@@ -1,5 +1,5 @@
 # ReinforcementLearning
-
+[![Discord](https://img.shields.io/badge/discord-chat-green.svg?logo=slack&style=for-the-badge&logo=appveyor)](https://discord.gg/f5MZP2K)
 ## Installation
 *Not Implemented yet*
 
