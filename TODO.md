@@ -1,12 +1,16 @@
 # ToDo list
 
-- [x] Init this repository
+- [x] Update [requirements.txt](./requirements.txt)
 - [ ] Design the architecture of code
+- [ ] Choice test tool and init them
+- [ ] Choice docs tool and init this 
+- [ ] Config codecov
+- [ ] Config codefactor
 - [ ] Create Code style standard and document it in [CONTRIBUTING.md](./CONTRIBUTING.md)
 - [ ] List Agents for starting project
 - [ ] List Environments for start project
-- [x] Update "Copyright [yyyy] [name of copyright owner]" in [LICENCE](./LICENSE)
-- [x] Update [requirements.txt](./requirements.txt)
+
+
 
 # Agents list
 
