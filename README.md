@@ -1,5 +1,6 @@
 ﻿# Renforce : Reinforcement Learning library with Pytorch
 
+[![CodeFactor](https://www.codefactor.io/repository/github/french-ai/reinforcement/badge?style=for-the-badge)](https://www.codefactor.io/repository/github/french-ai/reinforcement)
 [![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg?logo=Discord&style=for-the-badge)](https://discord.gg/f5MZP2K)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge)](https://github.com/french-ai/reinforcement/blob/master/LICENSE)
 
