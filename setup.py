@@ -15,7 +15,7 @@ TEST_REQUIRES = [
     'pytest', 'coverage', 'pytest-cov',
 ]
 
-with open('README.rst') as f:
+with open('README.md') as f:
     README = f.read()
 
 setuptools.setup(
@@ -23,12 +23,12 @@ setuptools.setup(
     name='renforce',
     license="Apache-2.0",
     description='Reinforcement learning with pytorch ',
-    long_description='README.md',
+    long_description=README,
     long_description_content_type='text/markdown',
     url='https://github.com/french-ai/reinforcement',
     packages=setuptools.find_packages(),
     include_package_data=True,
-    python_requires=">=3.5",
+    python_requires=">=3.6",
     install_requires=INSTALL_REQUIRES,
     extras_require={
         'test': TEST_REQUIRES + INSTALL_REQUIRES,
