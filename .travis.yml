@@ -8,5 +8,11 @@ branches:
     - master
     - develop
 
+install:
+  - pip install ".[test]" . # install package + test dependencies
+
 script:
   - pytest
+
+after_success:
+  - codecov # submit coverage
