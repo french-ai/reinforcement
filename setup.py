@@ -34,8 +34,6 @@ setuptools.setup(
         'test': TEST_REQUIRES + INSTALL_REQUIRES,
     },
     classifiers=[
-        # Trove classifiers
-        # (https://pypi.python.org/pypi?%3Aaction=list_classifiers)
         'Development Status :: Alpha',
         'License :: OSI Approved :: Apache 2.0 License',
         'Programming Language :: Python',
