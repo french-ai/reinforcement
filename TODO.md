@@ -28,6 +28,9 @@
 - [ ] Proximal Policy Optimizations (Schulman *et al.*, [2017](https://arxiv.org/abs/1707.06347))
 
 # Explorations list
+
+- [ ] Random
+- [ ] Epsilon Greedy
 - [ ] Intrinsic Curiosity Module (Pathak *et al.*, [2017](https://arxiv.org/abs/1705.05363))
 - [ ] Random Network Distillation (Burda *et al.*, [2017](https://arxiv.org/abs/1810.12894))
 
