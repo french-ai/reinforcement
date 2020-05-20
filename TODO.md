@@ -34,7 +34,7 @@
 # Memories list
 
 - [ ] Prioritized Experience Replay (Schaul *et al.*, [2015](https://arxiv.org/abs/1511.05952))
-- [ ] Hindsight Experience Replay ([Andrychowicz](https://arxiv.org/abs/1707.01495) *et al.*, 2017)
+- [ ] Hindsight Experience Replay (Andrychowicz *et al.*, [2017](https://arxiv.org/abs/1707.01495))
 
 # Environments list
 
