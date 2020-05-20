@@ -28,13 +28,19 @@
 - [ ] Proximal Policy Optimizations (Schulman *et al.*, [2017](https://arxiv.org/abs/1707.06347))
 
 # Explorations list
+
+- [ ] Random
+- [ ] Epsilon Greedy
 - [ ] Intrinsic Curiosity Module (Pathak *et al.*, [2017](https://arxiv.org/abs/1705.05363))
 - [ ] Random Network Distillation (Burda *et al.*, [2017](https://arxiv.org/abs/1810.12894))
 
 # Memories list
 
+- [ ] No memory (= model based)
+- [ ] Trajectory replay
+- [ ] Experience Replay (Lin, [1992](https://link.springer.com/article/10.1007/BF00992699))
 - [ ] Prioritized Experience Replay (Schaul *et al.*, [2015](https://arxiv.org/abs/1511.05952))
-- [ ] Hindsight Experience Replay ([Andrychowicz](https://arxiv.org/abs/1707.01495) *et al.*, 2017)
+- [ ] Hindsight Experience Replay (Andrychowicz *et al.*, [2017](https://arxiv.org/abs/1707.01495))
 
 # Environments list
 
