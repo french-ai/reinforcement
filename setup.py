@@ -20,7 +20,7 @@ with open('README.md') as f:
 
 setuptools.setup(
     author="french ai team",
-    name='renforce',
+    name='torchforce',
     license="Apache-2.0",
     description='Reinforcement learning with pytorch ',
     long_description=README,
@@ -35,7 +35,7 @@ setuptools.setup(
     },
     classifiers=[
         'Development Status :: Alpha',
-        'License :: OSI Approved :: Apache 2.0 License',
+        'License :: Apache 2.0 License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
