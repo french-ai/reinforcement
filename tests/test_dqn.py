@@ -20,4 +20,3 @@ def dqn_agent():
 	observation = [0.0, 0.5, 1.]
 
 	agent.get_action(observation)
-
