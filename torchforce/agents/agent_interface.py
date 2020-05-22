@@ -1,10 +1,16 @@
-class AgentInterface():
-    
-	def get_action(self, observation):
-		raise NotImplementedError()
+import abc
 
-	def learn(self, observation, action, reward, next_observation):
-		raise NotImplementedError()
 
-	def episod_finished(self):
-		raise NotImplementedError()
+class AgentInterface(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def get_action(self, observation):
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def learn(self, observation, action, reward, next_observation) -> None:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def episode_finished(self) -> None:
+        raise NotImplementedError()
