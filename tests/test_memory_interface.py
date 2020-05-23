@@ -1,8 +1,8 @@
 import pytest
 
-from torchforce.agents import AgentInterface
+from torchforce.memories import MemoryInterface
 
 
-def test_can_t_instantiate_agent_interface():
+def test_can_t_instantiate_memory_interface():
     with pytest.raises(TypeError):
-        AgentInterface()
+        MemoryInterface()
