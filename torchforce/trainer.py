@@ -1,4 +1,4 @@
-import argparse
+from argparse import ArgumentParser
 
 import gym
 
@@ -38,7 +38,7 @@ class Trainer:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    parser = ArgumentParser()
     parser.add_argument('agent', type=str, help='name of Agent', nargs='?', const=1, default="agent_random")
     parser.add_argument('env', type=str, help='name of environment', nargs='?', const=1, default="CartPole-v1")
     parser.add_argument('max_episode', type=int, help='number of episode for train', nargs='?', const=1, default=100)
