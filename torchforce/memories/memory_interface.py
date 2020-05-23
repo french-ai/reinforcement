@@ -8,7 +8,7 @@ class MemoryInterface(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def extends(self, observations, actions, rewards, next_observations, done) -> None:
+    def extend(self, observations, actions, rewards, next_observations, dones) -> None:
         pass
 
     @abc.abstractmethod
