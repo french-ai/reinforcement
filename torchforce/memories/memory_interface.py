@@ -4,7 +4,7 @@ import abc
 class MemoryInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
-    def append(self, observation, action, reward, next_observation, done) -> none:
+    def append(self, observation, action, reward, next_observation, done) -> None:
         pass
 
     @abc.abstractmethod
@@ -12,5 +12,5 @@ class MemoryInterface(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def sample(self, buffer_size):
+    def sample(self, batch_size):
         pass
