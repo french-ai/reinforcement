@@ -1,6 +1,8 @@
 import torch.nn as nn
 import torch.nn.functional as F
+
 from torchforce.agents import DQN
+
 
 class Network(nn.Module):
 	def __init__(self):
