@@ -16,7 +16,7 @@ class Trainer:
     def agentarg_to_agent(cls, agentargs) -> AgentInterface:
         if agentargs == "agent_random":
             return AgentRandom
-        raise NotImplemented("this agent (" + agentargs + " is not implemented")
+        raise ValueError("this agent (" + agentargs + " is not implemented")
 
     def train(self, max_episode=1000):
         env = gym.make(self.environment)
