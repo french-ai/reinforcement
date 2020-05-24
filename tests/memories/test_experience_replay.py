@@ -1,7 +1,7 @@
 from torchforce.memories import ExperienceReplay
 
 
-def experience_replay():
+def test_experience_replay():
 
 	max_size = 2
 
