@@ -15,4 +15,15 @@ class Record:
 
 class Logger:
     def __init__(self):
-        self.episode = []
+        self.current_steps = []
+        self.episodes = []
+
+    def add_steps(self, steps):
+        self.current_steps.append(steps)
+
+    def add_episode(self, episode):
+        self.episodes.append(episode)
+
+    def end_episode(self):
+        self.episodes.append(self.current_steps)
+        self.current_steps = []
