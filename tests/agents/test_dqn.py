@@ -14,7 +14,7 @@ class Network(nn.Module):
 		x = F.relu(x)
 		return x
 
-def dqn_agent():
+def test_dqn_agent():
 
 	network = Network()
 	agent = DQN(network)
