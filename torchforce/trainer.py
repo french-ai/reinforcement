@@ -10,7 +10,12 @@ class Trainer:
         self.environment = environment
         if isinstance(agent, str):
             agent = self.arg_to_agent(agent)
-        self.agent = agent(gym.make(self.environment).action_space)
+        if agent is AgentInterface:
+            self.agent = agent(self.get_environment(environment).action_space)
+        else:
+            import warnings
+            warnings.warn("be sure of agent have good input and output dimension")
+            self.agent = agent
 
     @classmethod
     def arg_to_agent(cls, arg_agent) -> AgentInterface:

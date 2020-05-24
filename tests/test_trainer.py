@@ -9,39 +9,39 @@ class FakeEnv(gym.Env):
 
     def __init__(self):
         super(FakeEnv).__init__()
-        self.step_done = False
-        self.reset_done = False
-        self.render_done = False
+        self.step_done = 0
+        self.reset_done = 0
+        self.render_done = 0
 
     def step(self, action):
-        self.step_done = True
+        self.step_done += 1
         return True, 0, True, True
 
     def reset(self):
-        self.reset_done = True
+        self.reset_done += 1
         return True
 
     def render(self, mode='human'):
-        self.render_done = True
+        self.render_done += 1
 
 
 class FakeAgent(AgentInterface):
 
     def __init__(self):
         super(FakeAgent).__init__()
-        self.get_action_done = False
-        self.learn_done = False
-        self.episode_finished_done = False
+        self.get_action_done = 0
+        self.learn_done = 0
+        self.episode_finished_done = 0
 
     def get_action(self, observation):
-        self.get_action_done = True
+        self.get_action_done += 1
         return True
 
     def learn(self, observation, action, reward, next_observation) -> None:
-        self.learn_done = True
+        self.learn_done += 1
 
     def episode_finished(self) -> None:
-        self.episode_finished_done = True
+        self.episode_finished_done += 1
 
 
 def test_arg_to_agent():
@@ -71,20 +71,49 @@ def test_get_agent():
 def test_do_episode():
     fake_env = FakeEnv()
     fake_agent = FakeAgent()
-    assert fake_agent.episode_finished_done is False
-    assert fake_env.reset_done is False
+    assert fake_agent.episode_finished_done == 0
+    assert fake_env.reset_done == 0
 
     Trainer.do_episode(env=fake_env, agent=fake_agent)
-    assert fake_agent.episode_finished_done is True
-    assert fake_env.reset_done is True
+    assert fake_agent.episode_finished_done == 1
+    assert fake_env.reset_done == 1
 
 
 def test_do_step():
     fake_env = FakeEnv()
     fake_agent = FakeAgent()
-    assert fake_agent.get_action_done is False and fake_agent.learn_done is False and fake_agent.episode_finished_done is False
-    assert fake_env.step_done is False and fake_env.reset_done is False and fake_env.render_done is False
+    assert fake_agent.get_action_done == 0 and fake_agent.learn_done == 0 and fake_agent.episode_finished_done == 0
+    assert fake_env.step_done == 0 and fake_env.reset_done == 0 and fake_env.render_done == 0
 
     Trainer.do_step(observation=None, env=fake_env, agent=fake_agent)
-    assert fake_agent.get_action_done is True and fake_agent.learn_done is True and fake_agent.episode_finished_done is False
-    assert fake_env.step_done is True and fake_env.reset_done is False and fake_env.render_done is True
+    assert fake_agent.get_action_done == 1 and fake_agent.learn_done == 1 and fake_agent.episode_finished_done == 0
+    assert fake_env.step_done == 1 and fake_env.reset_done == 0 and fake_env.render_done == 1
+
+
+def test_init_trainer():
+    trainer = Trainer(environment=FakeEnv(), agent=FakeAgent())
+    assert isinstance(trainer.agent, AgentInterface)
+    assert isinstance(trainer.environment, gym.Env)
+
+    trainer = Trainer(environment="CartPole-v1", agent=FakeAgent())
+    assert isinstance(trainer.agent, AgentInterface)
+    assert isinstance(trainer.environment, str)
+
+
+def test_trainer_train():
+    test_list = [0, 1, 10, 100, 1000]
+
+    for number_episode in test_list:
+        fake_env = FakeEnv()
+        fake_agent = FakeAgent()
+        trainer = Trainer(environment=fake_env, agent=fake_agent)
+
+        assert fake_agent.get_action_done == 0 and fake_agent.learn_done == 0 and fake_agent.episode_finished_done == 0
+        assert fake_env.step_done == 0 and fake_env.reset_done == 0 and fake_env.render_done == 0
+
+        trainer.train(max_episode=number_episode)
+
+        assert fake_agent.get_action_done == number_episode and fake_agent.learn_done == number_episode
+        assert fake_agent.episode_finished_done == number_episode
+        assert fake_env.step_done == number_episode and fake_env.reset_done == number_episode
+        assert fake_env.render_done == number_episode
