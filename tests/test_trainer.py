@@ -88,3 +88,13 @@ def test_do_step():
     Trainer.do_step(observation=None, env=fake_env, agent=fake_agent)
     assert fake_agent.get_action_done is True and fake_agent.learn_done is True and fake_agent.episode_finished_done is False
     assert fake_env.step_done is True and fake_env.reset_done is False and fake_env.render_done is True
+
+
+def test_init_trainer():
+    trainer = Trainer(environment=FakeEnv(), agent=FakeAgent())
+    assert isinstance(trainer.agent, AgentInterface)
+    assert isinstance(trainer.environment, gym.Env)
+
+    trainer = Trainer(environment="CartPole-v1", agent=FakeAgent())
+    assert isinstance(trainer.agent, AgentInterface)
+    assert isinstance(trainer.environment, str)
