@@ -11,7 +11,7 @@ class ExperienceReplay(MemoryInterface):
 		self.size = 0
 
 	def append(self, observation, action, reward, next_observation, done):
-		self.buffer[self.index] = np.array([observation, action, reward, next_observation, done])
+		self.buffer[self.index] = np.array([np.array(observation), action, reward, np.array(next_observation), done])
 		self.index = (self.index + 1) % self.max_size
 		self.size = min(self.size + 1, self.max_size)
 
@@ -24,6 +24,9 @@ class ExperienceReplay(MemoryInterface):
 		if len_datas > self.max_size:
 			datas = datas[-self.max_size:]
 			len_datas = self.max_size
+
+		datas[:, 0] = [np.array(observation) for observation in datas[:, 0]]
+		datas[:, 3] = [np.array(next_observation) for next_observation in datas[:, 3]]
 
 		idx_max = self.index + len_datas
 
@@ -39,5 +42,6 @@ class ExperienceReplay(MemoryInterface):
 
 	def sample(self, batch_size):
 		idxs = np.random.randint(self.size, size = batch_size)
-
-		return self.buffer[idxs]
+		
+		return self.buffer[idxs].T
+	
