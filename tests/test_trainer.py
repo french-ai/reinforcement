@@ -71,9 +71,20 @@ def test_get_agent():
 def test_do_episode():
     fake_env = FakeEnv()
     fake_agent = FakeAgent()
+    assert fake_agent.episode_finished_done is False
+    assert fake_env.reset_done is False
+
+    Trainer.do_episode(env=fake_env, agent=fake_agent)
+    assert fake_agent.episode_finished_done is True
+    assert fake_env.reset_done is True
+
+
+def test_do_step():
+    fake_env = FakeEnv()
+    fake_agent = FakeAgent()
     assert fake_agent.get_action_done is False and fake_agent.learn_done is False and fake_agent.episode_finished_done is False
     assert fake_env.step_done is False and fake_env.reset_done is False and fake_env.render_done is False
 
-    Trainer.do_episode(env=fake_env, agent=fake_agent)
-    assert fake_agent.get_action_done is True and fake_agent.learn_done is True and fake_agent.episode_finished_done is True
-    assert fake_env.step_done is True and fake_env.reset_done is True and fake_env.render_done is True
+    Trainer.do_step(observation=None, env=fake_env, agent=fake_agent)
+    assert fake_agent.get_action_done is True and fake_agent.learn_done is True and fake_agent.episode_finished_done is False
+    assert fake_env.step_done is True and fake_env.reset_done is False and fake_env.render_done is True

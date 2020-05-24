@@ -36,15 +36,19 @@ class Trainer:
         done = False
         ite = 1
         while not done:
-            env.render()
-            action = agent.get_action(observation=observation)
-            next_observation, reward, done, info = env.step(action)
-            agent.learn(observation, action, reward, next_observation)
+            observation, done = Trainer.do_step(observation=observation, env=env, agent=agent)
             ite += 1
-            observation = next_observation
             if done:
                 print("Episode finished after {} timesteps".format(ite))
         agent.episode_finished()
+
+    @classmethod
+    def do_step(cls, observation, env, agent):
+        env.render()
+        action = agent.get_action(observation=observation)
+        next_observation, reward, done, info = env.step(action)
+        agent.learn(observation, action, reward, next_observation)
+        return next_observation, done
 
     def train(self, max_episode=1000):
         env = self.get_environment(self.environment)
