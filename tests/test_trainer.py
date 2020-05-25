@@ -99,6 +99,8 @@ def test_init_trainer():
     assert isinstance(trainer.agent, AgentInterface)
     assert isinstance(trainer.environment, str)
 
+    with pytest.raises(ValueError):
+        Trainer(environment="CartPole-v1", agent="dzdqsdz")
 
 def test_trainer_train():
     test_list = [0, 1, 10, 100, 1000]
