@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 
 import gym
 
+from torchforce import Logger, Record
 from torchforce.agents import AgentInterface, AgentRandom
 
 
@@ -16,6 +17,8 @@ class Trainer:
             import warnings
             warnings.warn("be sure of agent have good input and output dimension")
             self.agent = agent
+
+        self.logger = Logger()
 
     @classmethod
     def arg_to_agent(cls, arg_agent) -> AgentInterface:
@@ -36,24 +39,27 @@ class Trainer:
         raise ValueError("this env (" + str(arg_env) + ") is not supported")
 
     @classmethod
-    def do_episode(cls, env, agent):
-        observation = env.reset()
-        done = False
-        ite = 1
-        while not done:
-            observation, done = Trainer.do_step(observation=observation, env=env, agent=agent)
-            ite += 1
-            if done:
-                print("Episode finished after {} timesteps".format(ite))
-        agent.episode_finished()
-
-    @classmethod
-    def do_step(cls, observation, env, agent):
+    def do_step(cls, observation, env, agent, logger=None):
         env.render()
         action = agent.get_action(observation=observation)
         next_observation, reward, done, info = env.step(action)
         agent.learn(observation, action, reward, next_observation)
-        return next_observation, done
+        if logger:
+            logger.add_steps(Record(reward))
+        return next_observation, done, reward
+
+    @classmethod
+    def do_episode(cls, env, agent, logger=None):
+        observation = env.reset()
+        done = False
+        ite = 1
+        while not done:
+            observation, done, reward = Trainer.do_step(observation=observation, env=env, agent=agent, logger=logger)
+            ite += 1
+        print("Episode finished after {} timesteps".format(ite))
+        agent.episode_finished()
+        if logger:
+            logger.end_episode()
 
     def train(self, max_episode=1000):
         env = self.get_environment(self.environment)
