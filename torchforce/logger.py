@@ -1,3 +1,6 @@
+from torch.utils.tensorboard import SummaryWriter
+
+
 class Record:
     def __init__(self, value):
         if not isinstance(value, (int, float)):
@@ -17,6 +20,7 @@ class Logger:
     def __init__(self):
         self.current_steps = []
         self.episodes = []
+        self.summary_writer = SummaryWriter()
 
     def add_steps(self, steps):
         self.current_steps.append(steps)
@@ -25,5 +29,10 @@ class Logger:
         self.episodes.append(episode)
 
     def end_episode(self):
+        self.log_episode(self.summary_writer, self.current_steps, len(self.episodes))
         self.episodes.append(self.current_steps)
         self.current_steps = []
+
+    @classmethod
+    def log_episode(cls, summary_writer, episode, step):
+        summary_writer.add_scalar(tag="Avg/Reward", scalar_value=Record.avg_records(episode), global_step=step)

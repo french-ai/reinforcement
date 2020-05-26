@@ -57,7 +57,7 @@ class Trainer:
     def train(self, max_episode=1000):
         env = self.get_environment(self.environment)
         for i_episode in range(max_episode):
-            self.do_episode(env, self.agent)
+            self.do_episode(env=env, agent=self.agent, logger=self.logger)
         env.close()
 
 

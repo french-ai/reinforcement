@@ -9,6 +9,7 @@ INSTALL_REQUIRES = [
     'torch',
     'torchvision',
     'gym',
+    'tensorboard',
 ]
 TEST_REQUIRES = [
     # testing and coverage
