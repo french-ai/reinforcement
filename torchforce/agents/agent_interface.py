@@ -3,9 +3,6 @@ import abc
 
 class AgentInterface(metaclass=abc.ABCMeta):
 
-    def __init__(self, action_space):
-        self.action_space = action_space
-
     @abc.abstractmethod
     def get_action(self, observation):
         pass

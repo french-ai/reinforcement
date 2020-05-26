@@ -40,6 +40,13 @@ def test_avg_records():
     for records, value in zip(list_records, list_value):
         assert value == Record.avg_records(records)
 
+    list_fail = ["dsdzs", ["dzdqzdq"], [1548, 1548], 1254]
+    for records in list_fail:
+        with pytest.raises(TypeError):
+            Record.avg_records(records)
+
+    assert 0 == Record.avg_records([])
+
 
 def test_min_records():
     list_records = [[Record(1), Record(1), Record(1), Record(1)],
@@ -54,6 +61,13 @@ def test_min_records():
 
     for records, value in zip(list_records, list_value):
         assert value == Record.min_records(records)
+
+    list_fail = ["dsdzs", ["dzdqzdq"], [1548, 1548], 1254]
+    for records in list_fail:
+        with pytest.raises(TypeError):
+            Record.min_records(records)
+
+    assert 0 == Record.min_records([])
 
 
 def test_max_records():
@@ -70,6 +84,13 @@ def test_max_records():
     for records, value in zip(list_records, list_value):
         assert value == Record.max_records(records)
 
+    list_fail = ["dsdzs", ["dzdqzdq"], [1548, 1548], 1254]
+    for records in list_fail:
+        with pytest.raises(TypeError):
+            Record.max_records(records)
+
+    assert 0 == Record.max_records([])
+
 
 def test_sum_records():
     list_records = [[Record(1), Record(1), Record(1), Record(1)],
@@ -84,6 +105,13 @@ def test_sum_records():
 
     for records, value in zip(list_records, list_value):
         assert value == Record.sum_records(records)
+
+    list_fail = ["dsdzs", ["dzdqzdq"], [1548, 1548], 1254]
+    for records in list_fail:
+        with pytest.raises(TypeError):
+            Record.sum_records(records)
+
+    assert 0 == Record.sum_records([])
 
 
 def test_logger_init():

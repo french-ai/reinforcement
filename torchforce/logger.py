@@ -13,7 +13,10 @@ class Record:
             raise TypeError("records must be a list not " + str(records))
         if not records:
             return 0.0
-        return sum([record.value for record in records]) / len(records)
+        try:
+            return sum([record.value for record in records]) / len(records)
+        except AttributeError:
+            raise TypeError("records must a list of Record")
 
     @classmethod
     def max_records(cls, records):
@@ -21,8 +24,10 @@ class Record:
             raise TypeError("records must be a list not " + str(records))
         if not records:
             return 0.0
-
-        return max([record.value for record in records])
+        try:
+            return max([record.value for record in records])
+        except AttributeError:
+            raise TypeError("records must a list of Record")
 
     @classmethod
     def min_records(cls, records):
@@ -30,8 +35,10 @@ class Record:
             raise TypeError("records must be a list not " + str(records))
         if not records:
             return 0.0
-
-        return min([record.value for record in records])
+        try:
+            return min([record.value for record in records])
+        except AttributeError:
+            raise TypeError("records must a list of Record")
 
     @classmethod
     def sum_records(cls, records):
@@ -39,7 +46,10 @@ class Record:
             raise TypeError("records must be a list not " + str(records))
         if not records:
             return 0.0
-        return sum([record.value for record in records])
+        try:
+            return sum([record.value for record in records])
+        except AttributeError:
+            raise TypeError("records must a list of Record")
 
 
 class Logger:
