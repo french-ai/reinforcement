@@ -102,6 +102,7 @@ def test_init_trainer():
     with pytest.raises(ValueError):
         Trainer(environment="CartPole-v1", agent="dzdqsdz")
 
+
 def test_trainer_train():
     test_list = [0, 1, 10, 100, 1000]
 
