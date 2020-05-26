@@ -3,6 +3,19 @@ import pytest
 
 from torchforce import Trainer, Logger
 from torchforce.agents import AgentInterface
+from torchforce.trainer import arg_to_agent
+
+
+def test_arg_to_agent():
+    fail_list = ["dzdzqd", None, 123, 123.123, [], {}, object]
+    work_list = ["agent_random"]
+
+    for agent in fail_list:
+        with pytest.raises(ValueError):
+            arg_to_agent(agent)
+
+    for agent in work_list:
+        arg_to_agent(agent)
 
 
 class FakeEnv(gym.Env):
@@ -27,8 +40,7 @@ class FakeEnv(gym.Env):
 
 class FakeAgent(AgentInterface):
 
-    def __init__(self):
-        super(FakeAgent).__init__()
+    def __init__(self, action_space):
         self.get_action_done = 0
         self.learn_done = 0
         self.episode_finished_done = 0
@@ -60,18 +72,6 @@ class FakeLogger(Logger):
         self.end_episode_call += 1
 
 
-def test_arg_to_agent():
-    fail_list = ["dzdzqd", None, 123, 123.123, [], {}]
-    work_list = ["agent_random", FakeAgent()]
-
-    for agent in fail_list:
-        with pytest.raises(ValueError):
-            Trainer.arg_to_agent(agent)
-
-    for agent in work_list:
-        Trainer.arg_to_agent(agent)
-
-
 def test_get_agent():
     fail_list = ["dzdzqd", None, 123, 123.123, [], {}]
     work_list = ["CartPole-v1", FakeEnv()]
@@ -86,7 +86,7 @@ def test_get_agent():
 
 def test_do_episode():
     fake_env = FakeEnv()
-    fake_agent = FakeAgent()
+    fake_agent = FakeAgent(action_space=None)
     logger = FakeLogger()
 
     assert fake_agent.episode_finished_done == 0
@@ -105,7 +105,7 @@ def test_do_episode():
 
 def test_do_step():
     fake_env = FakeEnv()
-    fake_agent = FakeAgent()
+    fake_agent = FakeAgent(action_space=None)
     logger = FakeLogger()
 
     assert fake_agent.get_action_done == 0 and fake_agent.learn_done == 0 and fake_agent.episode_finished_done == 0
@@ -123,18 +123,21 @@ def test_do_step():
 
 
 def test_init_trainer():
-    trainer = Trainer(environment=FakeEnv(), agent=FakeAgent())
-    assert isinstance(trainer.agent, AgentInterface)
+    trainer = Trainer(environment=FakeEnv(), agent=FakeAgent)
+    assert isinstance(trainer.agent, AgentInterface) and not isinstance(trainer.agent, type(AgentInterface))
     assert isinstance(trainer.environment, gym.Env)
     assert isinstance(trainer.logger, Logger)
 
-    trainer = Trainer(environment="CartPole-v1", agent=FakeAgent())
-    assert isinstance(trainer.agent, AgentInterface)
-    assert isinstance(trainer.environment, str)
+    trainer = Trainer(environment=FakeEnv(), agent=FakeAgent(action_space=None))
+    assert isinstance(trainer.agent, AgentInterface) and not isinstance(trainer.agent, type(AgentInterface))
+    assert isinstance(trainer.environment, gym.Env)
     assert isinstance(trainer.logger, Logger)
 
+    with pytest.raises(TypeError):
+        Trainer(environment="CartPole-v1", agent="random_agent")
+
     with pytest.raises(ValueError):
-        Trainer(environment="CartPole-v1", agent="dzdqsdz")
+        Trainer(environment="CartPole-dzdv1", agent=FakeAgent)
 
 
 def test_trainer_train():
@@ -142,7 +145,7 @@ def test_trainer_train():
 
     for number_episode in test_list:
         fake_env = FakeEnv()
-        fake_agent = FakeAgent()
+        fake_agent = FakeAgent(action_space=None)
         trainer = Trainer(environment=fake_env, agent=fake_agent)
 
         assert fake_agent.get_action_done == 0 and fake_agent.learn_done == 0 and fake_agent.episode_finished_done == 0

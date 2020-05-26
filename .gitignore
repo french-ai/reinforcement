@@ -129,5 +129,7 @@ dmypy.json
 .pyre/
 
 # idea
-
 .idea/
+
+#tensorboard log
+runs/
