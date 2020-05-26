@@ -62,8 +62,6 @@ class Trainer:
 
 
 def arg_to_agent(arg_agent) -> AgentInterface:
-    if isinstance(arg_agent, AgentInterface):
-        return arg_agent
     if arg_agent == "agent_random":
         return AgentRandom
     raise ValueError("this agent (" + str(arg_agent) + ") is not implemented")
