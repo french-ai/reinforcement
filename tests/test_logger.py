@@ -41,6 +41,51 @@ def test_avg_records():
         assert value == Record.avg_records(records)
 
 
+def test_min_records():
+    list_records = [[Record(1), Record(1), Record(1), Record(1)],
+                    [Record(2), Record(2), Record(2), Record(2)],
+                    [Record(1.0), Record(1.0), Record(1.0), Record(1.0)],
+                    [Record(2.0), Record(2.0), Record(2.0), Record(2.0)],
+                    [Record(1), Record(2), Record(3), Record(4)],
+                    [Record(-1), Record(1)],
+                    [Record(-10), Record(-15), Record(-20), Record(-15)]]
+
+    list_value = [1, 2, 1.0, 2.0, 1, -1, -20]
+
+    for records, value in zip(list_records, list_value):
+        assert value == Record.min_records(records)
+
+
+def test_max_records():
+    list_records = [[Record(1), Record(1), Record(1), Record(1)],
+                    [Record(2), Record(2), Record(2), Record(2)],
+                    [Record(1.0), Record(1.0), Record(1.0), Record(1.0)],
+                    [Record(2.0), Record(2.0), Record(2.0), Record(2.0)],
+                    [Record(1), Record(2), Record(3), Record(4)],
+                    [Record(-1), Record(1)],
+                    [Record(-10), Record(-15), Record(-20), Record(-15)]]
+
+    list_value = [1, 2, 1.0, 2.0, 4, 1, -10]
+
+    for records, value in zip(list_records, list_value):
+        assert value == Record.max_records(records)
+
+
+def test_sum_records():
+    list_records = [[Record(1), Record(1), Record(1), Record(1)],
+                    [Record(2), Record(2), Record(2), Record(2)],
+                    [Record(1.0), Record(1.0), Record(1.0), Record(1.0)],
+                    [Record(2.0), Record(2.0), Record(2.0), Record(2.0)],
+                    [Record(1), Record(2), Record(3), Record(4)],
+                    [Record(-1), Record(1)],
+                    [Record(-10), Record(-15), Record(-20), Record(-15)]]
+
+    list_value = [4, 8, 4.0, 8.0, 10, 0, -60]
+
+    for records, value in zip(list_records, list_value):
+        assert value == Record.sum_records(records)
+
+
 def test_logger_init():
     logger = Logger()
     assert not logger.episodes and not logger.current_steps
@@ -98,11 +143,7 @@ def test_log_episode():
                   [Record(-1), Record(1)],
                   [Record(-10), Record(-15), Record(-20), Record(-15)]]
 
-    list_value = [1, 2, 1.0, 2.0, 2.5, 0, -15]
-
-    for ite, (records, value) in enumerate(zip(list_steps, list_value)):
+    for ite, records in enumerate(list_steps):
         Logger.log_episode(summary_writer, records, ite)
-        assert ite + 1 == len(summary_writer.add_scalar_call)
-        assert "Avg/Reward" == summary_writer.add_scalar_call[-1][0]
-        assert value == summary_writer.add_scalar_call[-1][1]
+        assert (ite + 1) * 4 == len(summary_writer.add_scalar_call)
         assert ite == summary_writer.add_scalar_call[-1][2]

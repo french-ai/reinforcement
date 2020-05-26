@@ -15,6 +15,32 @@ class Record:
             return 0.0
         return sum([record.value for record in records]) / len(records)
 
+    @classmethod
+    def max_records(cls, records):
+        if not isinstance(records, list):
+            raise TypeError("records must be a list not " + str(records))
+        if not records:
+            return 0.0
+
+        return max([record.value for record in records])
+
+    @classmethod
+    def min_records(cls, records):
+        if not isinstance(records, list):
+            raise TypeError("records must be a list not " + str(records))
+        if not records:
+            return 0.0
+
+        return min([record.value for record in records])
+
+    @classmethod
+    def sum_records(cls, records):
+        if not isinstance(records, list):
+            raise TypeError("records must be a list not " + str(records))
+        if not records:
+            return 0.0
+        return sum([record.value for record in records])
+
 
 class Logger:
     def __init__(self):
@@ -35,4 +61,7 @@ class Logger:
 
     @classmethod
     def log_episode(cls, summary_writer, episode, step):
-        summary_writer.add_scalar(tag="Avg/Reward", scalar_value=Record.avg_records(episode), global_step=step)
+        summary_writer.add_scalar(tag="Reward/max", scalar_value=Record.max_records(episode), global_step=step)
+        summary_writer.add_scalar(tag="Reward/min", scalar_value=Record.max_records(episode), global_step=step)
+        summary_writer.add_scalar(tag="Reward/avg", scalar_value=Record.avg_records(episode), global_step=step)
+        summary_writer.add_scalar(tag="Reward/sum", scalar_value=Record.sum_records(episode), global_step=step)
