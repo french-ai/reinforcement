@@ -12,15 +12,9 @@ We want to create library for reinforcement learning with *pytorch*.
 
 ### Get Started
 
-- Install pytorch :
+- Installation of pytorch :
 
 For installing *pytorch* follow [Quick Start Locally](https://pytorch.org/) for your config.
-
-- Install [requirements](requirements.txt):
-
-``
-pip install requirements.txt
-``
 
 - Download files:
 
@@ -28,6 +22,31 @@ pip install requirements.txt
 git clone https://github.com/french-ai/reinforcement.git
 ``
 
+- Installation of torchforce:
+
+In root repository
+
+for use:
+```
+pip install .
+```
+
+for dev:
+```
+pip install ".[test]" .
+```
+
+- Start training:
+
+```
+python train.py
+```
+
+- For visualize training metrics:
+
+```
+tensorboard --logdir runs
+```
 ## Environments
 
 We will use GYM environments for moments.
