@@ -9,24 +9,17 @@ from torchforce.agents import AgentInterface, AgentRandom
 class Trainer:
     def __init__(self, environment, agent):
         self.environment = environment
-        if isinstance(agent, str):
-            agent = self.arg_to_agent(agent)
-        if agent is AgentInterface:
-            self.agent = agent(self.get_environment(environment).action_space)
-        else:
+        if isinstance(agent, type(AgentInterface)):
+            action_space = self.get_environment(environment).action_space
+            self.agent = agent(action_space=action_space)
+        elif isinstance(agent, AgentInterface):
             import warnings
             warnings.warn("be sure of agent have good input and output dimension")
             self.agent = agent
+        else:
+            raise TypeError("this type (" + str(type(agent)) + ") is an AgentInterface or instance of AgentInterface")
 
         self.logger = Logger()
-
-    @classmethod
-    def arg_to_agent(cls, arg_agent) -> AgentInterface:
-        if isinstance(arg_agent, AgentInterface):
-            return arg_agent
-        if arg_agent == "agent_random":
-            return AgentRandom
-        raise ValueError("this agent (" + str(arg_agent) + ") is not implemented")
 
     @classmethod
     def get_environment(cls, arg_env):
@@ -68,6 +61,14 @@ class Trainer:
         env.close()
 
 
+def arg_to_agent(arg_agent) -> AgentInterface:
+    if isinstance(arg_agent, AgentInterface):
+        return arg_agent
+    if arg_agent == "agent_random":
+        return AgentRandom
+    raise ValueError("this agent (" + str(arg_agent) + ") is not implemented")
+
+
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('agent', type=str, help='name of Agent', nargs='?', const=1, default="agent_random")
@@ -75,5 +76,5 @@ if __name__ == '__main__':
     parser.add_argument('max_episode', type=int, help='number of episode for train', nargs='?', const=1, default=100)
     args = parser.parse_args()
 
-    trainer = Trainer(environment=args.env, agent=args.agent)
+    trainer = Trainer(environment=args.env, agent=arg_to_agent(args.agent))
     trainer.train(max_episode=args.max_episode)
