@@ -7,11 +7,12 @@ from torchforce.agents import AgentInterface
 from torchforce.memories import MemoryInterface
 from torchforce.explorations import GreedyExplorationInterface, EpsilonGreedy
 from random import randint
+from copy import deepcopy
 
 
-class DQN(AgentInterface):
+class DoubleDQN(AgentInterface):
 
-	def __init__(self, action_space, neural_network, memory, step_train=2, batch_size=8, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
+	def __init__(self, action_space, neural_network, memory, step_copy=1000, step_train=2, batch_size=8, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
 		
 		if not isinstance(action_space, Discrete):
 			raise TypeError("action_space need to be instance of gym.spaces.Space.Discrete, not :" + str(type(action_space)))
@@ -32,9 +33,12 @@ class DQN(AgentInterface):
 			raise TypeError("greedy_exploration need to be instance of torchforces.explorations.GreedyExplorationInterface, not :" + str(type(greedy_exploration)))
 
 		self.action_space = action_space
-		self.neural_network = neural_network
+		self.neural_network_online = neural_network
+		self.neural_network_target = deepcopy(neural_network)
+		self.copy_online_to_target()
 		self.memory = memory
 
+		self.step_copy = step_copy
 		self.step_train = step_train
 		self.step = 0
 		self.batch_size = batch_size
@@ -47,7 +51,7 @@ class DQN(AgentInterface):
 			self.loss = loss
 
 		if optimizer is None:
-			self.optimizer = optim.RMSprop(self.neural_network.parameters())
+			self.optimizer = optim.RMSprop(self.neural_network_online.parameters())
 		else:
 			self.optimizer = optimizer
 
@@ -64,7 +68,7 @@ class DQN(AgentInterface):
 		observation = torch.tensor(observation)
 		observation = observation.view(1, -1)
 		
-		return torch.argmax(self.neural_network.forward(observation))
+		return torch.argmax(self.neural_network_online.forward(observation))
 
 	def learn(self, observation, action, reward, next_observation, done) -> None:
 
@@ -74,6 +78,9 @@ class DQN(AgentInterface):
 		if (self.step % self.step_train) == 0:
 			self.train()
 
+		if (self.step % self.step_copy) == 0:
+			self.copy_online_to_target()
+
 	def episode_finished(self) -> None:
 		pass
 
@@ -81,12 +88,19 @@ class DQN(AgentInterface):
 
 		observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size)
 		
-		q = rewards + self.gamma * torch.max(self.neural_network.forward(next_observations), dim=1)[0].detach() * (1 - dones)
+		actions_next = torch.argmax(self.neural_network_online.forward(next_observations).detach(), dim=1)
+		actions_next_one_hot = F.one_hot(actions_next.to(torch.int64), num_classes=self.action_space.n)
+		q_next = self.neural_network_target.forward(next_observations).detach()  * actions_next_one_hot
+		
+		q = rewards + self.gamma * torch.max(q_next, dim=1)[0] * (1 - dones)
 
 		actions_one_hot = F.one_hot(actions.to(torch.int64), num_classes=self.action_space.n)
-		q_predict = torch.max(self.neural_network.forward(observations) * actions_one_hot, dim=1)[0]
+		q_predict = torch.max(self.neural_network_online.forward(observations) * actions_one_hot, dim=1)[0]
 
 		self.optimizer.zero_grad()
 		loss = self.loss(q_predict, q)
 		loss.backward()
 		self.optimizer.step()
+
+	def copy_online_to_target(self):
+		self.neural_network_target.load_state_dict(self.neural_network_online.state_dict())

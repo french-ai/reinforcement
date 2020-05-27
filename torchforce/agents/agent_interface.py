@@ -8,7 +8,7 @@ class AgentInterface(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def learn(self, observation, action, reward, next_observation) -> None:
+    def learn(self, observation, action, reward, next_observation, done) -> None:
         pass
 
     @abc.abstractmethod

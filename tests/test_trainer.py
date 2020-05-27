@@ -49,7 +49,7 @@ class FakeAgent(AgentInterface):
         self.get_action_done += 1
         return True
 
-    def learn(self, observation, action, reward, next_observation) -> None:
+    def learn(self, observation, action, reward, next_observation, done) -> None:
         self.learn_done += 1
 
     def episode_finished(self) -> None:
