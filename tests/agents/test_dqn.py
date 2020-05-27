@@ -22,8 +22,7 @@ def test_dqn_agent_instantiation():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
-	with pytest.raises(TypeError):
-		agent = DQN(Discrete(4), network, memory)
+	agent = DQN(Discrete(4), network, memory)
 
 def test_dqn_agent_instantiation_error_action_space():
 	network = Network()
