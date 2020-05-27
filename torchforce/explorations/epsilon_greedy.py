@@ -9,4 +9,4 @@ class EpsilonGreedy(GreedyExplorationInterface):
         self.epsilon = epsilon
 
     def be_greedy(self, step):
-        return random() < self.epsilon
+        return random() > self.epsilon
