@@ -5,7 +5,6 @@ from gym.spaces import Discrete
 from torchforce.agents import DQN
 from torchforce.memories import ExperienceReplay
 
-
 class Network(nn.Module):
 	def __init__(self):
 		super(Network, self).__init__()
@@ -17,14 +16,44 @@ class Network(nn.Module):
 		return x
 
 def test_dqn_agent_instantiation():
-
 	network = Network()
-	agent = DQN(Discrete(4), network)
+	memory = ExperienceReplay(max_size=5)
+
+	agent = DQN(Discrete(4), network, memory)
+
+def test_dqn_agent_instantiation_error_action_space():
+	network = Network()
+	memory = ExperienceReplay(max_size=5)
+
+	agent = DQN(None, network, memory)
+
+def test_dqn_agent_instantiation_error_neural_network():
+	memory = ExperienceReplay(max_size=5)
+
+	agent = DQN(Discrete(4), None, memory)
+
+def test_dqn_agent_instantiation_error_memory():
+	network = Network()
+
+	agent = DQN(Discrete(4), network, None)
+
+def test_dqn_agent_instantiation_error_loss():
+	network = Network()
+	memory = ExperienceReplay(max_size=5)
+
+	agent = DQN(Discrete(4), network, memory, loss="LOSS_ERROR")
+
+def test_dqn_agent_instantiation_error_optimizer():
+	network = Network()
+	memory = ExperienceReplay(max_size=5)
+
+	agent = DQN(Discrete(4), network, memory, optimizer="OPTIMIZER_ERROR")
 
 def test_dqn_agent_getaction():
-
 	network = Network()
-	agent = DQN(Discrete(4), network)
+	memory = ExperienceReplay(max_size=5)
+
+	agent = DQN(Discrete(4), network, memory)
 
 	observation = [0.0, 0.5, 1.]
 
@@ -52,3 +81,10 @@ def test_dqn_agent_learn():
 
 	agent.learn(obs, action, reward, next_obs, done)
 	agent.learn(obs, action, reward, next_obs, done)
+
+def test_dqn_agent_episode_finished():
+	network = Network()
+	memory = ExperienceReplay(max_size=5)
+
+	agent = DQN(Discrete(4),network, memory)
+	agent.episode_finished()
