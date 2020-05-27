@@ -6,6 +6,7 @@ def test_adaptative_epsilon_greedy_step_min():
 
 	exploration.be_greedy(0)
 
+
 def test_adaptative_epsilon_greedy_step():
 	exploration = AdaptativeEpsilonGreedy(0.8, 0.1, 5, 1)
 

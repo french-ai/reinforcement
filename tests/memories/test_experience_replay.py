@@ -2,7 +2,6 @@ from torchforce.memories import ExperienceReplay
 
 
 def test_experience_replay():
-
 	max_size = 2
 
 	mem = ExperienceReplay(max_size)
@@ -12,9 +11,9 @@ def test_experience_replay():
 	reward = 0
 	next_obs = [5, 9, 4]
 	done = False
-	
+
 	mem.append(obs, action, reward, next_obs, done)
-	
+
 	obs_s = [obs, obs, obs]
 	actions = [1, 2, 3]
 	rewards = [-2.2, 5, 4]
@@ -22,5 +21,5 @@ def test_experience_replay():
 	dones = [False, True, False]
 
 	mem.extend(obs_s, actions, rewards, next_obs_s, dones)
-	
+
 	mem.sample(2)
