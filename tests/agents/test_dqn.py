@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from gym.spaces import Discrete
 from torchforce.agents import DQN
 from torchforce.memories import ExperienceReplay
+from torchforce.explorations import Greedy
 
 class Network(nn.Module):
 	def __init__(self):
@@ -48,12 +49,18 @@ def test_dqn_agent_instantiation_error_optimizer():
 	memory = ExperienceReplay(max_size=5)
 
 	agent = DQN(Discrete(4), network, memory, optimizer="OPTIMIZER_ERROR")
+	
+def test_dqn_agent_instantiation_error_greedy_exploration():
+	network = Network()
+	memory = ExperienceReplay(max_size=5)
+
+	agent = DQN(Discrete(4), network, memory, greedy_exploration="GREEDY_EXPLORATION_ERROR")
 
 def test_dqn_agent_getaction():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
-	agent = DQN(Discrete(4), network, memory)
+	agent = DQN(Discrete(4), network, memory, greedy_exploration=Greedy())
 
 	observation = [0.0, 0.5, 1.]
 

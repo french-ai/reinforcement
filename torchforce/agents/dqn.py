@@ -5,11 +5,13 @@ import torch.nn.functional as F
 from gym.spaces import Discrete
 from torchforce.agents import AgentInterface
 from torchforce.memories import MemoryInterface
+from torchforce.explorations import GreedyExplorationInterface, EpsilonGreedy
+from random import randint
 
 
 class DQN(AgentInterface):
 
-	def __init__(self, action_space, neural_network, memory, step_train=2, batch_size=8, gamma=0.99, loss=None, optimizer=None):
+	def __init__(self, action_space, neural_network, memory, step_train=2, batch_size=8, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
 		
 		if not isinstance(action_space, Discrete):
 			raise TypeError("action_space need to be instance of gym.spaces.Space.Discrete, not :" + str(type(action_space)))
@@ -25,6 +27,9 @@ class DQN(AgentInterface):
 		
 		if optimizer is not None and not isinstance(optimizer, optim.Optimizer):
 			raise TypeError("optimizer need to be instance of torchforces.memories.MemoryInterface, not :" + str(type(optimizer)))
+
+		if greedy_exploration is not None and not isinstance(greedy_exploration, GreedyExplorationInterface):
+			raise TypeError("greedy_exploration need to be instance of torchforces.explorations.GreedyExplorationInterface, not :" + str(type(greedy_exploration)))
 
 		self.action_space = action_space
 		self.neural_network = neural_network
@@ -46,7 +51,16 @@ class DQN(AgentInterface):
 		else:
 			self.optimizer = optimizer
 
+		if greedy_exploration is None:
+			self.greedy_exploration = EpsilonGreedy(0.1)
+		else:
+			self.greedy_exploration = greedy_exploration
+
 	def get_action(self, observation):
+
+		if not self.greedy_exploration.be_greedy():
+			return self.action_space.sample()
+
 		observation = torch.tensor(observation)
 		observation = observation.view(1, -1)
 		
@@ -55,9 +69,9 @@ class DQN(AgentInterface):
 	def learn(self, observation, action, reward, next_observation, done) -> None:
 
 		self.memory.append(observation, action, reward, next_observation, done)
-		self.step = (self.step + 1) % self.step_train
+		self.step += 1
 
-		if self.step == 0:
+		if (self.step % self.step_train) == 0:
 			self.train()
 
 	def episode_finished(self) -> None:
