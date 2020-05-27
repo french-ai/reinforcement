@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from torchforce.memories import MemoryInterface
 
 
@@ -23,11 +24,11 @@ class ExperienceReplay(MemoryInterface):
 
 		if len_datas > self.max_size:
 			datas = datas[-self.max_size:]
-			len_datas = self.max_size
-
+			len_datas = self.max_size		
+			
 		datas[:, 0] = [np.array(observation) for observation in datas[:, 0]]
 		datas[:, 3] = [np.array(next_observation) for next_observation in datas[:, 3]]
-
+		
 		idx_max = self.index + len_datas
 
 		if idx_max > self.max_size:
@@ -43,5 +44,4 @@ class ExperienceReplay(MemoryInterface):
 	def sample(self, batch_size):
 		idxs = np.random.randint(self.size, size = batch_size)
 		
-		return self.buffer[idxs].T
-	
+		return [torch.Tensor(list(V)) for V in self.buffer[idxs].T]
