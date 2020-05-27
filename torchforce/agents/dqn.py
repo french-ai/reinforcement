@@ -58,7 +58,7 @@ class DQN(AgentInterface):
 
 	def get_action(self, observation):
 
-		if not self.greedy_exploration.be_greedy():
+		if not self.greedy_exploration.be_greedy(self.step):
 			return self.action_space.sample()
 
 		observation = torch.tensor(observation)
