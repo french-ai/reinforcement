@@ -12,7 +12,7 @@ from torchforce.memories import ExperienceReplay
 class Network(nn.Module):
     def __init__(self):
         super(Network, self).__init__()
-        self.dense = nn.Linear(3, 4)
+        self.dense = nn.Linear(4, 4)
 
     def forward(self, x):
         x = self.dense(x)
@@ -106,7 +106,7 @@ def test_dqn_agent_getaction():
 
     agent = DQN(Discrete(4), Discrete(4), memory, neural_network=network, greedy_exploration=Greedy())
 
-    observation = [0.0, 0.5, 1.]
+    observation = [0, 1, 2]
 
     agent.get_action(observation)
 
@@ -117,7 +117,7 @@ def test_dqn_agent_getaction_non_greedy():
 
     agent = DQN(Discrete(4), Discrete(4), memory, neural_network=network, greedy_exploration=EpsilonGreedy(1.))
 
-    observation = [0.0, 0.5, 1.]
+    observation = [0, 1, 2]
 
     agent.get_action(observation)
 
