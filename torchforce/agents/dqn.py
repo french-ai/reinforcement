@@ -1,24 +1,26 @@
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
-from gym.spaces import Discrete, flatdim
+from gym.spaces import Discrete, Space, flatdim, flatten
 
 from torchforce.agents import AgentInterface
 from torchforce.explorations import GreedyExplorationInterface, EpsilonGreedy
+from torchforce.memories import ExperienceReplay
 from torchforce.memories import MemoryInterface
 from torchforce.networks import SimpleNetwork
 
 
 class DQN(AgentInterface):
 
-    def __init__(self, action_space, observation_space, memory, neural_network=None, step_train=2, batch_size=8,
+    def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_train=2,
+                 batch_size=8,
                  gamma=0.99, loss=None,
                  optimizer=None, greedy_exploration=None):
 
         if not isinstance(action_space, Discrete):
             raise TypeError(
                 "action_space need to be instance of gym.spaces.Space.Discrete, not :" + str(type(action_space)))
-        if not isinstance(observation_space, Discrete):
+        if not isinstance(observation_space, Space):
             raise TypeError(
                 "observation_space need to be instance of gym.spaces.Space.Discrete, not :" + str(
                     type(observation_space)))
@@ -48,6 +50,7 @@ class DQN(AgentInterface):
                 "greedy_exploration need to be instance of torchforces.explorations.GreedyExplorationInterface, not :" + str(
                     type(greedy_exploration)))
 
+        self.observation_space = observation_space
         self.action_space = action_space
         self.neural_network = neural_network
         self.memory = memory
@@ -78,10 +81,11 @@ class DQN(AgentInterface):
         if not self.greedy_exploration.be_greedy(self.step):
             return self.action_space.sample()
 
-        observation = torch.tensor(observation)
-        observation = observation.view(1, -1)
+        observation = torch.tensor([flatten(self.observation_space, observation)])
 
-        return torch.argmax(self.neural_network.forward(observation))
+        action_prob = self.neural_network.forward(observation)
+
+        return torch.argmax(action_prob).detach().numpy()
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
 
@@ -102,9 +106,10 @@ class DQN(AgentInterface):
                 1 - dones)
 
         actions_one_hot = F.one_hot(actions.to(torch.int64), num_classes=self.action_space.n)
-        q_predict = torch.max(self.neural_network.forward(observations) * actions_one_hot, dim=1)[0]
+        prob = self.neural_network.forward(observations) * actions_one_hot
+        q_predict = torch.max(prob, dim=1)
 
         self.optimizer.zero_grad()
-        loss = self.loss(q_predict, q)
+        loss = self.loss(q_predict[0], q)
         loss.backward()
         self.optimizer.step()

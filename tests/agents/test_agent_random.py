@@ -21,23 +21,23 @@ test_list = [dict_list, tuple_list, *base_list.values()]
 
 
 def test_agent_work_with_space():
-    for action_space in test_list:
-        AgentRandom(action_space=action_space)
+    for space in test_list:
+        AgentRandom(observation_space=space, action_space=space)
 
 
 def test_agent_get_action():
-    for action_space in test_list:
-        agent = AgentRandom(action_space=action_space)
+    for space in test_list:
+        agent = AgentRandom(observation_space=space, action_space=space)
         agent.get_action(None)
 
 
 def test_agent_learn():
-    for action_space in test_list:
-        agent = AgentRandom(action_space=action_space)
+    for space in test_list:
+        agent = AgentRandom(observation_space=space, action_space=space)
         agent.learn(None, None, None, None, None)
 
 
 def test_agent_episode_finished():
-    for action_space in test_list:
-        agent = AgentRandom(action_space=action_space)
+    for space in test_list:
+        agent = AgentRandom(observation_space=space, action_space=space)
         agent.episode_finished()

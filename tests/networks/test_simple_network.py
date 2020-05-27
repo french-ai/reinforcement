@@ -27,9 +27,8 @@ def test_simple_network_init():
 
 
 def test_forward():
-    list_work = [[(454), (874)],
-                 [(454, 54), (48, 44)],
+    list_work = [[(454, 54), (48, 44)],
                  [(454, 54, 45), (48, 44, 47)]]
     for ob, ac in list_work:
         simple_network = SimpleNetwork(observation_shape=ob, action_shape=ac)
-        simple_network.forward(torch.rand(ob))
+        simple_network.forward(torch.rand((1, *ob)))

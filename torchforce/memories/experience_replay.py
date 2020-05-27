@@ -6,7 +6,7 @@ from torchforce.memories import MemoryInterface
 
 class ExperienceReplay(MemoryInterface):
 
-    def __init__(self, max_size):
+    def __init__(self, max_size=300):
         self.max_size = max_size
         self.buffer = np.empty(shape=(self.max_size, 5), dtype=np.object)
         self.index = 0
@@ -18,7 +18,6 @@ class ExperienceReplay(MemoryInterface):
         self.size = min(self.size + 1, self.max_size)
 
     def extend(self, observations, actions, rewards, next_observations, dones):
-
         datas = np.array((observations, actions, rewards, next_observations, dones)).T
 
         len_datas = len(datas)

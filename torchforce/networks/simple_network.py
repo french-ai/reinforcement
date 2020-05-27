@@ -1,5 +1,4 @@
 import numpy as np
-import torch
 import torch.nn as nn
 
 from torchforce.networks import BaseNetwork
@@ -18,8 +17,8 @@ class SimpleNetwork(BaseNetwork):
         self.network.add_module("NetWorkSimple_Linear_Input", nn.Linear(np.prod(self.observation_space), 256))
         self.network.add_module("NetWorkSimple_Linear_1", nn.Linear(256, 256))
         self.network.add_module("NetWorkSimple_Linear_2", nn.Linear(256, 256))
-        self.network.add_module("NetWorkSimple_Linear_Ouput", nn.Linear(256, np.prod(self.observation_space)))
+        self.network.add_module("NetWorkSimple_Linear_Output", nn.Linear(256, np.prod(self.action_space)))
 
     def forward(self, observation):
-        x = torch.flatten(observation)
+        x = observation.view(observation.shape[0], -1)
         return self.network(x)
