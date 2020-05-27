@@ -36,7 +36,7 @@ class Trainer:
         env.render()
         action = agent.get_action(observation=observation)
         next_observation, reward, done, info = env.step(action)
-        agent.learn(observation, action, reward, next_observation)
+        agent.learn(observation, action, reward, next_observation, done)
         if logger:
             logger.add_steps(Record(reward))
         return next_observation, done, reward

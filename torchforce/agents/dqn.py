@@ -15,8 +15,9 @@ class DQN(AgentInterface):
 
 		return torch.argmax(self.neural_network.forward(observation))
 
-	def learn(self, observation, action, reward, next_observation) -> None:
-		print("TO BE IMPLEMENTED")
+	def learn(self, observation, action, reward, next_observation, done) -> None:
+
+		self.memory.append(observation, action, reward, next_observation, done)
 
 	def episode_finished(self) -> None:
 		print("TO BE IMPLEMENTED")
