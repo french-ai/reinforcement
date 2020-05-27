@@ -8,7 +8,7 @@ from torchforce.trainer import arg_to_agent
 
 def test_arg_to_agent():
     fail_list = ["dzdzqd", None, 123, 123.123, [], {}, object]
-    work_list = ["agent_random"]
+    work_list = ["agent_random", "dqn"]
 
     for agent in fail_list:
         with pytest.raises(ValueError):
@@ -40,7 +40,7 @@ class FakeEnv(gym.Env):
 
 class FakeAgent(AgentInterface):
 
-    def __init__(self, action_space):
+    def __init__(self, observation_space, action_space):
         self.get_action_done = 0
         self.learn_done = 0
         self.episode_finished_done = 0
@@ -86,7 +86,7 @@ def test_get_agent():
 
 def test_do_episode():
     fake_env = FakeEnv()
-    fake_agent = FakeAgent(action_space=None)
+    fake_agent = FakeAgent(observation_space=None, action_space=None)
     logger = FakeLogger()
 
     assert fake_agent.episode_finished_done == 0
@@ -105,7 +105,7 @@ def test_do_episode():
 
 def test_do_step():
     fake_env = FakeEnv()
-    fake_agent = FakeAgent(action_space=None)
+    fake_agent = FakeAgent(observation_space=None, action_space=None)
     logger = FakeLogger()
 
     assert fake_agent.get_action_done == 0 and fake_agent.learn_done == 0 and fake_agent.episode_finished_done == 0
@@ -128,7 +128,7 @@ def test_init_trainer():
     assert isinstance(trainer.environment, gym.Env)
     assert isinstance(trainer.logger, Logger)
 
-    trainer = Trainer(environment=FakeEnv(), agent=FakeAgent(action_space=None))
+    trainer = Trainer(environment=FakeEnv(), agent=FakeAgent(observation_space=None, action_space=None))
     assert isinstance(trainer.agent, AgentInterface) and not isinstance(trainer.agent, type(AgentInterface))
     assert isinstance(trainer.environment, gym.Env)
     assert isinstance(trainer.logger, Logger)
@@ -145,7 +145,7 @@ def test_trainer_train():
 
     for number_episode in test_list:
         fake_env = FakeEnv()
-        fake_agent = FakeAgent(action_space=None)
+        fake_agent = FakeAgent(observation_space=None, action_space=None)
         trainer = Trainer(environment=fake_env, agent=fake_agent)
 
         assert fake_agent.get_action_done == 0 and fake_agent.learn_done == 0 and fake_agent.episode_finished_done == 0
