@@ -128,7 +128,7 @@ def test_dqn_agent_learn():
 
     agent = DQN(Discrete(4), Discrete(4), memory, neural_network=network)
 
-    obs = [1, 2, 5]
+    obs = [1, 2, 5, 0]
     action = 0
     reward = 0
     next_obs = [5, 9, 4]
