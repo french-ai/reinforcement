@@ -1,12 +1,13 @@
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.optim as optim
 
 import pytest
 
 from gym.spaces import Discrete
 from torchforce.agents import DQN
 from torchforce.memories import ExperienceReplay
-from torchforce.explorations import Greedy
+from torchforce.explorations import Greedy, EpsilonGreedy
 
 class Network(nn.Module):
 	def __init__(self):
@@ -56,7 +57,7 @@ def test_dqn_agent_instantiation_error_optimizer():
 
 	with pytest.raises(TypeError):
 		agent = DQN(Discrete(4), network, memory, optimizer="OPTIMIZER_ERROR")
-	
+
 def test_dqn_agent_instantiation_error_greedy_exploration():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
@@ -64,11 +65,33 @@ def test_dqn_agent_instantiation_error_greedy_exploration():
 	with pytest.raises(TypeError):
 		agent = DQN(Discrete(4), network, memory, greedy_exploration="GREEDY_EXPLORATION_ERROR")
 
+def test_dqn_agent_instantiation_custom_loss():
+	network = Network()
+	memory = ExperienceReplay(max_size=5)
+
+	agent = DQN(Discrete(4), network, memory, loss=nn.MSELoss())
+		
+def test_dqn_agent_instantiation_custom_optimizer():
+	network = Network()
+	memory = ExperienceReplay(max_size=5)
+
+	agent = DQN(Discrete(4), network, memory, optimizer=optim.RMSprop(network.parameters()))
+
 def test_dqn_agent_getaction():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
 	agent = DQN(Discrete(4), network, memory, greedy_exploration=Greedy())
+
+	observation = [0.0, 0.5, 1.]
+
+	agent.get_action(observation)
+
+def test_dqn_agent_getaction_non_greedy():
+	network = Network()
+	memory = ExperienceReplay(max_size=5)
+
+	agent = DQN(Discrete(4), network, memory, greedy_exploration=EpsilonGreedy(1.))
 
 	observation = [0.0, 0.5, 1.]
 
