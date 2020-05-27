@@ -1,11 +1,9 @@
 import torch
+import torch.optim as optim
 import torch.nn.functional as F
 
 from gym.spaces import Discrete
 from torchforce.agents import AgentInterface
-
-import torch.optim as optim
-
 
 
 class DQN(AgentInterface):
