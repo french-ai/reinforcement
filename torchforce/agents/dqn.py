@@ -85,7 +85,7 @@ class DQN(AgentInterface):
 
         q_values = self.neural_network.forward(observation)
 
-        return torch.argmax(q_values).detach().numpy()
+        return torch.argmax(q_values).detach().item()
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
 
