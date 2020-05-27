@@ -13,7 +13,7 @@ class AgentRandom(AgentInterface):
     def get_action(self, observation):
         return self.action_space.sample()
 
-    def learn(self, observation, action, reward, next_observation) -> None:
+    def learn(self, observation, action, reward, next_observation, done) -> None:
         pass
 
     def episode_finished(self) -> None:

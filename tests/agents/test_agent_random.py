@@ -34,7 +34,7 @@ def test_agent_get_action():
 def test_agent_learn():
     for action_space in test_list:
         agent = AgentRandom(action_space=action_space)
-        agent.learn(None, None, None, None)
+        agent.learn(None, None, None, None, None)
 
 
 def test_agent_episode_finished():
