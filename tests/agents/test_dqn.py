@@ -131,7 +131,7 @@ def test_dqn_agent_learn():
     obs = [1, 2, 5, 0]
     action = 0
     reward = 0
-    next_obs = [5, 9, 4]
+    next_obs = [5, 9, 4, 0]
     done = False
 
     obs_s = [obs, obs, obs]
