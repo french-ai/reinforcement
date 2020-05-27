@@ -83,9 +83,9 @@ class DQN(AgentInterface):
 
         observation = torch.tensor([flatten(self.observation_space, observation)])
 
-        action_prob = self.neural_network.forward(observation)
+        q_values = self.neural_network.forward(observation)
 
-        return torch.argmax(action_prob).detach().numpy()
+        return torch.argmax(q_values).detach().numpy()
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
 
@@ -106,8 +106,8 @@ class DQN(AgentInterface):
                 1 - dones)
 
         actions_one_hot = F.one_hot(actions.to(torch.int64), num_classes=self.action_space.n)
-        prob = self.neural_network.forward(observations) * actions_one_hot
-        q_predict = torch.max(prob, dim=1)
+        q_values_predict = self.neural_network.forward(observations) * actions_one_hot
+        q_predict = torch.max(q_values_predict, dim=1)
 
         self.optimizer.zero_grad()
         loss = self.loss(q_predict[0], q)
