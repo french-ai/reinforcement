@@ -5,7 +5,7 @@ import torch.optim as optim
 import pytest
 
 from gym.spaces import Discrete
-from torchforce.agents import DQN
+from torchforce.agents import DoubleDQN
 from torchforce.memories import ExperienceReplay
 from torchforce.explorations import Greedy, EpsilonGreedy
 
@@ -19,89 +19,89 @@ class Network(nn.Module):
 		x = F.relu(x)
 		return x
 
-def test_dqn_agent_instantiation():
+def test_double_dqn_agent_instantiation():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
-	agent = DQN(Discrete(4), network, memory)
+	agent = DoubleDQN(Discrete(4), network, memory)
 
-def test_dqn_agent_instantiation_error_action_space():
-	network = Network()
-	memory = ExperienceReplay(max_size=5)
-
-	with pytest.raises(TypeError):
-		agent = DQN(None, network, memory)
-
-def test_dqn_agent_instantiation_error_neural_network():
-	memory = ExperienceReplay(max_size=5)
-
-	with pytest.raises(TypeError):
-		agent = DQN(Discrete(4), None, memory)
-
-def test_dqn_agent_instantiation_error_memory():
-	network = Network()
-
-	with pytest.raises(TypeError):
-		agent = DQN(Discrete(4), network, None)
-
-def test_dqn_agent_instantiation_error_loss():
+def test_double_dqn_agent_instantiation_error_action_space():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
 	with pytest.raises(TypeError):
-		agent = DQN(Discrete(4), network, memory, loss="LOSS_ERROR")
+		agent = DoubleDQN(None, network, memory)
 
-def test_dqn_agent_instantiation_error_optimizer():
+def test_double_dqn_agent_instantiation_error_neural_network():
+	memory = ExperienceReplay(max_size=5)
+
+	with pytest.raises(TypeError):
+		agent = DoubleDQN(Discrete(4), None, memory)
+
+def test_double_dqn_agent_instantiation_error_memory():
+	network = Network()
+
+	with pytest.raises(TypeError):
+		agent = DoubleDQN(Discrete(4), network, None)
+
+def test_double_dqn_agent_instantiation_error_loss():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
 	with pytest.raises(TypeError):
-		agent = DQN(Discrete(4), network, memory, optimizer="OPTIMIZER_ERROR")
+		agent = DoubleDQN(Discrete(4), network, memory, loss="LOSS_ERROR")
 
-def test_dqn_agent_instantiation_error_greedy_exploration():
+def test_double_dqn_agent_instantiation_error_optimizer():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
 	with pytest.raises(TypeError):
-		agent = DQN(Discrete(4), network, memory, greedy_exploration="GREEDY_EXPLORATION_ERROR")
+		agent = DoubleDQN(Discrete(4), network, memory, optimizer="OPTIMIZER_ERROR")
 
-def test_dqn_agent_instantiation_custom_loss():
+def test_double_dqn_agent_instantiation_error_greedy_exploration():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
-	agent = DQN(Discrete(4), network, memory, loss=nn.MSELoss())
+	with pytest.raises(TypeError):
+		agent = DoubleDQN(Discrete(4), network, memory, greedy_exploration="GREEDY_EXPLORATION_ERROR")
+
+def test_double_dqn_agent_instantiation_custom_loss():
+	network = Network()
+	memory = ExperienceReplay(max_size=5)
+
+	agent = DoubleDQN(Discrete(4), network, memory, loss=nn.MSELoss())
 		
-def test_dqn_agent_instantiation_custom_optimizer():
+def test_double_dqn_agent_instantiation_custom_optimizer():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
-	agent = DQN(Discrete(4), network, memory, optimizer=optim.RMSprop(network.parameters()))
+	agent = DoubleDQN(Discrete(4), network, memory, optimizer=optim.RMSprop(network.parameters()))
 
-def test_dqn_agent_getaction():
+def test_double_dqn_agent_getaction():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
-	agent = DQN(Discrete(4), network, memory, greedy_exploration=Greedy())
+	agent = DoubleDQN(Discrete(4), network, memory, greedy_exploration=Greedy())
 
 	observation = [0.0, 0.5, 1.]
 
 	agent.get_action(observation)
 
-def test_dqn_agent_getaction_non_greedy():
+def test_double_dqn_agent_getaction_non_greedy():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
-	agent = DQN(Discrete(4), network, memory, greedy_exploration=EpsilonGreedy(1.))
+	agent = DoubleDQN(Discrete(4), network, memory, greedy_exploration=EpsilonGreedy(1.))
 
 	observation = [0.0, 0.5, 1.]
 
 	agent.get_action(observation)
 
-def test_dqn_agent_learn():
+def test_double_dqn_agent_learn():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
-	agent = DQN(Discrete(4),network, memory)
+	agent = DoubleDQN(Discrete(4), network, memory, step_copy=2)
 	
 	obs = [1, 2, 5]
 	action = 0
@@ -120,9 +120,9 @@ def test_dqn_agent_learn():
 	agent.learn(obs, action, reward, next_obs, done)
 	agent.learn(obs, action, reward, next_obs, done)
 
-def test_dqn_agent_episode_finished():
+def test_double_dqn_agent_episode_finished():
 	network = Network()
 	memory = ExperienceReplay(max_size=5)
 
-	agent = DQN(Discrete(4),network, memory)
+	agent = DoubleDQN(Discrete(4),network, memory)
 	agent.episode_finished()
