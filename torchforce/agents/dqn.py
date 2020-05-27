@@ -4,14 +4,27 @@ import torch.nn.functional as F
 
 from gym.spaces import Discrete
 from torchforce.agents import AgentInterface
+from torchforce.memories import MemoryInterface
 
 
 class DQN(AgentInterface):
 
-	def __init__(self, action_space=None, neural_network=None, memory=None, step_train=2, batch_size=8, gamma=0.99, loss=None, optimizer=None):
+	def __init__(self, action_space, neural_network, memory, step_train=2, batch_size=8, gamma=0.99, loss=None, optimizer=None):
 		
 		if not isinstance(action_space, Discrete):
 			raise TypeError("action_space need to be instance of gym.spaces.Space.Discrete, not :" + str(type(action_space)))
+
+		if not isinstance(neural_network, torch.nn.Module):
+			raise TypeError("neural_network need to be instance of torch.nn.Module, not :" + str(type(neural_network)))
+				
+		if not isinstance(memory, MemoryInterface):
+			raise TypeError("memory need to be instance of torchforces.memories.MemoryInterface, not :" + str(type(memory)))
+		
+		if loss is not None and not isinstance(loss, torch.nn.Module):
+			raise TypeError("loss need to be instance of torchforces.memories.MemoryInterface, not :" + str(type(loss)))
+		
+		if optimizer is not None and not isinstance(optimizer, optim.Optimizer):
+			raise TypeError("optimizer need to be instance of torchforces.memories.MemoryInterface, not :" + str(type(optimizer)))
 
 		self.action_space = action_space
 		self.neural_network = neural_network
