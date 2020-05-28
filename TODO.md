@@ -3,18 +3,18 @@
 # ToDo list
 
 - [x] Update [requirements.txt](./requirements.txt)
-- [ ] Design the architecture of code
+- [x] Design the architecture of code
 - [x] Choice test tool and init them
 - [ ] Choice docs tool and init this 
 - [x] Config codecov
 - [x] Config codefactor
-- [ ] Create Code style standard and document it in [CONTRIBUTING.md](./CONTRIBUTING.md)
+- [x] Create Code style standard and document it in [CONTRIBUTING.md](./CONTRIBUTING.md)
 - [x] List Agents for starting project
-- [ ] List Environments for start project
+- [x] List Environments for start project
 
 # Agents list
 
-- [ ] Random Agent
+- [x] Random Agent
 - [ ] Deep Q Network (Mnih *et al.*, [2013](https://arxiv.org/abs/1312.5602))
 - [ ] Deep Recurrent Q Network (Hausknecht *et al.*, [2015](https://arxiv.org/abs/1507.06527))
 - [ ] Persistent Advantage Learning (Bellamare *et al.*, [2015](https://arxiv.org/abs/1512.04860))
@@ -30,7 +30,7 @@
 # Explorations list
 
 - [ ] Random
-- [ ] Epsilon Greedy
+- [x] Epsilon Greedy
 - [ ] Intrinsic Curiosity Module (Pathak *et al.*, [2017](https://arxiv.org/abs/1705.05363))
 - [ ] Random Network Distillation (Burda *et al.*, [2017](https://arxiv.org/abs/1810.12894))
 
@@ -44,4 +44,4 @@
 
 # Environments list
 
-- [ ] Gym CartPole
+- [x] Gym CartPole
