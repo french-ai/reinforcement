@@ -12,6 +12,13 @@ from torchforce.memories import MemoryInterface
 
 class DoubleDQN(AgentInterface):
 
+    def save(self, save_dir="."):
+        pass
+
+    @classmethod
+    def load(cls, file):
+        pass
+
     def __init__(self, action_space, neural_network, memory, step_copy=1000, step_train=2, batch_size=8, gamma=0.99,
                  loss=None, optimizer=None, greedy_exploration=None):
 

@@ -1,3 +1,5 @@
+from abc import ABCMeta
+
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
@@ -10,11 +12,17 @@ from torchforce.memories import MemoryInterface
 from torchforce.networks import SimpleNetwork
 
 
-class DQN(AgentInterface):
+class DQN(AgentInterface, metaclass=ABCMeta):
+
+    def save(self, save_dir="."):
+        pass
+
+    @classmethod
+    def load(cls, file):
+        pass
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_train=2,
                  batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
-
 
         if not isinstance(action_space, Discrete):
             raise TypeError(

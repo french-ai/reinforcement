@@ -40,6 +40,13 @@ class FakeEnv(gym.Env):
 
 class FakeAgent(AgentInterface):
 
+    def save(self, save_dir="."):
+        pass
+
+    @classmethod
+    def load(cls, file):
+        pass
+
     def __init__(self, observation_space, action_space):
         self.get_action_done = 0
         self.learn_done = 0

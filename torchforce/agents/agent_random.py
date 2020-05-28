@@ -5,6 +5,13 @@ from torchforce.agents import AgentInterface
 
 class AgentRandom(AgentInterface):
 
+    def save(self, save_dir="."):
+        pass
+
+    @classmethod
+    def load(cls, file):
+        pass
+
     def __init__(self, observation_space, action_space):
         if not isinstance(action_space, Space):
             raise TypeError("action_space need to be instance of gym.spaces.Space, not :" + str(type(action_space)))
