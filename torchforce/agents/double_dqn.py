@@ -3,22 +3,34 @@ from copy import deepcopy
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
-from gym.spaces import Discrete
+from gym.spaces import Discrete, Space, flatdim, flatten
 
 from torchforce.agents import AgentInterface
 from torchforce.explorations import GreedyExplorationInterface, EpsilonGreedy
-from torchforce.memories import MemoryInterface
+from torchforce.memories import MemoryInterface, ExperienceReplay
+from torchforce.networks import SimpleNetwork
 
 
 class DoubleDQN(AgentInterface):
 
-    def __init__(self, action_space, neural_network, memory, step_copy=1000, step_train=2, batch_size=8, gamma=0.99,
+    def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network = None, step_copy=500, step_train=32, batch_size=8, gamma=0.99,
                  loss=None, optimizer=None, greedy_exploration=None):
 
         if not isinstance(action_space, Discrete):
             raise TypeError(
                 "action_space need to be instance of gym.spaces.Space.Discrete, not :" + str(type(action_space)))
+        
+        if not isinstance(observation_space, Space):
+            raise TypeError(
+                "observation_space need to be instance of gym.spaces.Space.Discrete, not :" + str(
+                    type(observation_space)))
 
+        if neural_network is None and optimizer is not None:
+            raise TypeError("If neural_network is None, optimizer need to be None not " + str(type(optimizer)))
+
+        if neural_network is None:
+            neural_network = SimpleNetwork(observation_shape=flatdim(observation_space),
+                                           action_shape=flatdim(action_space))
         if not isinstance(neural_network, torch.nn.Module):
             raise TypeError("neural_network need to be instance of torch.nn.Module, not :" + str(type(neural_network)))
 
@@ -39,6 +51,7 @@ class DoubleDQN(AgentInterface):
                     type(greedy_exploration)))
 
         self.action_space = action_space
+        self.observation_space = observation_space
         self.neural_network_online = neural_network
         self.neural_network_target = deepcopy(neural_network)
         self.copy_online_to_target()
@@ -57,7 +70,7 @@ class DoubleDQN(AgentInterface):
             self.loss = loss
 
         if optimizer is None:
-            self.optimizer = optim.RMSprop(self.neural_network_online.parameters())
+            self.optimizer = optim.RMSprop(self.neural_network_online.parameters(), lr=0.00025, momentum=0.95)
         else:
             self.optimizer = optimizer
 
@@ -71,10 +84,11 @@ class DoubleDQN(AgentInterface):
         if not self.greedy_exploration.be_greedy(self.step):
             return self.action_space.sample()
 
-        observation = torch.tensor(observation)
-        observation = observation.view(1, -1)
+        observation = torch.tensor([flatten(self.observation_space, observation)])
 
-        return torch.argmax(self.neural_network_online.forward(observation))
+        q_values = self.neural_network_online.forward(observation)
+
+        return torch.argmax(q_values).detach().item()
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
 
