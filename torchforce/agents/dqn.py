@@ -13,7 +13,7 @@ from torchforce.networks import SimpleNetwork
 class DQN(AgentInterface):
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_train=2,
-                 batch_size=8,
+                 batch_size=32,
                  gamma=0.99, loss=None,
                  optimizer=None, greedy_exploration=None):
 
@@ -67,7 +67,7 @@ class DQN(AgentInterface):
             self.loss = loss
 
         if optimizer is None:
-            self.optimizer = optim.RMSprop(self.neural_network.parameters())
+            self.optimizer = optim.SGD(self.neural_network.parameters())
         else:
             self.optimizer = optimizer
 
