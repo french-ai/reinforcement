@@ -35,6 +35,12 @@ def test_double_dqn_agent_instantiation_error_action_space():
     with pytest.raises(TypeError):
         agent = DoubleDQN("ACTION_SPACE_ERROR", Discrete(3), neural_network=network, memory=memory)
 
+def test_double_dqn_agent_instantiation_error_observation_space():
+    network = Network()
+    memory = ExperienceReplay(max_size=5)
+
+    with pytest.raises(TypeError):
+        DQN(Discrete(1), "OBSERVATION_SPACE_ERROR", neural_network=network, memory=memory)
 
 def test_double_dqn_agent_instantiation_error_neural_network():
     memory = ExperienceReplay(max_size=5)
