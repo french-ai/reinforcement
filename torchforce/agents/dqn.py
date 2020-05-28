@@ -15,6 +15,7 @@ class DQN(AgentInterface):
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_train=2,
                  batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
 
+
         if not isinstance(action_space, Discrete):
             raise TypeError(
                 "action_space need to be instance of gym.spaces.Space.Discrete, not :" + str(type(action_space)))
@@ -65,7 +66,7 @@ class DQN(AgentInterface):
             self.loss = loss
 
         if optimizer is None:
-            self.optimizer = optim.RMSprop(self.neural_network.parameters())
+            self.optimizer = optim.SGD(self.neural_network.parameters(), lr=0.01)
         else:
             self.optimizer = optimizer
 
