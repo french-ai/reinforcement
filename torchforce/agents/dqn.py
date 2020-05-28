@@ -5,8 +5,7 @@ from gym.spaces import Discrete, Space, flatdim, flatten
 
 from torchforce.agents import AgentInterface
 from torchforce.explorations import GreedyExplorationInterface, EpsilonGreedy
-from torchforce.memories import ExperienceReplay
-from torchforce.memories import MemoryInterface
+from torchforce.memories import MemoryInterface, ExperienceReplay
 from torchforce.networks import SimpleNetwork
 
 
