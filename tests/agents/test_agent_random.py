@@ -9,7 +9,11 @@ def test_agent_don_t_work_with_no_space():
     test_list = [1, 100, "100", "somethink", [], dict(), 0.0, 1245.215, None]
     for action_space in test_list:
         with pytest.raises(TypeError):
-            AgentRandom(action_space=action_space)
+            AgentRandom(observation_space=Discrete(1), action_space=action_space)
+
+    for observation_space in test_list:
+        with pytest.raises(TypeError):
+            AgentRandom(observation_space=observation_space, action_space=Discrete(1))
 
 
 base_list = {"box": Box(low=-1.0, high=2.0, shape=(3, 4), dtype=np.float32), "discrete": Discrete(3),
