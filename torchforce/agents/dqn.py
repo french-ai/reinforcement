@@ -13,13 +13,6 @@ from torchforce.networks import SimpleNetwork
 
 class DQN(AgentInterface, metaclass=ABCMeta):
 
-    def save(self, save_dir="."):
-        pass
-
-    @classmethod
-    def load(cls, file):
-        pass
-
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_train=2,
                  batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
 
@@ -119,3 +112,10 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         loss = self.loss(q_predict[0], q)
         loss.backward()
         self.optimizer.step()
+
+    def save(self, save_dir="."):
+        pass
+
+    @classmethod
+    def load(cls, file):
+        pass
