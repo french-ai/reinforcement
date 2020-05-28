@@ -7,8 +7,7 @@ from gym.spaces import Discrete, Space, flatdim, flatten
 
 from torchforce.agents import AgentInterface
 from torchforce.explorations import GreedyExplorationInterface, EpsilonGreedy
-from torchforce.memories import ExperienceReplay
-from torchforce.memories import MemoryInterface
+from torchforce.memories import MemoryInterface, ExperienceReplay
 from torchforce.networks import SimpleNetwork
 
 
@@ -95,7 +94,7 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         return torch.argmax(q_values).detach().item()
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
-
+        
         self.memory.append(observation, action, reward, next_observation, done)
         self.step += 1
 
