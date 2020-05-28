@@ -14,7 +14,6 @@ class DQN(AgentInterface):
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_train=2,
                  batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
 
-
         if not isinstance(action_space, Discrete):
             raise TypeError(
                 "action_space need to be instance of gym.spaces.Space.Discrete, not :" + str(type(action_space)))
@@ -86,7 +85,7 @@ class DQN(AgentInterface):
         return torch.argmax(q_values).detach().item()
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
-
+        
         self.memory.append(observation, action, reward, next_observation, done)
         self.step += 1
 
