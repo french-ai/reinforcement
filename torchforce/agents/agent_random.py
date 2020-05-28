@@ -5,9 +5,12 @@ from torchforce.agents import AgentInterface
 
 class AgentRandom(AgentInterface):
 
-    def __init__(self, action_space):
+    def __init__(self, observation_space, action_space):
         if not isinstance(action_space, Space):
             raise TypeError("action_space need to be instance of gym.spaces.Space, not :" + str(type(action_space)))
+        if not isinstance(observation_space, Space):
+            raise TypeError(
+                "observation_space need to be instance of gym.spaces.Space, not :" + str(type(observation_space)))
         self.action_space = action_space
 
     def get_action(self, observation):

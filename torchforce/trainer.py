@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 import gym
 
 from torchforce import Logger, Record
-from torchforce.agents import AgentInterface, AgentRandom
+from torchforce.agents import AgentInterface, AgentRandom, DQN
 
 
 class Trainer:
@@ -11,7 +11,8 @@ class Trainer:
         self.environment = environment
         if isinstance(agent, type(AgentInterface)):
             action_space = self.get_environment(environment).action_space
-            self.agent = agent(action_space=action_space)
+            observation_space = self.get_environment(environment).observation_space
+            self.agent = agent(observation_space=observation_space, action_space=action_space)
         elif isinstance(agent, AgentInterface):
             import warnings
             warnings.warn("be sure of agent have good input and output dimension")
@@ -32,8 +33,9 @@ class Trainer:
         raise ValueError("this env (" + str(arg_env) + ") is not supported")
 
     @classmethod
-    def do_step(cls, observation, env, agent, logger=None):
-        env.render()
+    def do_step(cls, observation, env, agent, logger=None, render=True):
+        if render:
+            env.render()
         action = agent.get_action(observation=observation)
         next_observation, reward, done, info = env.step(action)
         agent.learn(observation, action, reward, next_observation, done)
@@ -42,12 +44,13 @@ class Trainer:
         return next_observation, done, reward
 
     @classmethod
-    def do_episode(cls, env, agent, logger=None):
+    def do_episode(cls, env, agent, logger=None, render=True):
         observation = env.reset()
         done = False
         ite = 1
         while not done:
-            observation, done, reward = Trainer.do_step(observation=observation, env=env, agent=agent, logger=logger)
+            observation, done, reward = Trainer.do_step(observation=observation, env=env, agent=agent, logger=logger,
+                                                        render=render)
             ite += 1
         print("Episode finished after {} timesteps".format(ite))
         agent.episode_finished()
@@ -64,14 +67,18 @@ class Trainer:
 def arg_to_agent(arg_agent) -> AgentInterface:
     if arg_agent == "agent_random":
         return AgentRandom
+    if arg_agent == "dqn":
+        return DQN
     raise ValueError("this agent (" + str(arg_agent) + ") is not implemented")
 
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument('agent', type=str, help='name of Agent', nargs='?', const=1, default="agent_random")
-    parser.add_argument('env', type=str, help='name of environment', nargs='?', const=1, default="CartPole-v1")
-    parser.add_argument('max_episode', type=int, help='number of episode for train', nargs='?', const=1, default=100)
+    parser.add_argument('--agent', type=str, help='name of Agent', nargs='?', const=1, default="agent_random")
+    parser.add_argument('--env', type=str, help='name of environment', nargs='?', const=1, default="CartPole-v1")
+    parser.add_argument('--max_episode', type=int, help='number of episode for train', nargs='?', const=1, default=100)
+    parser.add_argument('--render', type=bool, help='if show render on each step or not', nargs='?', const=1,
+                        default=True)
     args = parser.parse_args()
 
     trainer = Trainer(environment=args.env, agent=arg_to_agent(args.agent))
