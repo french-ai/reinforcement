@@ -16,7 +16,7 @@ class DoubleDQN(DQN):
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network = None, step_copy=500, step_train=2, batch_size=32, gamma=0.99,
                  loss=None, optimizer=None, greedy_exploration=None):
 
-        super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma)
+        super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss, optimizer, greedy_exploration)
         
         self.neural_network_target = deepcopy(self.neural_network)
         self.copy_online_to_target()
