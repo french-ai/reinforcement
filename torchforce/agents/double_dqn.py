@@ -20,7 +20,6 @@ class DoubleDQN(DQN):
         
         self.neural_network_target = deepcopy(self.neural_network)
         self.copy_online_to_target()
-        self.memory = memory
 
         self.step_copy = step_copy
 
