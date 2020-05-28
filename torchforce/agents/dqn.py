@@ -113,9 +113,9 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         loss.backward()
         self.optimizer.step()
 
-    def save(self, save_dir="."):
+    def save(self, file_name, dire_name="."):
         pass
 
     @classmethod
-    def load(cls, file):
+    def load(cls, file_name, dire_name="."):
         pass

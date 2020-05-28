@@ -26,7 +26,9 @@ test_list = [dict_list, tuple_list, *base_list.values()]
 
 def test_agent_work_with_space():
     for space in test_list:
-        AgentRandom(observation_space=space, action_space=space)
+        agent = AgentRandom(observation_space=space, action_space=space)
+        assert agent.observation_space == space
+        assert agent.action_space == space
 
 
 def test_agent_get_action():
@@ -45,3 +47,13 @@ def test_agent_episode_finished():
     for space in test_list:
         agent = AgentRandom(observation_space=space, action_space=space)
         agent.episode_finished()
+
+
+def test_agent_save_load():
+    agent = AgentRandom(observation_space=Discrete(1), action_space=Discrete(1))
+
+    agent.save(file_name="deed.pt")
+    agent_l = AgentRandom.load(file_name="deed.pt")
+
+    assert agent.observation_space == agent_l.observation_space
+    assert agent.action_space == agent_l.action_space

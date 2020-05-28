@@ -16,10 +16,10 @@ class AgentInterface(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def save(self, save_dir="."):
+    def save(self, file_name, dire_name="."):
         pass
 
     @classmethod
     @abc.abstractmethod
-    def load(cls, file):
+    def load(cls, file_name, dire_name="."):
         pass

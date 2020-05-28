@@ -1,3 +1,6 @@
+import pickle
+
+import torch
 from gym.spaces import Space
 
 from torchforce.agents import AgentInterface
@@ -12,6 +15,7 @@ class AgentRandom(AgentInterface):
             raise TypeError(
                 "observation_space need to be instance of gym.spaces.Space, not :" + str(type(observation_space)))
         self.action_space = action_space
+        self.observation_space = observation_space
 
     def get_action(self, observation):
         return self.action_space.sample()
@@ -22,9 +26,13 @@ class AgentRandom(AgentInterface):
     def episode_finished(self) -> None:
         pass
 
-    def save(self, save_dir="."):
-        pass
+    def save(self, file_name, dire_name="."):
+        dict_save = {"observation_space": pickle.dumps(self.observation_space),
+                     "action_space": pickle.dumps(self.action_space)}
+        torch.save(dict_save, file_name)
 
     @classmethod
-    def load(cls, file):
-        pass
+    def load(cls, file_name, dire_name="."):
+        dict_save = torch.load(file_name)
+        return AgentRandom(observation_space=pickle.loads(dict_save["observation_space"]),
+                           action_space=pickle.loads(dict_save["action_space"]))
