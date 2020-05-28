@@ -13,9 +13,7 @@ from torchforce.networks import SimpleNetwork
 class DQN(AgentInterface):
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_train=2,
-                 batch_size=8,
-                 gamma=0.99, loss=None,
-                 optimizer=None, greedy_exploration=None):
+                 batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
 
         if not isinstance(action_space, Discrete):
             raise TypeError(
