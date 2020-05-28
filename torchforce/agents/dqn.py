@@ -67,7 +67,7 @@ class DQN(AgentInterface):
             self.loss = loss
 
         if optimizer is None:
-            self.optimizer = optim.SGD(self.neural_network.parameters())
+            self.optimizer = optim.SGD(self.neural_network.parameters(), lr=0.01)
         else:
             self.optimizer = optimizer
 
