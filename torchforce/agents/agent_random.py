@@ -27,8 +27,9 @@ class AgentRandom(AgentInterface):
         pass
 
     def save(self, file_name, dire_name="."):
-        dict_save = {"observation_space": pickle.dumps(self.observation_space),
-                     "action_space": pickle.dumps(self.action_space)}
+        dict_save = dict()
+        dict_save["observation_space"] = pickle.dumps(self.observation_space)
+        dict_save["action_space"] = pickle.dumps(self.observation_space)
         torch.save(dict_save, file_name)
 
     @classmethod
