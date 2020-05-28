@@ -121,6 +121,11 @@ def test_do_step():
     assert fake_env.step_done == 2 and fake_env.reset_done == 0 and fake_env.render_done == 2
     assert logger.add_steps_call == 1 and logger.add_episode_call == 0 and logger.end_episode_call == 0
 
+    Trainer.do_step(observation=None, env=fake_env, agent=fake_agent, render=False)
+    assert fake_agent.get_action_done == 3 and fake_agent.learn_done == 3 and fake_agent.episode_finished_done == 0
+    assert fake_env.step_done == 3 and fake_env.reset_done == 0 and fake_env.render_done == 2
+    assert logger.add_steps_call == 1 and logger.add_episode_call == 0 and logger.end_episode_call == 0
+
 
 def test_init_trainer():
     trainer = Trainer(environment=FakeEnv(), agent=FakeAgent)
