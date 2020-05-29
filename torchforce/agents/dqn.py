@@ -1,3 +1,5 @@
+import os
+import pickle
 from abc import ABCMeta
 
 import torch
@@ -87,7 +89,7 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         return torch.argmax(q_values).detach().item()
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
-        
+
         self.memory.append(observation, action, reward, next_observation, done)
         self.step += 1
 
@@ -114,8 +116,38 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         self.optimizer.step()
 
     def save(self, file_name, dire_name="."):
-        pass
+
+        os.makedirs(os.path.abspath(dire_name), exist_ok=True)
+
+        dict_save = dict()
+        dict_save["observation_space"] = pickle.dumps(self.observation_space)
+        dict_save["action_space"] = pickle.dumps(self.action_space)
+        dict_save["neural_network_class"] = pickle.dumps(type(self.neural_network))
+        dict_save["neural_network"] = self.neural_network.state_dict()
+        dict_save["step_train"] = pickle.dumps(self.step_train)
+        dict_save["batch_size"] = pickle.dumps(self.batch_size)
+        dict_save["gamma"] = pickle.dumps(self.gamma)
+        dict_save["loss"] = pickle.dumps(self.loss)
+        dict_save["optimizer"] = pickle.dumps(self.optimizer)
+        dict_save["greedy_exploration"] = pickle.dumps(self.greedy_exploration)
+
+        torch.save(dict_save, os.path.abspath(os.path.join(dire_name, file_name)))
 
     @classmethod
     def load(cls, file_name, dire_name="."):
-        pass
+        dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
+
+        neural_network = pickle.loads(dict_save["neural_network_class"])(
+            observation_shape=flatdim(pickle.loads(dict_save["observation_space"])),
+            action_shape=flatdim(pickle.loads(dict_save["action_space"])))
+        neural_network.load_state_dict(dict_save["neural_network"])
+
+        return DQN(observation_space=pickle.loads(dict_save["observation_space"]),
+                   action_space=pickle.loads(dict_save["action_space"]),
+                   neural_network=neural_network,
+                   step_train=pickle.loads(dict_save["step_train"]),
+                   batch_size=pickle.loads(dict_save["batch_size"]),
+                   gamma=pickle.loads(dict_save["gamma"]),
+                   loss=pickle.loads(dict_save["loss"]),
+                   optimizer=pickle.loads(dict_save["optimizer"]),
+                   greedy_exploration=pickle.loads(dict_save["greedy_exploration"]))

@@ -33,7 +33,7 @@ class AgentRandom(AgentInterface):
 
         dict_save = dict()
         dict_save["observation_space"] = pickle.dumps(self.observation_space)
-        dict_save["action_space"] = pickle.dumps(self.observation_space)
+        dict_save["action_space"] = pickle.dumps(self.action_space)
 
         torch.save(dict_save, os.path.abspath(os.path.join(dire_name, file_name)))
 

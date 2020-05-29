@@ -1,17 +1,22 @@
+import os
+
+import numpy as np
 import pytest
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from gym.spaces import Discrete
+from gym.spaces import *
 
 from torchforce.agents import DQN
 from torchforce.explorations import Greedy, EpsilonGreedy
 from torchforce.memories import ExperienceReplay
+from torchforce.networks import BaseNetwork
 
 
-class Network(nn.Module):
-    def __init__(self):
-        super(Network, self).__init__()
+class Network(BaseNetwork):
+    def __init__(self, observation_shape=None, action_shape=None):
+        super().__init__(observation_shape, action_shape)
         self.dense = nn.Linear(4, 4)
 
     def forward(self, x):
@@ -152,3 +157,66 @@ def test_dqn_agent_episode_finished():
 
     agent = DQN(Discrete(4), Discrete(4), memory, neural_network=network)
     agent.episode_finished()
+
+
+base_list = {"box": Box(low=-1.0, high=2.0, shape=(3, 4), dtype=np.float32), "discrete": Discrete(3),
+             "multibinary": MultiBinary(10), "multidiscrete": MultiDiscrete(10)}
+dict_list = Dict(base_list)
+tuple_list = Tuple(list(base_list.values()))
+
+test_list = [*base_list.values(), dict_list, tuple_list]
+
+
+def test_agent_save_load():
+    for space in test_list:
+        agent = DQN(observation_space=space, action_space=Discrete(2))
+
+        agent.save(file_name="deed.pt")
+        agent_l = DQN.load(file_name="deed.pt")
+
+        assert agent.observation_space == agent_l.observation_space
+        assert Discrete(2) == agent_l.action_space
+        os.remove("deed.pt")
+
+    network = Network()
+
+    agent = DQN(observation_space=space, action_space=Discrete(2), memory=ExperienceReplay(), neural_network=network,
+                step_train=3, batch_size=12, gamma=0.50, loss=None, optimizer=torch.optim.Adam(network.parameters()),
+                greedy_exploration=EpsilonGreedy(0.2))
+
+    agent.save(file_name="deed.pt")
+    agent_l = DQN.load(file_name="deed.pt")
+
+    os.remove("deed.pt")
+
+    assert agent.observation_space == agent_l.observation_space
+    assert Discrete(2) == agent_l.action_space
+    assert type(agent.neural_network) == type(agent_l.neural_network)
+    for a, b in zip(agent.neural_network.state_dict(), agent_l.neural_network.state_dict()):
+        assert a == b
+    assert agent.step_train == agent_l.step_train
+    assert agent.batch_size == agent_l.batch_size
+    assert agent.gamma == agent_l.gamma
+    assert type(agent.loss) == type(agent_l.loss)
+    for a, b in zip(agent.loss.parameters(), agent_l.loss.parameters()):
+        assert a == b
+    assert type(agent.optimizer) == type(agent_l.optimizer)
+    for a, b in zip(agent.optimizer.state_dict(), agent_l.optimizer.state_dict()):
+        assert a == b
+    assert type(agent.greedy_exploration) == type(agent_l.greedy_exploration)
+
+    agent = DQN(observation_space=space, action_space=Discrete(2))
+    agent.save(file_name="deed.pt", dire_name="./remove/")
+
+    os.remove("./remove/deed.pt")
+    os.rmdir("./remove/")
+
+    with pytest.raises(TypeError):
+        agent.save(file_name=14548)
+    with pytest.raises(TypeError):
+        agent.save(file_name="deed.pt", dire_name=14484)
+
+    with pytest.raises(FileNotFoundError):
+        DQN.load(file_name="deed.pt")
+    with pytest.raises(FileNotFoundError):
+        DQN.load(file_name="deed.pt", dire_name="/Dede/")
