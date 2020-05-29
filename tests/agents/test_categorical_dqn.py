@@ -7,6 +7,7 @@ from gym.spaces import Discrete, Box
 from torchforce.agents import CategoricalDQN
 from torchforce.explorations import Greedy, EpsilonGreedy
 from torchforce.memories import ExperienceReplay
+from torchforce.networks import C51Network
 
 def test_categorical_dqn_agent_instantiation():
 
@@ -55,17 +56,14 @@ def test_categorical_dqn_agent_instantiation_error_greedy_exploration():
         CategoricalDQN(Discrete(4), Discrete(4), greedy_exploration="GREEDY_EXPLORATION_ERROR")
 
 
-def test_categorical_dqn_agent_instantiation_custom_loss():
-
-    CategoricalDQN(Discrete(4), Discrete(4), loss=nn.CrossEntropyLoss())
-
-
 def test_categorical_dqn_agent_instantiation_custom_optimizer():
 
-    CategoricalDQN(Discrete(4), Discrete(4), optimizer=optim.RMSprop(network.parameters()))
+    c51 = C51Network((1), (1))
+
+    CategoricalDQN(Discrete(4), Discrete(4), neural_network=c51, optimizer=optim.RMSprop(c51.parameters()))
 
     with pytest.raises(TypeError):
-        CategoricalDQN(Discrete(4), Discrete(4), neural_network=None, optimizer=optim.RMSprop(network.parameters()))
+        CategoricalDQN(Discrete(4), Discrete(4), neural_network=None, optimizer=optim.RMSprop(c51.parameters()))
 
 
 def test_categorical_dqn_agent_getaction():
