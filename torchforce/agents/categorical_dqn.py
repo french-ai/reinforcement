@@ -48,9 +48,10 @@ class CategoricalDQN(DQN):
 
     def train(self):
         
-        self.batch_size = 3
         observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size)
-
+        
+        actions = actions.int()
+        
         predictions_next = self.neural_network.forward(next_observations).detach()
         q_values_next = predictions_next * self.z
         q_values_next = torch.sum(q_values_next, dim=2)
@@ -62,16 +63,17 @@ class CategoricalDQN(DQN):
         for sample_i in range(self.batch_size):
             done = dones[sample_i]
             for j in range(self.num_atoms):
-                Tzj = torch.clamp(rewards[sample_i] + self.gamma * self.z[j] * (1 - done), self.r_min, self.r_max)
-                bj = (Tzj - self.r_min) / self.delta_z
-                l, u = floor(bj), ceil(bj)
-                m_prob[sample_i][l] += (done + (1 - done) * predictions_next[sample_i][actions_next[sample_i]][j] * (u - bj))
-                m_prob[sample_i][u] += (done + (1 - done) * predictions_next[sample_i][actions_next[sample_i]][j] * (bj - l))
-
-            if done:
-                break
-
+                                
+               Tzj = torch.clamp(rewards[sample_i] + self.gamma * self.z[j] * (1 - done), self.r_min, self.r_max)
+               bj = (Tzj - self.r_min) / self.delta_z
+               l, u = floor(bj), ceil(bj)
+                
+               m_prob[sample_i][actions[sample_i].item()][l] += (done + (1 - done) * predictions_next[sample_i][actions_next[sample_i]][j]) * (u - bj)
+               m_prob[sample_i][actions[sample_i].item()][u] += (done + (1 - done) * predictions_next[sample_i][actions_next[sample_i]][j]) * (bj - l)
+               
         self.optimizer.zero_grad()
-        loss = self.loss(q_predict[0], m_prob)
-        loss.backward()
+        predictions = self.neural_network.forward(observations)
+        loss = - predictions.log() * m_prob
+        loss.sum().backward()
+        
         self.optimizer.step()
