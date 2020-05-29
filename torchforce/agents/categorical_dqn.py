@@ -12,10 +12,12 @@ from torchforce.memories import MemoryInterface, ExperienceReplay
 from torchforce.networks import C51Network
 
 
-class DistributionalDQN(DQN):
+class CategoricalDQN(DQN):
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network = None, num_atoms=51, r_min=-2, r_max=2, step_train=2, batch_size=32, gamma=0.99,
-                 loss=None, optimizer=None, greedy_exploration=None):
+                optimizer=None, greedy_exploration=None):
+        
+        loss = None
 
         super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss, optimizer, greedy_exploration)
                
@@ -23,9 +25,6 @@ class DistributionalDQN(DQN):
             self.neural_network = C51Network(observation_shape=flatdim(observation_space),
                                            action_shape=flatdim(action_space))
             num_atoms = 51
-
-        if loss is None:
-            self.loss = torch.nn.CrossEntropyLoss()
 
         if optimizer is None:
             self.optimizer = optim.Adam(self.neural_network.parameters(), lr=0.01)
@@ -63,7 +62,7 @@ class DistributionalDQN(DQN):
         for sample_i in range(self.batch_size):
             done = dones[sample_i]
             for j in range(self.num_atoms):
-                Tzj = torch.clamp(rewards[sample_j] + self.gamma * self.z[j] * (1 - done), self.r_min, self.r_max)
+                Tzj = torch.clamp(rewards[sample_i] + self.gamma * self.z[j] * (1 - done), self.r_min, self.r_max)
                 bj = (Tzj - self.r_min) / self.delta_z
                 l, u = floor(bj), ceil(bj)
                 m_prob[sample_i][l] += (done + (1 - done) * predictions_next[sample_i][actions_next[sample_i]][j] * (u - bj))
