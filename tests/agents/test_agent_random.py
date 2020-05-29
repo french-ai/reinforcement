@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import pytest
 from gym.spaces import Box, Dict, Discrete, MultiBinary, MultiDiscrete, Tuple
@@ -22,7 +24,6 @@ dict_list = Dict(base_list)
 tuple_list = Tuple(list(base_list.values()))
 
 test_list = [*base_list.values(), dict_list, tuple_list]
-
 
 
 def test_agent_work_with_space():
@@ -59,3 +60,20 @@ def test_agent_save_load():
 
         assert agent.observation_space == agent_l.observation_space
         assert agent.action_space == agent_l.action_space
+        os.remove("deed.pt")
+
+    agent = AgentRandom(observation_space=space, action_space=space)
+    agent.save(file_name="deed.pt", dire_name="./remove/")
+
+    os.remove("./remove/deed.pt")
+    os.rmdir("./remove/")
+
+    with pytest.raises(TypeError):
+        agent.save(file_name=14548)
+    with pytest.raises(TypeError):
+        agent.save(file_name="deed.pt", dire_name=14484)
+
+    with pytest.raises(FileNotFoundError):
+        AgentRandom.load(file_name="deed.pt")
+    with pytest.raises(FileNotFoundError):
+        AgentRandom.load(file_name="deed.pt", dire_name="/Dede/")

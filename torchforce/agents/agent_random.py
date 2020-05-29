@@ -1,3 +1,4 @@
+import os
 import pickle
 
 import torch
@@ -27,13 +28,17 @@ class AgentRandom(AgentInterface):
         pass
 
     def save(self, file_name, dire_name="."):
+
+        os.makedirs(os.path.abspath(dire_name), exist_ok=True)
+
         dict_save = dict()
         dict_save["observation_space"] = pickle.dumps(self.observation_space)
         dict_save["action_space"] = pickle.dumps(self.observation_space)
-        torch.save(dict_save, file_name)
+
+        torch.save(dict_save, os.path.abspath(os.path.join(dire_name, file_name)))
 
     @classmethod
     def load(cls, file_name, dire_name="."):
-        dict_save = torch.load(file_name)
+        dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
         return AgentRandom(observation_space=pickle.loads(dict_save["observation_space"]),
                            action_space=pickle.loads(dict_save["action_space"]))
