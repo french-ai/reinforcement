@@ -25,7 +25,7 @@ class DoubleDQN(DQN):
         self.step_copy = step_copy
 
         if optimizer is None:
-            self.optimizer = optim.RMSprop(self.neural_network.parameters(), lr=0.00025, momentum=0.95)
+            self.optimizer = optim.Adam(self.neural_network.parameters())
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
 

@@ -26,7 +26,7 @@ class CategoricalDQN(DQN):
             num_atoms = 51
 
         if optimizer is None:
-            self.optimizer = optim.Adam(self.neural_network.parameters(), lr=0.01)
+            self.optimizer = optim.Adam(self.neural_network.parameters())
 
         self.num_atoms = num_atoms
         self.r_min = r_min
