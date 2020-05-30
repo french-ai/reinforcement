@@ -83,6 +83,9 @@ if __name__ == '__main__':
     parser.add_argument('--max_episode', type=int, help='number of episode for train', nargs='?', const=1, default=100)
     parser.add_argument('--render', type=bool, help='if show render on each step or not', nargs='?', const=1,
                         default=False)
+    parser.add_argument('--train', type=bool, help='if train agent or not', nargs='?', const=1,
+                        default=True)
+    parser.add_argument('--file_path', type=str, help='path to file for load trained agent')
     args = parser.parse_args()
 
     trainer = Trainer(environment=args.env, agent=arg_to_agent(args.agent))
