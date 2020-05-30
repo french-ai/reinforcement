@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from gym.spaces import *
+from gym.spaces import Discrete, Box, MultiBinary, MultiDiscrete, Dict, Tuple
 
 from torchforce.agents import DQN
 from torchforce.explorations import Greedy, EpsilonGreedy
