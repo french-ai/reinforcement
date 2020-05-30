@@ -160,6 +160,8 @@ def test_init_trainer():
     assert trainer.logger.summary_writer.log_dir == "dede"
 
     rmtree('dede')
+
+
 def test_trainer_train():
     test_list = [0, 1, 10, 100, 1000]
 
