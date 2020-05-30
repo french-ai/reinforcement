@@ -57,10 +57,10 @@ class Trainer:
         if logger:
             logger.end_episode()
 
-    def train(self, max_episode=1000):
+    def train(self, max_episode=1000, render=True):
         env = self.get_environment(self.environment)
         for i_episode in range(max_episode):
-            self.do_episode(env=env, agent=self.agent, logger=self.logger)
+            self.do_episode(env=env, agent=self.agent, logger=self.logger, render=render)
         env.close()
 
 
@@ -82,8 +82,8 @@ if __name__ == '__main__':
     parser.add_argument('--env', type=str, help='name of environment', nargs='?', const=1, default="CartPole-v1")
     parser.add_argument('--max_episode', type=int, help='number of episode for train', nargs='?', const=1, default=100)
     parser.add_argument('--render', type=bool, help='if show render on each step or not', nargs='?', const=1,
-                        default=True)
+                        default=False)
     args = parser.parse_args()
 
     trainer = Trainer(environment=args.env, agent=arg_to_agent(args.agent))
-    trainer.train(max_episode=args.max_episode)
+    trainer.train(max_episode=args.max_episode, render=args.render)
