@@ -7,7 +7,7 @@ from torchforce.agents import AgentInterface, AgentRandom, DQN, DoubleDQN, Categ
 
 
 class Trainer:
-    def __init__(self, environment, agent):
+    def __init__(self, environment, agent, log_dir="./runs"):
         self.environment = environment
         if isinstance(agent, type(AgentInterface)):
             action_space = self.get_environment(environment).action_space
@@ -20,7 +20,7 @@ class Trainer:
         else:
             raise TypeError("this type (" + str(type(agent)) + ") is an AgentInterface or instance of AgentInterface")
 
-        self.logger = Logger()
+        self.logger = Logger(log_dir=log_dir)
 
     @classmethod
     def get_environment(cls, arg_env):

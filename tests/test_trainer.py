@@ -1,3 +1,5 @@
+from shutil import rmtree
+
 import gym
 import pytest
 
@@ -151,7 +153,13 @@ def test_init_trainer():
     with pytest.raises(ValueError):
         Trainer(environment="CartPole-dzdv1", agent=FakeAgent)
 
+    trainer = Trainer(environment=FakeEnv(), agent=FakeAgent, log_dir="dede")
+    assert isinstance(trainer.agent, AgentInterface) and not isinstance(trainer.agent, type(AgentInterface))
+    assert isinstance(trainer.environment, gym.Env)
+    assert isinstance(trainer.logger, Logger)
+    assert trainer.logger.summary_writer.log_dir == "dede"
 
+    rmtree('dede')
 def test_trainer_train():
     test_list = [0, 1, 10, 100, 1000]
 
