@@ -1,3 +1,5 @@
+from shutil import rmtree
+
 import gym
 import pytest
 
@@ -8,7 +10,7 @@ from torchforce.trainer import arg_to_agent
 
 def test_arg_to_agent():
     fail_list = ["dzdzqd", None, 123, 123.123, [], {}, object]
-    work_list = ["agent_random", "dqn"]
+    work_list = ["agent_random", "dqn", "double_dqn", "categorical_dqn"]
 
     for agent in fail_list:
         with pytest.raises(ValueError):
@@ -39,6 +41,13 @@ class FakeEnv(gym.Env):
 
 
 class FakeAgent(AgentInterface):
+
+    def save(self, save_dir="."):
+        pass
+
+    @classmethod
+    def load(cls, file):
+        pass
 
     def __init__(self, observation_space, action_space):
         self.get_action_done = 0
@@ -143,6 +152,14 @@ def test_init_trainer():
 
     with pytest.raises(ValueError):
         Trainer(environment="CartPole-dzdv1", agent=FakeAgent)
+
+    trainer = Trainer(environment=FakeEnv(), agent=FakeAgent, log_dir="dede")
+    assert isinstance(trainer.agent, AgentInterface) and not isinstance(trainer.agent, type(AgentInterface))
+    assert isinstance(trainer.environment, gym.Env)
+    assert isinstance(trainer.logger, Logger)
+    assert trainer.logger.summary_writer.log_dir == "dede"
+
+    rmtree('dede')
 
 
 def test_trainer_train():

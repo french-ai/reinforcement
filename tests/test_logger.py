@@ -5,8 +5,9 @@ from torchforce import Record, Logger
 
 
 class FakeSummaryWriter(SummaryWriter):
-    def __init__(self):
+    def __init__(self, log_dir=None):
         super().__init__()
+        self.log_dir = log_dir
         self.add_scalar_call = []
 
     def add_scalar(self, tag, scalar_value, global_step=None, walltime=None):
@@ -118,6 +119,11 @@ def test_logger_init():
     logger = Logger()
     assert not logger.episodes and not logger.current_steps
     assert isinstance(logger.summary_writer, SummaryWriter)
+
+    logger = Logger(log_dir="des")
+    assert not logger.episodes and not logger.current_steps
+    assert isinstance(logger.summary_writer, SummaryWriter)
+    assert logger.summary_writer.log_dir == "des"
 
 
 def test_add_step():

@@ -14,3 +14,12 @@ class AgentInterface(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def episode_finished(self) -> None:
         pass
+
+    @abc.abstractmethod
+    def save(self, file_name, dire_name="."):
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def load(cls, file_name, dire_name="."):
+        pass

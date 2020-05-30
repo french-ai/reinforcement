@@ -1,31 +1,31 @@
+import os
+import pickle
 from copy import deepcopy
 
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
-from gym.spaces import Discrete, Space, flatdim, flatten
+from gym.spaces import flatdim
 
 from torchforce.agents import DQN
-from torchforce.explorations import GreedyExplorationInterface, EpsilonGreedy
-from torchforce.memories import MemoryInterface, ExperienceReplay
-from torchforce.networks import SimpleNetwork
+from torchforce.memories import ExperienceReplay
 
 
 class DoubleDQN(DQN):
 
-    def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network = None, step_copy=500, step_train=2, batch_size=32, gamma=0.99,
+    def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_copy=500,
+                 step_train=2, batch_size=32, gamma=0.99,
                  loss=None, optimizer=None, greedy_exploration=None):
 
-        super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss, optimizer, greedy_exploration)
-        
+        super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss,
+                         optimizer, greedy_exploration)
+
         self.neural_network_target = deepcopy(self.neural_network)
         self.copy_online_to_target()
-        self.memory = memory
-
         self.step_copy = step_copy
 
         if optimizer is None:
-            self.optimizer = optim.RMSprop(self.neural_network.parameters(), lr=0.00025, momentum=0.95)
+            self.optimizer = optim.Adam(self.neural_network.parameters())
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
 
@@ -35,7 +35,7 @@ class DoubleDQN(DQN):
             self.copy_online_to_target()
 
     def train(self):
-        
+
         observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size)
 
         actions_next = torch.argmax(self.neural_network.forward(next_observations).detach(), dim=1)
@@ -54,3 +54,45 @@ class DoubleDQN(DQN):
 
     def copy_online_to_target(self):
         self.neural_network_target.load_state_dict(self.neural_network.state_dict())
+
+    def save(self, file_name, dire_name="."):
+
+        os.makedirs(os.path.abspath(dire_name), exist_ok=True)
+
+        dict_save = dict()
+        dict_save["observation_space"] = pickle.dumps(self.observation_space)
+        dict_save["action_space"] = pickle.dumps(self.action_space)
+        dict_save["neural_network_class"] = pickle.dumps(type(self.neural_network))
+        dict_save["neural_network"] = self.neural_network.state_dict()
+        dict_save["step_train"] = pickle.dumps(self.step_train)
+        dict_save["batch_size"] = pickle.dumps(self.batch_size)
+        dict_save["gamma"] = pickle.dumps(self.gamma)
+        dict_save["loss"] = pickle.dumps(self.loss)
+        dict_save["optimizer"] = pickle.dumps(self.optimizer)
+        dict_save["greedy_exploration"] = pickle.dumps(self.greedy_exploration)
+        dict_save["step_copy"] = pickle.dumps(self.step_copy)
+
+        torch.save(dict_save, os.path.abspath(os.path.join(dire_name, file_name)))
+
+    @classmethod
+    def load(cls, file_name, dire_name="."):
+        dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
+
+        neural_network = pickle.loads(dict_save["neural_network_class"])(
+            observation_shape=flatdim(pickle.loads(dict_save["observation_space"])),
+            action_shape=flatdim(pickle.loads(dict_save["action_space"])))
+        neural_network.load_state_dict(dict_save["neural_network"])
+
+        double_dqn = DoubleDQN(observation_space=pickle.loads(dict_save["observation_space"]),
+                               action_space=pickle.loads(dict_save["action_space"]),
+                               neural_network=neural_network,
+                               step_train=pickle.loads(dict_save["step_train"]),
+                               batch_size=pickle.loads(dict_save["batch_size"]),
+                               gamma=pickle.loads(dict_save["gamma"]),
+                               loss=pickle.loads(dict_save["loss"]),
+                               optimizer=pickle.loads(dict_save["optimizer"]),
+                               greedy_exploration=pickle.loads(dict_save["greedy_exploration"]))
+
+        double_dqn.step_copy = pickle.loads(dict_save["step_copy"])
+
+        return double_dqn

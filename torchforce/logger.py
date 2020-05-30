@@ -53,10 +53,10 @@ class Record:
 
 
 class Logger:
-    def __init__(self):
+    def __init__(self, log_dir="./runs"):
         self.current_steps = []
         self.episodes = []
-        self.summary_writer = SummaryWriter()
+        self.summary_writer = SummaryWriter(log_dir)
 
     def add_steps(self, steps):
         self.current_steps.append(steps)

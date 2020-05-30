@@ -3,11 +3,11 @@ from argparse import ArgumentParser
 import gym
 
 from torchforce import Logger, Record
-from torchforce.agents import AgentInterface, AgentRandom, DQN
+from torchforce.agents import AgentInterface, AgentRandom, DQN, DoubleDQN, CategoricalDQN
 
 
 class Trainer:
-    def __init__(self, environment, agent):
+    def __init__(self, environment, agent, log_dir="./runs"):
         self.environment = environment
         if isinstance(agent, type(AgentInterface)):
             action_space = self.get_environment(environment).action_space
@@ -20,7 +20,7 @@ class Trainer:
         else:
             raise TypeError("this type (" + str(type(agent)) + ") is an AgentInterface or instance of AgentInterface")
 
-        self.logger = Logger()
+        self.logger = Logger(log_dir=log_dir)
 
     @classmethod
     def get_environment(cls, arg_env):
@@ -57,10 +57,10 @@ class Trainer:
         if logger:
             logger.end_episode()
 
-    def train(self, max_episode=1000):
+    def train(self, max_episode=1000, render=True):
         env = self.get_environment(self.environment)
         for i_episode in range(max_episode):
-            self.do_episode(env=env, agent=self.agent, logger=self.logger)
+            self.do_episode(env=env, agent=self.agent, logger=self.logger, render=render)
         env.close()
 
 
@@ -69,6 +69,10 @@ def arg_to_agent(arg_agent) -> AgentInterface:
         return AgentRandom
     if arg_agent == "dqn":
         return DQN
+    if arg_agent == "double_dqn":
+        return DoubleDQN
+    if arg_agent == "categorical_dqn":
+        return CategoricalDQN
     raise ValueError("this agent (" + str(arg_agent) + ") is not implemented")
 
 
@@ -78,8 +82,11 @@ if __name__ == '__main__':
     parser.add_argument('--env', type=str, help='name of environment', nargs='?', const=1, default="CartPole-v1")
     parser.add_argument('--max_episode', type=int, help='number of episode for train', nargs='?', const=1, default=100)
     parser.add_argument('--render', type=bool, help='if show render on each step or not', nargs='?', const=1,
+                        default=False)
+    parser.add_argument('--train', type=bool, help='if train agent or not', nargs='?', const=1,
                         default=True)
+    parser.add_argument('--file_path', type=str, help='path to file for load trained agent')
     args = parser.parse_args()
 
     trainer = Trainer(environment=args.env, agent=arg_to_agent(args.agent))
-    trainer.train(max_episode=args.max_episode)
+    trainer.train(max_episode=args.max_episode, render=args.render)

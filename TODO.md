@@ -22,7 +22,7 @@
 - [ ] Dueling Q Network (Wang *et al.*, [2016](https://arxiv.org/abs/1511.06581))
 - [ ] Bootstraped Deep Q Network (Osband *et al.*, [2016](https://arxiv.org/abs/1602.04621))
 - [ ] Continuous Deep Q Network (Gu*et al.*, [2016](https://arxiv.org/abs/1603.00748))
-- [ ] C51 = Distributed Deep Q Network (Bellamare *et al.*, [2017](https://arxiv.org/abs/1707.06887))
+- [ ] C51 = Categorical Deep Q Network (Bellamare *et al.*, [2017](https://arxiv.org/abs/1707.06887))
 - [ ] Rainbow (Hessel *et al.*, [2017](https://arxiv.org/abs/1710.02298))
 - [ ] Quantile Regression Deep Q Network (Dabney *et al.*, [2017](https://arxiv.org/abs/1710.10044))
 - [ ] Proximal Policy Optimizations (Schulman *et al.*, [2017](https://arxiv.org/abs/1707.06347))
