@@ -191,19 +191,19 @@ def test_agent_save_load():
 
     assert agent.observation_space == agent_l.observation_space
     assert Discrete(2) == agent_l.action_space
-    assert type(agent.neural_network) == type(agent_l.neural_network)
+    assert isinstance(type(agent.neural_network), type(agent_l.neural_network))
     for a, b in zip(agent.neural_network.state_dict(), agent_l.neural_network.state_dict()):
         assert a == b
     assert agent.step_train == agent_l.step_train
     assert agent.batch_size == agent_l.batch_size
     assert agent.gamma == agent_l.gamma
-    assert type(agent.loss) == type(agent_l.loss)
+    assert isinstance(type(agent.loss), type(agent_l.loss))
     for a, b in zip(agent.loss.parameters(), agent_l.loss.parameters()):
         assert a == b
-    assert type(agent.optimizer) == type(agent_l.optimizer)
+    assert isinstance(type(agent.optimizer), type(agent_l.optimizer))
     for a, b in zip(agent.optimizer.state_dict(), agent_l.optimizer.state_dict()):
         assert a == b
-    assert type(agent.greedy_exploration) == type(agent_l.greedy_exploration)
+    assert isinstance(type(agent.greedy_exploration), type(agent_l.greedy_exploration))
 
     agent = DQN(observation_space=space, action_space=Discrete(2))
     agent.save(file_name="deed.pt", dire_name="./remove/")
