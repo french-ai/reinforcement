@@ -42,17 +42,18 @@ class FakeEnv(gym.Env):
 
 class FakeAgent(AgentInterface):
 
-    def save(self, save_dir="."):
+    def save(self, file_name, dire_name="."):
         pass
 
     @classmethod
-    def load(cls, file):
+    def load(cls, file_name, dire_name="."):
         pass
 
     def __init__(self, observation_space, action_space):
         self.get_action_done = 0
         self.learn_done = 0
         self.episode_finished_done = 0
+        self.str_done = 0
 
     def get_action(self, observation):
         self.get_action_done += 1
@@ -63,6 +64,10 @@ class FakeAgent(AgentInterface):
 
     def episode_finished(self) -> None:
         self.episode_finished_done += 1
+
+    def __str__(self):
+        self.str_done += 1
+        return None
 
 
 class FakeLogger(Logger):

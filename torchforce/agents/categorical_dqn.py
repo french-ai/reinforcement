@@ -79,3 +79,10 @@ class CategoricalDQN(DQN):
         loss.sum().backward()
 
         self.optimizer.step()
+
+    def __str__(self):
+        return 'CategoricalDQN-' + str(self.observation_space) + "-" + str(self.action_space) + "-" + str(
+            self.neural_network) + "-" + str(self.memory) + "-" + str(self.step_train) + "-" + str(
+            self.step) + "-" + str(self.batch_size) + "-" + str(self.gamma) + "-" + str(self.loss) + "-" + str(
+            self.optimizer) + "-" + str(self.greedy_exploration) + "-" + str(self.num_atoms) + "-" + str(
+            self.r_min) + "-" + str(self.r_max) + "-" + str(self.delta_z) + "-" + str(self.z)

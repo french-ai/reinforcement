@@ -10,3 +10,6 @@ class EpsilonGreedy(GreedyExplorationInterface):
 
     def be_greedy(self, step):
         return random() > self.epsilon
+
+    def __str__(self):
+        return 'EpsilonGreedy-' + str(self.epsilon)

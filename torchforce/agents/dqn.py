@@ -151,3 +151,9 @@ class DQN(AgentInterface, metaclass=ABCMeta):
                    loss=pickle.loads(dict_save["loss"]),
                    optimizer=pickle.loads(dict_save["optimizer"]),
                    greedy_exploration=pickle.loads(dict_save["greedy_exploration"]))
+
+    def __str__(self):
+        return 'DQN-' + str(self.observation_space) + "-" + str(self.action_space) + "-" + str(
+            self.neural_network) + "-" + str(self.memory) + "-" + str(self.step_train) + "-" + str(
+            self.step) + "-" + str(self.batch_size) + "-" + str(self.gamma) + "-" + str(self.loss) + "-" + str(
+            self.optimizer) + "-" + str(self.greedy_exploration)

@@ -23,3 +23,7 @@ class AgentInterface(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def load(cls, file_name, dire_name="."):
         pass
+
+    @abc.abstractmethod
+    def __str__(self):
+        pass

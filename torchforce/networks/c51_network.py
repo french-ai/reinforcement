@@ -42,3 +42,6 @@ class C51Network(BaseNetwork):
         q = q.permute(1, 0, 2)
 
         return q
+
+    def __str__(self):
+        return 'C51Network-' + str(self.observation_space) + "-" + str(self.action_space)

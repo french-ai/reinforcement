@@ -23,3 +23,6 @@ class SimpleNetwork(BaseNetwork):
     def forward(self, observation):
         x = observation.view(observation.shape[0], -1)
         return self.network(x)
+
+    def __str__(self):
+        return 'SimpleNetwork-' + str(self.observation_space) + "-" + str(self.action_space)

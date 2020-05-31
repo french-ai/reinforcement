@@ -14,3 +14,7 @@ class MemoryInterface(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def sample(self, batch_size):
         pass
+
+    @abc.abstractmethod
+    def __str__(self):
+        pass

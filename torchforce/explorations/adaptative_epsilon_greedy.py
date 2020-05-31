@@ -17,3 +17,7 @@ class AdaptativeEpsilonGreedy(EpsilonGreedy):
         a = (1 / (1 - (self.epsilon_min / self.epsilon_max)) - 1) * self.step_max
         self.epsilon = max((1 - (step / (self.step_max + a))) * self.epsilon_max, self.epsilon_min)
         return super().be_greedy(step)
+
+    def __str__(self):
+        return 'AdaptativeEpsilonGreedy-' + str(self.epsilon_max) + '-' + str(self.epsilon_min) + '-' + str(
+            self.step_max) + '-' + str(self.step_min)

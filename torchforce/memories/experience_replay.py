@@ -45,3 +45,6 @@ class ExperienceReplay(MemoryInterface):
         idxs = np.random.randint(self.size, size=batch_size)
 
         return [torch.Tensor(list(V)) for V in self.buffer[idxs].T]
+
+    def __str__(self):
+        return 'ExperienceReplay-' + str(self.max_size)

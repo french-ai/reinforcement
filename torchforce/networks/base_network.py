@@ -9,3 +9,7 @@ class BaseNetwork(nn.Module, metaclass=abc.ABCMeta):
         super().__init__()
         self.observation_space = observation_shape
         self.action_space = action_shape
+
+    @abc.abstractmethod
+    def __str__(self):
+        pass
