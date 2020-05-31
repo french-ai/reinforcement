@@ -13,7 +13,7 @@ from torchforce.networks import C51Network
 class CategoricalDQN(DQN):
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, num_atoms=51,
-                 r_min=-2, r_max=2, step_train=2, batch_size=32, gamma=0.99,
+                 r_min=-10, r_max=10, step_train=2, batch_size=32, gamma=0.99,
                  optimizer=None, greedy_exploration=None):
 
         loss = None
