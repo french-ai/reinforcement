@@ -90,6 +90,6 @@ class CategoricalDQN(DQN):
         self.optimizer.zero_grad()
         predictions = self.neural_network.forward(observations)
         loss = - predictions.log() * m_prob
-        loss.sum().backward()
+        loss.sum((1, 2)).mean().backward()
 
         self.optimizer.step()
