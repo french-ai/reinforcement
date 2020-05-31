@@ -83,9 +83,12 @@ class CategoricalDQN(DQN):
         l_index = (l + offset).view(-1).to(torch.int64)
         
         predictions_next = (dones + (1 - dones) * predictions_next)
-                
-        m_prob[actions==1, :].view(-1).index_add_(0, u_index, (predictions_next * (u-b)).view(-1))
-        m_prob[actions==1, :].view(-1).index_add_(0, l_index, (predictions_next * (b-l)).view(-1))
+         
+        m_prob_action = m_prob[actions==1, :].view(-1)
+        m_prob_action.index_add_(0, u_index, (predictions_next * (u-b)).view(-1))
+        m_prob_action.index_add_(0, l_index, (predictions_next * (b-l)).view(-1))
+
+        m_prob[actions==1, :] = m_prob_action.view(-1, self.num_atoms)
                                 
         self.optimizer.zero_grad()
         predictions = self.neural_network.forward(observations)
