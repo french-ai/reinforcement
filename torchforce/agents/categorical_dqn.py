@@ -2,6 +2,7 @@ from math import floor, ceil
 
 import torch
 import torch.optim as optim
+import torch.nn.functional as F
 from gym.spaces import flatdim, flatten
 
 from torchforce.agents import DQN
@@ -47,32 +48,45 @@ class CategoricalDQN(DQN):
 
     def train(self):
 
-        observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size)
+        self.batch_size = 3
 
-        actions = actions.int()
+        observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size)
+        
+        actions = actions.to(torch.long)
+        actions = F.one_hot(actions, num_classes=self.action_space.n)
 
         predictions_next = self.neural_network.forward(next_observations).detach()
         q_values_next = predictions_next * self.z
         q_values_next = torch.sum(q_values_next, dim=2)
 
         actions_next = torch.argmax(q_values_next, dim=1)
+        actions_next = actions_next.to(torch.long)
+        actions_next = F.one_hot(actions_next, num_classes=self.action_space.n)
+
+        dones = dones.view(-1, 1)
+
+        m_prob = torch.zeros((self.batch_size, self.action_space.n, self.num_atoms))        
+
+        tz = torch.clamp(rewards.view(-1, 1) + self.gamma * self.z * (1 - dones), self.r_min, self.r_max)
+        b = (tz - self.r_min) / self.delta_z
+
+        l, u = b.floor().to(torch.int64), b.ceil().to(torch.int64)               
 
         m_prob = torch.zeros((self.batch_size, self.action_space.n, self.num_atoms))
-
-        for sample_i in range(self.batch_size):
-            done = dones[sample_i]
-            for j in range(self.num_atoms):
-                tzj = torch.clamp(rewards[sample_i] + self.gamma * self.z[j] * (1 - done), self.r_min, self.r_max)
-                bj = (tzj - self.r_min) / self.delta_z
-                l, u = floor(bj), ceil(bj)
-
-                m_prob[sample_i][actions[sample_i].item()][l] += (done + (1 - done) *
-                                                                  predictions_next[sample_i][actions_next[sample_i]][
-                                                                      j]) * (u - bj)
-                m_prob[sample_i][actions[sample_i].item()][u] += (done + (1 - done) *
-                                                                  predictions_next[sample_i][actions_next[sample_i]][
-                                                                      j]) * (bj - l)
-
+        
+        predictions_next = predictions_next[actions_next==1, :]
+        
+        offset = torch.linspace(0, (self.batch_size - 1) * self.num_atoms, self.batch_size).view(-1, 1)
+        offset = offset.expand(self.batch_size, self.num_atoms)
+        
+        u_index = (u + offset).view(-1).to(torch.int64)
+        l_index = (l + offset).view(-1).to(torch.int64)
+        
+        predictions_next = (dones + (1 - dones) * predictions_next)
+                
+        m_prob[actions==1, :].view(-1).index_add_(0, u_index, (predictions_next * (u-b)).view(-1))
+        m_prob[actions==1, :].view(-1).index_add_(0, l_index, (predictions_next * (b-l)).view(-1))
+                                
         self.optimizer.zero_grad()
         predictions = self.neural_network.forward(observations)
         loss = - predictions.log() * m_prob
