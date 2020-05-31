@@ -47,12 +47,9 @@ class Trainer:
     def do_episode(cls, env, agent, logger=None, render=True):
         observation = env.reset()
         done = False
-        ite = 1
         while not done:
             observation, done, reward = Trainer.do_step(observation=observation, env=env, agent=agent, logger=logger,
                                                         render=render)
-            ite += 1
-        print("Episode finished after {} timesteps".format(ite))
         agent.episode_finished()
         if logger:
             logger.end_episode()
