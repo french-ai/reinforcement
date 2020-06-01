@@ -13,7 +13,7 @@ INSTALL_REQUIRES = [
 ]
 TEST_REQUIRES = [
     # testing and coverage
-    'pytest', 'coverage', 'pytest-cov', 'codecov',
+    'pytest', 'coverage', 'pytest-cov', 'codecov', 'sphinx'
 ]
 
 with open('README.md') as f:
