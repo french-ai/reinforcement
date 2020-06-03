@@ -39,7 +39,7 @@ pip install ".[test]" .
 - Start training:
 
 ```
-python train.py
+python torchforce/trainer.py
 ```
 
 - For visualize training metrics:

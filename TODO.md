@@ -15,21 +15,21 @@
 # Agents list
 
 - [x] Random Agent
-- [ ] Deep Q Network (Mnih *et al.*, [2013](https://arxiv.org/abs/1312.5602))
-- [ ] Deep Recurrent Q Network (Hausknecht *et al.*, [2015](https://arxiv.org/abs/1507.06527))
+- [x] Deep Q Network (Mnih *et al.*, [2013](https://arxiv.org/abs/1312.5602))
+- [x] Deep Recurrent Q Network (Hausknecht *et al.*, [2015](https://arxiv.org/abs/1507.06527))
 - [ ] Persistent Advantage Learning (Bellamare *et al.*, [2015](https://arxiv.org/abs/1512.04860))
 - [ ] Double Deep Q Network (van Hasselt *et al.*, [2016](https://arxiv.org/abs/1509.06461))
 - [ ] Dueling Q Network (Wang *et al.*, [2016](https://arxiv.org/abs/1511.06581))
 - [ ] Bootstraped Deep Q Network (Osband *et al.*, [2016](https://arxiv.org/abs/1602.04621))
 - [ ] Continuous Deep Q Network (Gu*et al.*, [2016](https://arxiv.org/abs/1603.00748))
-- [ ] C51 = Categorical Deep Q Network (Bellamare *et al.*, [2017](https://arxiv.org/abs/1707.06887))
+- [x] C51 = Categorical Deep Q Network (Bellamare *et al.*, [2017](https://arxiv.org/abs/1707.06887))
 - [ ] Rainbow (Hessel *et al.*, [2017](https://arxiv.org/abs/1710.02298))
 - [ ] Quantile Regression Deep Q Network (Dabney *et al.*, [2017](https://arxiv.org/abs/1710.10044))
 - [ ] Proximal Policy Optimizations (Schulman *et al.*, [2017](https://arxiv.org/abs/1707.06347))
 
 # Explorations list
 
-- [ ] Random
+- [x] Random
 - [x] Epsilon Greedy
 - [ ] Intrinsic Curiosity Module (Pathak *et al.*, [2017](https://arxiv.org/abs/1705.05363))
 - [ ] Random Network Distillation (Burda *et al.*, [2017](https://arxiv.org/abs/1810.12894))
@@ -38,7 +38,7 @@
 
 - [ ] No memory (= model based)
 - [ ] Trajectory replay
-- [ ] Experience Replay (Lin, [1992](https://link.springer.com/article/10.1007/BF00992699))
+- [x] Experience Replay (Lin, [1992](https://link.springer.com/article/10.1007/BF00992699))
 - [ ] Prioritized Experience Replay (Schaul *et al.*, [2015](https://arxiv.org/abs/1511.05952))
 - [ ] Hindsight Experience Replay (Andrychowicz *et al.*, [2017](https://arxiv.org/abs/1707.01495))
 
