@@ -4,6 +4,13 @@ from torchforce.explorations import EpsilonGreedy
 class AdaptativeEpsilonGreedy(EpsilonGreedy):
 
     def __init__(self, epsilon_max, epsilon_min, step_max, step_min=0):
+        """
+
+        :param epsilon_max:
+        :param epsilon_min:
+        :param step_max:
+        :param step_min:
+        """
         super().__init__(epsilon_max)
         self.epsilon_max = epsilon_max
         self.epsilon_min = epsilon_min
@@ -11,6 +18,11 @@ class AdaptativeEpsilonGreedy(EpsilonGreedy):
         self.step_min = step_min
 
     def be_greedy(self, step):
+        """
+
+        :param step:
+        :return:
+        """
         if step <= self.step_min:
             return False
 

@@ -8,6 +8,12 @@ from torchforce.agents import AgentInterface, AgentRandom, DQN, DoubleDQN, Categ
 
 class Trainer:
     def __init__(self, environment, agent, log_dir="./runs"):
+        """
+
+        :param environment:
+        :param agent:
+        :param log_dir:
+        """
         self.environment = environment
         if isinstance(agent, type(AgentInterface)):
             action_space = self.get_environment(environment).action_space
@@ -24,6 +30,11 @@ class Trainer:
 
     @classmethod
     def get_environment(cls, arg_env):
+        """
+
+        :param arg_env:
+        :return:
+        """
         if isinstance(arg_env, str) and arg_env in [env_spec.id for env_spec in gym.envs.registry.all()]:
             return gym.make(arg_env)
 
@@ -34,6 +45,15 @@ class Trainer:
 
     @classmethod
     def do_step(cls, observation, env, agent, logger=None, render=True):
+        """
+
+        :param observation:
+        :param env:
+        :param agent:
+        :param logger:
+        :param render:
+        :return:
+        """
         if render:
             env.render()
         action = agent.get_action(observation=observation)
@@ -45,6 +65,13 @@ class Trainer:
 
     @classmethod
     def do_episode(cls, env, agent, logger=None, render=True):
+        """
+
+        :param env:
+        :param agent:
+        :param logger:
+        :param render:
+        """
         observation = env.reset()
         done = False
         while not done:
@@ -55,6 +82,11 @@ class Trainer:
             logger.end_episode()
 
     def train(self, max_episode=1000, render=True):
+        """
+
+        :param max_episode:
+        :param render:
+        """
         env = self.get_environment(self.environment)
         for i_episode in range(max_episode):
             self.do_episode(env=env, agent=self.agent, logger=self.logger, render=render)
@@ -62,6 +94,11 @@ class Trainer:
 
 
 def arg_to_agent(arg_agent) -> AgentInterface:
+    """
+
+    :param arg_agent:
+    :return:
+    """
     if arg_agent == "agent_random":
         return AgentRandom
     if arg_agent == "dqn":

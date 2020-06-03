@@ -6,6 +6,11 @@ from torchforce.networks import BaseNetwork
 
 class SimpleNetwork(BaseNetwork):
     def __init__(self, observation_shape, action_shape):
+        """
+
+        :param observation_shape:
+        :param action_shape:
+        """
         super().__init__(observation_shape=observation_shape, action_shape=action_shape)
 
         if not isinstance(observation_shape, (tuple, int)):
@@ -21,6 +26,11 @@ class SimpleNetwork(BaseNetwork):
         self.network.add_module("NetWorkSimple_Linear_Output", nn.Linear(64, np.prod(self.action_space)))
 
     def forward(self, observation):
+        """
+
+        :param observation:
+        :return:
+        """
         x = observation.view(observation.shape[0], -1)
         return self.network(x)
 

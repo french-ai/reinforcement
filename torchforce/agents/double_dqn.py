@@ -16,7 +16,20 @@ class DoubleDQN(DQN):
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_copy=500,
                  step_train=2, batch_size=32, gamma=0.99,
                  loss=None, optimizer=None, greedy_exploration=None):
+        """
 
+        :param action_space:
+        :param observation_space:
+        :param memory:
+        :param neural_network:
+        :param step_copy:
+        :param step_train:
+        :param batch_size:
+        :param gamma:
+        :param loss:
+        :param optimizer:
+        :param greedy_exploration:
+        """
         super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss,
                          optimizer, greedy_exploration)
 
@@ -28,14 +41,23 @@ class DoubleDQN(DQN):
             self.optimizer = optim.Adam(self.neural_network.parameters())
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
+        """
 
+        :param observation:
+        :param action:
+        :param reward:
+        :param next_observation:
+        :param done:
+        """
         super().learn(observation, action, reward, next_observation, done)
 
         if (self.step % self.step_copy) == 0:
             self.copy_online_to_target()
 
     def train(self):
+        """
 
+        """
         observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size)
 
         actions_next = torch.argmax(self.neural_network.forward(next_observations).detach(), dim=1)
@@ -53,10 +75,17 @@ class DoubleDQN(DQN):
         self.optimizer.step()
 
     def copy_online_to_target(self):
+        """
+
+        """
         self.neural_network_target.load_state_dict(self.neural_network.state_dict())
 
     def save(self, file_name, dire_name="."):
+        """
 
+        :param file_name:
+        :param dire_name:
+        """
         os.makedirs(os.path.abspath(dire_name), exist_ok=True)
 
         dict_save = dict()
@@ -76,6 +105,12 @@ class DoubleDQN(DQN):
 
     @classmethod
     def load(cls, file_name, dire_name="."):
+        """
+
+        :param file_name:
+        :param dire_name:
+        :return:
+        """
         dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
 
         neural_network = pickle.loads(dict_save["neural_network_class"])(

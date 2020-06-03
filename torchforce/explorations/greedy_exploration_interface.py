@@ -5,6 +5,10 @@ class GreedyExplorationInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def be_greedy(self, step) -> bool:
+        """
+
+        :param step:
+        """
         pass
 
     @abc.abstractmethod
