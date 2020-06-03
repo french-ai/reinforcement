@@ -77,3 +77,10 @@ def test_agent_save_load():
         AgentRandom.load(file_name="deed.pt")
     with pytest.raises(FileNotFoundError):
         AgentRandom.load(file_name="deed.pt", dire_name="/Dede/")
+
+
+def test__str__():
+    for space in test_list:
+        agent = AgentRandom(observation_space=space, action_space=space)
+
+        assert 'AgentRandom-' + str(space) + "-" + str(space) == agent.__str__()

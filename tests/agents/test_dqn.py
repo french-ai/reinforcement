@@ -15,6 +15,10 @@ from torchforce.networks import BaseNetwork
 
 
 class Network(BaseNetwork):
+
+    def __str__(self):
+        return 'Network'
+
     def __init__(self, observation_shape=None, action_shape=None):
         super().__init__(observation_shape, action_shape)
         self.dense = nn.Linear(4, 4)
@@ -220,3 +224,12 @@ def test_agent_save_load():
         DQN.load(file_name="deed.pt")
     with pytest.raises(FileNotFoundError):
         DQN.load(file_name="deed.pt", dire_name="/Dede/")
+
+
+def test__str__():
+    agent = DQN(Discrete(4), Box(1, 10, (4,)))
+
+    assert 'DQN-' + str(agent.observation_space) + "-" + str(agent.action_space) + "-" + str(
+        agent.neural_network) + "-" + str(agent.memory) + "-" + str(agent.step_train) + "-" + str(
+        agent.step) + "-" + str(agent.batch_size) + "-" + str(agent.gamma) + "-" + str(agent.loss) + "-" + str(
+        agent.optimizer) + "-" + str(agent.greedy_exploration) == agent.__str__()

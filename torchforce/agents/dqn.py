@@ -17,7 +17,19 @@ class DQN(AgentInterface, metaclass=ABCMeta):
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_train=2,
                  batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
+        """
 
+        :param action_space:
+        :param observation_space:
+        :param memory:
+        :param neural_network:
+        :param step_train:
+        :param batch_size:
+        :param gamma:
+        :param loss:
+        :param optimizer:
+        :param greedy_exploration:
+        """
         if not isinstance(action_space, Discrete):
             raise TypeError(
                 "action_space need to be instance of gym.spaces.Space.Discrete, not :" + str(type(action_space)))
@@ -78,7 +90,11 @@ class DQN(AgentInterface, metaclass=ABCMeta):
             self.greedy_exploration = greedy_exploration
 
     def get_action(self, observation):
+        """
 
+        :param observation:
+        :return:
+        """
         if not self.greedy_exploration.be_greedy(self.step):
             return self.action_space.sample()
 
@@ -89,7 +105,14 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         return torch.argmax(q_values).detach().item()
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
+        """
 
+        :param observation:
+        :param action:
+        :param reward:
+        :param next_observation:
+        :param done:
+        """
         self.memory.append(observation, action, reward, next_observation, done)
         self.step += 1
 
@@ -97,10 +120,15 @@ class DQN(AgentInterface, metaclass=ABCMeta):
             self.train()
 
     def episode_finished(self) -> None:
+        """
+
+        """
         pass
 
     def train(self):
+        """
 
+        """
         observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size)
 
         q = rewards + self.gamma * torch.max(self.neural_network.forward(next_observations), dim=1)[0].detach() * (
@@ -116,7 +144,11 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         self.optimizer.step()
 
     def save(self, file_name, dire_name="."):
+        """
 
+        :param file_name:
+        :param dire_name:
+        """
         os.makedirs(os.path.abspath(dire_name), exist_ok=True)
 
         dict_save = dict()
@@ -135,6 +167,12 @@ class DQN(AgentInterface, metaclass=ABCMeta):
 
     @classmethod
     def load(cls, file_name, dire_name="."):
+        """
+
+        :param file_name:
+        :param dire_name:
+        :return:
+        """
         dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
 
         neural_network = pickle.loads(dict_save["neural_network_class"])(
@@ -151,3 +189,9 @@ class DQN(AgentInterface, metaclass=ABCMeta):
                    loss=pickle.loads(dict_save["loss"]),
                    optimizer=pickle.loads(dict_save["optimizer"]),
                    greedy_exploration=pickle.loads(dict_save["greedy_exploration"]))
+
+    def __str__(self):
+        return 'DQN-' + str(self.observation_space) + "-" + str(self.action_space) + "-" + str(
+            self.neural_network) + "-" + str(self.memory) + "-" + str(self.step_train) + "-" + str(
+            self.step) + "-" + str(self.batch_size) + "-" + str(self.gamma) + "-" + str(self.loss) + "-" + str(
+            self.optimizer) + "-" + str(self.greedy_exploration)

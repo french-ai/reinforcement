@@ -7,6 +7,11 @@ from torchforce.networks import BaseNetwork
 
 class C51Network(BaseNetwork):
     def __init__(self, observation_shape, action_shape):
+        """
+
+        :param observation_shape:
+        :param action_shape:
+        """
         super().__init__(observation_shape=observation_shape, action_shape=action_shape)
 
         if not isinstance(observation_shape, (tuple, int)):
@@ -33,6 +38,11 @@ class C51Network(BaseNetwork):
             self.distributional_list.append(distributional)
 
     def forward(self, observation):
+        """
+
+        :param observation:
+        :return:
+        """
         x = observation.view(observation.shape[0], -1)
         x = self.network(x)
 
@@ -42,3 +52,6 @@ class C51Network(BaseNetwork):
         q = q.permute(1, 0, 2)
 
         return q
+
+    def __str__(self):
+        return 'C51Network-' + str(self.observation_space) + "-" + str(self.action_space)

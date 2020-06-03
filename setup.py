@@ -2,6 +2,7 @@
 
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 
 import setuptools
 
@@ -13,10 +14,12 @@ INSTALL_REQUIRES = [
 ]
 TEST_REQUIRES = [
     # testing and coverage
-    'pytest', 'coverage', 'pytest-cov', 'codecov',
+    'pytest', 'coverage', 'pytest-cov', 'codecov', 'sphinx'
 ]
 
-with open('README.md') as f:
+path = os.path.abspath(os.path.dirname(__file__))
+
+with open(os.path.abspath(path + '/README.md')) as f:
     README = f.read()
 
 setuptools.setup(

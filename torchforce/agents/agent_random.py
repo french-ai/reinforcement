@@ -10,6 +10,11 @@ from torchforce.agents import AgentInterface
 class AgentRandom(AgentInterface):
 
     def __init__(self, observation_space, action_space):
+        """
+
+        :param observation_space:
+        :param action_space:
+        """
         if not isinstance(action_space, Space):
             raise TypeError("action_space need to be instance of gym.spaces.Space, not :" + str(type(action_space)))
         if not isinstance(observation_space, Space):
@@ -19,16 +24,36 @@ class AgentRandom(AgentInterface):
         self.observation_space = observation_space
 
     def get_action(self, observation):
+        """
+
+        :param observation:
+        :return:
+        """
         return self.action_space.sample()
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
+        """
+
+        :param observation:
+        :param action:
+        :param reward:
+        :param next_observation:
+        :param done:
+        """
         pass
 
     def episode_finished(self) -> None:
+        """
+
+        """
         pass
 
     def save(self, file_name, dire_name="."):
+        """
 
+        :param file_name:
+        :param dire_name:
+        """
         os.makedirs(os.path.abspath(dire_name), exist_ok=True)
 
         dict_save = dict()
@@ -39,6 +64,15 @@ class AgentRandom(AgentInterface):
 
     @classmethod
     def load(cls, file_name, dire_name="."):
+        """
+
+        :param file_name:
+        :param dire_name:
+        :return:
+        """
         dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
         return AgentRandom(observation_space=pickle.loads(dict_save["observation_space"]),
                            action_space=pickle.loads(dict_save["action_space"]))
+
+    def __str__(self):
+        return 'AgentRandom-' + str(self.observation_space) + "-" + str(self.action_space)

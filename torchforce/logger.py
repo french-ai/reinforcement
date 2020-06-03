@@ -3,12 +3,21 @@ from torch.utils.tensorboard import SummaryWriter
 
 class Record:
     def __init__(self, value):
+        """
+
+        :param value:
+        """
         if not isinstance(value, (int, float)):
             raise TypeError("value must be int or float not " + str(type(value)))
         self.value = value
 
     @classmethod
     def avg_records(cls, records):
+        """
+
+        :param records:
+        :return:
+        """
         if not isinstance(records, list):
             raise TypeError("records must be a list not " + str(records))
         if not records:
@@ -20,6 +29,11 @@ class Record:
 
     @classmethod
     def max_records(cls, records):
+        """
+
+        :param records:
+        :return:
+        """
         if not isinstance(records, list):
             raise TypeError("records must be a list not " + str(records))
         if not records:
@@ -31,6 +45,11 @@ class Record:
 
     @classmethod
     def min_records(cls, records):
+        """
+
+        :param records:
+        :return:
+        """
         if not isinstance(records, list):
             raise TypeError("records must be a list not " + str(records))
         if not records:
@@ -42,6 +61,11 @@ class Record:
 
     @classmethod
     def sum_records(cls, records):
+        """
+
+        :param records:
+        :return:
+        """
         if not isinstance(records, list):
             raise TypeError("records must be a list not " + str(records))
         if not records:
@@ -54,23 +78,44 @@ class Record:
 
 class Logger:
     def __init__(self, log_dir="./runs"):
+        """
+
+        :param log_dir:
+        """
         self.current_steps = []
         self.episodes = []
         self.summary_writer = SummaryWriter(log_dir)
 
     def add_steps(self, steps):
+        """
+
+        :param steps:
+        """
         self.current_steps.append(steps)
 
     def add_episode(self, episode):
+        """
+
+        :param episode:
+        """
         self.episodes.append(episode)
 
     def end_episode(self):
+        """
+
+        """
         self.log_episode(self.summary_writer, self.current_steps, len(self.episodes))
         self.episodes.append(self.current_steps)
         self.current_steps = []
 
     @classmethod
     def log_episode(cls, summary_writer, episode, step):
+        """
+
+        :param summary_writer:
+        :param episode:
+        :param step:
+        """
         summary_writer.add_scalar(tag="Reward/max", scalar_value=Record.max_records(episode), global_step=step)
         summary_writer.add_scalar(tag="Reward/min", scalar_value=Record.max_records(episode), global_step=step)
         summary_writer.add_scalar(tag="Reward/avg", scalar_value=Record.avg_records(episode), global_step=step)
