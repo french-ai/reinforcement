@@ -67,7 +67,7 @@ class FakeAgent(AgentInterface):
 
     def __str__(self):
         self.str_done += 1
-        return None
+        return "FakeAgent"
 
 
 class FakeLogger(Logger):
