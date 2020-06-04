@@ -20,6 +20,7 @@ sys.path.insert(0, os.path.abspath('../'))
 project = 'torchforce'
 copyright = '2020, franch ai team'
 author = 'franch ai team'
+master_doc = 'index'
 
 # -- General configuration ---------------------------------------------------
 
