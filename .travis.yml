@@ -9,7 +9,7 @@ branches:
     - develop
 
 install:
-  - pip install ".[test]" . # install package + test dependencies
+  - pip install ".[dev]" . # install package + test dependencies
 
 script:
   - pytest
