@@ -12,9 +12,9 @@ INSTALL_REQUIRES = [
     'gym',
     'tensorboard',
 ]
-TEST_REQUIRES = [
+DEV_REQUIRES = [
     # testing and coverage
-    'pytest', 'coverage', 'pytest-cov', 'codecov', 'sphinx'
+    'pytest', 'coverage', 'pytest-cov', 'codecov', 'sphinx', 'sphinx-rtd-theme'
 ]
 
 path = os.path.abspath(os.path.dirname(__file__))
@@ -35,7 +35,7 @@ setuptools.setup(
     python_requires=">=3.6",
     install_requires=INSTALL_REQUIRES,
     extras_require={
-        'test': TEST_REQUIRES + INSTALL_REQUIRES,
+        'dev': DEV_REQUIRES + INSTALL_REQUIRES,
     },
     classifiers=[
         'Development Status :: Alpha',
