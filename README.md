@@ -33,7 +33,7 @@ pip install .
 
 for dev:
 ```
-pip install ".[test]" .
+pip install ".[dev]" .
 ```
 
 - Start training:
