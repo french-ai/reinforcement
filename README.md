@@ -1,5 +1,5 @@
 ﻿# Renforce : Reinforcement Learning library with Pytorch
-
+[![Read the Docs](https://img.shields.io/readthedocs/torchforce?style=for-the-badge)](https://torchforce.readthedocs.io/en/latest/?badge=latest)
 [![Build Status](https://img.shields.io/travis/french-ai/reinforcement?branch=master.svg&style=for-the-badge)](https://travis-ci.org/french-ai/reinforcement)
 [![CodeFactor](https://www.codefactor.io/repository/github/french-ai/reinforcement/badge?style=for-the-badge)](https://www.codefactor.io/repository/github/french-ai/reinforcement)
 [![Codecov](https://img.shields.io/codecov/c/github/french-ai/reinforcement?style=for-the-badge)](https://codecov.io/gh/french-ai/reinforcement)
