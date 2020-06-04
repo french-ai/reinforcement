@@ -1,0 +1,11 @@
+numpy
+torch
+torchvision
+gym
+tensorboard
+pytest
+coverage
+pytest-cov
+codecov
+sphinx
+sphinx-rtd-theme
