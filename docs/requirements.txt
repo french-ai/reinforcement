@@ -3,4 +3,4 @@ torch
 torchvision
 gym
 sphinx
-sphinx_glpi_theme
+sphinx-glpi-theme
