@@ -14,7 +14,7 @@ INSTALL_REQUIRES = [
 ]
 DEV_REQUIRES = [
     # testing and coverage
-    'pytest', 'coverage', 'pytest-cov', 'codecov', 'sphinx', 'sphinx-rtd-theme'
+    'pytest', 'coverage', 'pytest-cov', 'codecov', 'sphinx', 'sphinx-glpi-theme'
 ]
 
 path = os.path.abspath(os.path.dirname(__file__))
