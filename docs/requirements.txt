@@ -1,6 +1,2 @@
-numpy
-torch
-torchvision
-gym
 sphinx
 sphinx-glpi-theme
