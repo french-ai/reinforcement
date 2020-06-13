@@ -1,9 +1,6 @@
 torchforce.memories package
 ===========================
 
-Submodules
-----------
-
 torchforce.memories.experience\_replay module
 ---------------------------------------------
 

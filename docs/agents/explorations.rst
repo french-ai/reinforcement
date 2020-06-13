@@ -1,9 +1,6 @@
 torchforce.explorations package
 ===============================
 
-Submodules
-----------
-
 torchforce.explorations.adaptative\_epsilon\_greedy module
 ----------------------------------------------------------
 
