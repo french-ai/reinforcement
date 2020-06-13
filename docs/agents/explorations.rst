@@ -35,12 +35,3 @@ torchforce.explorations.greedy\_exploration\_interface module
    :members:
    :undoc-members:
    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: torchforce.explorations
-   :members:
-   :undoc-members:
-   :show-inheritance:

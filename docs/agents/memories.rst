@@ -21,10 +21,3 @@ torchforce.memories.memory\_interface module
    :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: torchforce.memories
-   :members:
-   :undoc-members:
-   :show-inheritance:
