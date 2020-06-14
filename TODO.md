@@ -8,7 +8,8 @@
 - [ ] Choice docs tool and init this 
 - [x] Config codecov
 - [x] Config codefactor
-- [x] Create Code style standard and document it in [CONTRIBUTING.md](./CONTRIBUTING.md)
+- [x] Create Code style standard
+- [ ] Document it in [CONTRIBUTING.md](./CONTRIBUTING.md)
 - [x] List Agents for starting project
 - [x] List Environments for start project
 
@@ -16,9 +17,9 @@
 
 - [x] Random Agent
 - [x] Deep Q Network (Mnih *et al.*, [2013](https://arxiv.org/abs/1312.5602))
-- [x] Deep Recurrent Q Network (Hausknecht *et al.*, [2015](https://arxiv.org/abs/1507.06527))
+- [ ] Deep Recurrent Q Network (Hausknecht *et al.*, [2015](https://arxiv.org/abs/1507.06527))
 - [ ] Persistent Advantage Learning (Bellamare *et al.*, [2015](https://arxiv.org/abs/1512.04860))
-- [ ] Double Deep Q Network (van Hasselt *et al.*, [2016](https://arxiv.org/abs/1509.06461))
+- [x] Double Deep Q Network (van Hasselt *et al.*, [2016](https://arxiv.org/abs/1509.06461))
 - [ ] Dueling Q Network (Wang *et al.*, [2016](https://arxiv.org/abs/1511.06581))
 - [ ] Bootstraped Deep Q Network (Osband *et al.*, [2016](https://arxiv.org/abs/1602.04621))
 - [ ] Continuous Deep Q Network (Gu*et al.*, [2016](https://arxiv.org/abs/1603.00748))
