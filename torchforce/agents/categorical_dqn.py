@@ -49,10 +49,10 @@ class CategoricalDQN(DQN):
         self.z = torch.Tensor([r_min + i * self.delta_z for i in range(num_atoms)])
 
     def get_action(self, observation):
-        """
+        """ Return action choice by the agents
 
-        :param observation:
-        :return:
+        :param observation: stat of environment
+        :type observation: gym.Space
         """
         observation = torch.tensor([flatten(self.observation_space, observation)])
 

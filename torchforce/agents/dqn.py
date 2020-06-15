@@ -90,10 +90,10 @@ class DQN(AgentInterface, metaclass=ABCMeta):
             self.greedy_exploration = greedy_exploration
 
     def get_action(self, observation):
-        """
+        """ Return action choice by the agents
 
-        :param observation:
-        :return:
+        :param observation: stat of environment
+        :type observation: gym.Space
         """
         if not self.greedy_exploration.be_greedy(self.step):
             return self.action_space.sample()
@@ -105,13 +105,19 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         return torch.argmax(q_values).detach().item()
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
-        """
+        """ learn from parameters
 
-        :param observation:
-        :param action:
-        :param reward:
+        :param observation: stat of environment
+        :type observation: gym.Space
+        :param action: action taken by agent
+        :type action: int, float, list
+        :param reward: reward win
+        :type reward: int, float, np.int, np.float
+        :type reward: int, np.int
         :param next_observation:
-        :param done:
+        :type next_observation: gym.Space
+        :param done: if env is finished
+        :type done: bool
         """
         self.memory.append(observation, action, reward, next_observation, done)
         self.step += 1
@@ -120,9 +126,6 @@ class DQN(AgentInterface, metaclass=ABCMeta):
             self.train()
 
     def episode_finished(self) -> None:
-        """
-
-        """
         pass
 
     def train(self):
@@ -144,10 +147,12 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         self.optimizer.step()
 
     def save(self, file_name, dire_name="."):
-        """
+        """ Save agent at dire_name/file_name
 
-        :param file_name:
-        :param dire_name:
+        :param file_name: name of file for save
+        :type file_name: string
+        :param dire_name: name of directory where we would save it
+        :type file_name: string
         """
         os.makedirs(os.path.abspath(dire_name), exist_ok=True)
 
@@ -167,11 +172,12 @@ class DQN(AgentInterface, metaclass=ABCMeta):
 
     @classmethod
     def load(cls, file_name, dire_name="."):
-        """
+        """ load agent form dire_name/file_name
 
-        :param file_name:
-        :param dire_name:
-        :return:
+        :param file_name: name of file for load
+        :type file_name: string
+        :param dire_name: name of directory where we would load it
+        :type file_name: string
         """
         dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
 
