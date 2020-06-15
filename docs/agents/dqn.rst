@@ -1,8 +1,6 @@
 DQN
 =========================
 
-DQN
-----------------------------
 
 .. automodule:: torchforce.agents.dqn
    :members:
