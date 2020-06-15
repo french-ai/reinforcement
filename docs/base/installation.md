@@ -8,9 +8,9 @@ For installing *pytorch* follow [Quick Start Locally](https://pytorch.org/) for 
 # Installation of torchforce
 - Download files:
 
-``
+```
 git clone https://github.com/french-ai/reinforcement.git
-``
+```
 
 In root repository :
 
