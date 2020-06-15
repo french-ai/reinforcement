@@ -1,7 +1,7 @@
-torchforce.agents.agent_random
+Agent_random
 =========================
 
-torchforce.agents.agent\_random module
+Agent\_random
 --------------------------------------
 
 .. automodule:: torchforce.agents.agent_random

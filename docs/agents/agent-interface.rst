@@ -1,7 +1,7 @@
-torchforce.agents.agent_interface
+Agent interface
 =========================
 
-torchforce.agents.agent\_interface module
+Agent\_interface
 -----------------------------------------
 
 .. automodule:: torchforce.agents.agent_interface

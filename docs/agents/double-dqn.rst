@@ -1,7 +1,7 @@
-torchforce.agents.double_dqn
+Double_dqn
 =========================
 
-torchforce.agents.double\_dqn module
+Double\_dqn
 ------------------------------------
 
 .. automodule:: torchforce.agents.double_dqn

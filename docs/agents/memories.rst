@@ -1,7 +1,15 @@
-torchforce.memories package
+Memories package
 ===========================
 
-torchforce.memories.experience\_replay module
+Memory\_interface
+--------------------------------------------
+
+.. automodule:: torchforce.memories.memory_interface
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Experience\_replay
 ---------------------------------------------
 
 .. automodule:: torchforce.memories.experience_replay
@@ -9,12 +17,5 @@ torchforce.memories.experience\_replay module
    :undoc-members:
    :show-inheritance:
 
-torchforce.memories.memory\_interface module
---------------------------------------------
-
-.. automodule:: torchforce.memories.memory_interface
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 

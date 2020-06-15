@@ -1,7 +1,15 @@
-torchforce.explorations package
+Explorations package
 ===============================
 
-torchforce.explorations.adaptative\_epsilon\_greedy module
+Greedy\_exploration\_interface
+-------------------------------------------------------------
+
+.. automodule:: torchforce.explorations.greedy_exploration_interface
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Adaptative\_epsilon\_greedy
 ----------------------------------------------------------
 
 .. automodule:: torchforce.explorations.adaptative_epsilon_greedy
@@ -9,7 +17,7 @@ torchforce.explorations.adaptative\_epsilon\_greedy module
    :undoc-members:
    :show-inheritance:
 
-torchforce.explorations.epsilon\_greedy module
+Epsilon\_greedy
 ----------------------------------------------
 
 .. automodule:: torchforce.explorations.epsilon_greedy
@@ -17,18 +25,10 @@ torchforce.explorations.epsilon\_greedy module
    :undoc-members:
    :show-inheritance:
 
-torchforce.explorations.greedy module
+Greedy
 -------------------------------------
 
 .. automodule:: torchforce.explorations.greedy
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-torchforce.explorations.greedy\_exploration\_interface module
--------------------------------------------------------------
-
-.. automodule:: torchforce.explorations.greedy_exploration_interface
    :members:
    :undoc-members:
    :show-inheritance:

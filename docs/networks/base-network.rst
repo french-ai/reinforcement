@@ -1,7 +1,7 @@
-torchforce.networks.base_network
+Base_network
 ===========================
 
-torchforce.networks.base\_network module
+Base\_network
 ----------------------------------------
 
 .. automodule:: torchforce.networks.base_network

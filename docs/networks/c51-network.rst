@@ -1,7 +1,6 @@
-torchforce.networks.c51_network
+C51_network
 ===========================
-
-torchforce.networks.c51\_network module
+V51\_network
 ---------------------------------------
 
 .. automodule:: torchforce.networks.c51_network

@@ -1,7 +1,7 @@
-torchforce.agents.dqn
+DQN
 =========================
 
-torchforce.agents.dqn module
+DQN
 ----------------------------
 
 .. automodule:: torchforce.agents.dqn
