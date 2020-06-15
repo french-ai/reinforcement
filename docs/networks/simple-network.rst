@@ -1,7 +1,7 @@
-torchforce.networks.simple_network
+Simple_network
 ===========================
 
-torchforce.networks.simple\_network module
+Simple\_network
 ------------------------------------------
 
 .. automodule:: torchforce.networks.simple_network

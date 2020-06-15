@@ -6,20 +6,27 @@ Installation
 For installing *pytorch* follow [Quick Start Locally](https://pytorch.org/) for your config.
 
 # Installation of torchforce
-- Download files:
+Download files:
 
-``
+```bash
 git clone https://github.com/french-ai/reinforcement.git
-``
-
-In root repository :
-
-* for use:
 ```
+
+Move to reinforcement directory:
+
+```bash
+cd reinforcement
+```
+Install torchforce
+
+- to use it:
+
+```bash
 pip install .
 ```
 
-* for dev:
-```
+- to help development:
+
+```bash
 pip install ".[dev]" .
 ```

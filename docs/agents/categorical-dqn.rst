@@ -1,7 +1,7 @@
-torchforce.agents.categorical_dqn
+Categorical_dqn
 =========================
 
-torchforce.agents.categorical\_dqn module
+Categorical\_dqn
 -----------------------------------------
 
 .. automodule:: torchforce.agents.categorical_dqn

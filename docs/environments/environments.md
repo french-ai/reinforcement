@@ -1,4 +1,4 @@
-torchforce.environments package
+Environments package
 ===============================
 
 Module contents

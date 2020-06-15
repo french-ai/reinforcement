@@ -114,12 +114,12 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--agent', type=str, help='name of Agent', nargs='?', const=1, default="agent_random")
     parser.add_argument('--env', type=str, help='name of environment', nargs='?', const=1, default="CartPole-v1")
-    parser.add_argument('--max_episode', type=int, help='number of episode for train', nargs='?', const=1, default=100)
+    parser.add_argument('--max_episode', type=int, help='number of episode to train', nargs='?', const=1, default=100)
     parser.add_argument('--render', type=bool, help='if show render on each step or not', nargs='?', const=1,
                         default=False)
-    parser.add_argument('--train', type=bool, help='if train agent or not', nargs='?', const=1,
-                        default=True)
-    parser.add_argument('--file_path', type=str, help='path to file for load trained agent')
+    # parser.add_argument('--train', type=bool, help='if train agent or not', nargs='?', const=1,
+    #                    default=True)
+    # parser.add_argument('--file_path', type=str, help='path to file for load trained agent')
     args = parser.parse_args()
 
     trainer = Trainer(environment=args.env, agent=arg_to_agent(args.agent))
