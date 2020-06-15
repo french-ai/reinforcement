@@ -20,11 +20,13 @@ cd reinforcement
 Install torchforce
 
 - to use it:
+
 ```bash
 pip install .
 ```
 
 - to help development:
+
 ```bash
 pip install ".[dev]" .
 ```
