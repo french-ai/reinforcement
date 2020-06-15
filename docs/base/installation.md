@@ -1,11 +1,11 @@
 Installation
 ============
 
-# Installation of pytorch
+## Installation of pytorch
 
 For installing *pytorch* follow [Quick Start Locally](https://pytorch.org/) for your config.
 
-# Installation of torchforce
+## Installation of torchforce
 Download files:
 
 ```bash
