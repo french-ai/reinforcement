@@ -1,8 +1,6 @@
 Categorical_dqn
 =========================
 
-Categorical\_dqn
------------------------------------------
 
 .. automodule:: torchforce.agents.categorical_dqn
    :members:
