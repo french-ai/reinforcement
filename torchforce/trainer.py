@@ -97,19 +97,21 @@ class Trainer:
         while not done:
             observation, done, reward = Trainer.do_step(observation=observation, env=env, agent=agent, learn=False,
                                                         logger=logger, render=render)
-        agent.episode_finished()
         if logger:
             logger.evaluate()
 
-    def train(self, max_episode=1000, render=True):
+    def train(self, max_episode=1000, nb_evaluation=1, render=True):
         """
 
+        :param nb_evaluation:
         :param max_episode:
         :param render:
         """
         env = self.get_environment(self.environment)
         for i_episode in range(max_episode):
             self.do_episode(env=env, agent=self.agent, logger=self.logger, render=render)
+            if max_episode % (max_episode // nb_evaluation) == 0 and self.logger is not None:
+                self.evaluate(env=env, agent=self.agent, logger=self.logger, render=render)
         env.close()
 
 

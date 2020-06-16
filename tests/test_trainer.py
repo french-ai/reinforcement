@@ -130,14 +130,16 @@ def test_evaluate():
     assert fake_env.reset_done == 0
 
     Trainer.evaluate(env=fake_env, agent=fake_agent)
-    assert fake_agent.episode_finished_done == 1 and fake_agent.learn_done == 0
+    assert fake_agent.episode_finished_done == 0 and fake_agent.learn_done == 0
     assert fake_env.reset_done == 1
     assert logger.add_steps_call == 0 and logger.add_episode_call == 0 and logger.end_episode_call == 0
+    assert logger.evaluate_call == 0
 
     Trainer.evaluate(env=fake_env, agent=fake_agent, logger=logger)
-    assert fake_agent.episode_finished_done == 2 and fake_agent.learn_done == 0
+    assert fake_agent.episode_finished_done == 0 and fake_agent.learn_done == 0
     assert fake_env.reset_done == 2
     assert logger.add_steps_call == 1 and logger.add_episode_call == 0 and logger.end_episode_call == 0
+    assert logger.evaluate_call == 1
 
 
 def test_do_step():
@@ -208,7 +210,7 @@ def test_trainer_train():
 
         trainer.train(max_episode=number_episode)
 
-        assert fake_agent.get_action_done == number_episode and fake_agent.learn_done == number_episode
+        assert fake_agent.get_action_done // 2 == number_episode and fake_agent.learn_done == number_episode
         assert fake_agent.episode_finished_done == number_episode
-        assert fake_env.step_done == number_episode and fake_env.reset_done == number_episode
-        assert fake_env.render_done == number_episode
+        assert fake_env.step_done // 2 == number_episode and fake_env.reset_done // 2 == number_episode
+        assert fake_env.render_done // 2 == number_episode
