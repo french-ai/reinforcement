@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 import gym
 
 from torchforce import Logger, Record
-from torchforce.agents import AgentInterface, AgentRandom, DQN, DoubleDQN, CategoricalDQN
+from torchforce.agents import AgentInterface, AgentRandom, DQN, DoubleDQN, CategoricalDQN, DuelingDQN
 
 
 class Trainer:
@@ -107,6 +107,8 @@ def arg_to_agent(arg_agent) -> AgentInterface:
         return DoubleDQN
     if arg_agent == "categorical_dqn":
         return CategoricalDQN
+    if arg_agent == "dueling_dqn":
+        return DuelingDQN
     raise ValueError("this agent (" + str(arg_agent) + ") is not implemented")
 
 

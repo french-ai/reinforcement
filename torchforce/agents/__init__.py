@@ -4,3 +4,4 @@ from .agent_constant import AgentConstant
 from .dqn import DQN
 from .categorical_dqn import CategoricalDQN
 from .double_dqn import DoubleDQN
+from .dueling_dqn import DuelingDQN
