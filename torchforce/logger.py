@@ -108,15 +108,23 @@ class Logger:
         self.episodes.append(self.current_steps)
         self.current_steps = []
 
-    @classmethod
-    def log_episode(cls, summary_writer, episode, step):
+    def evaluate(self):
         """
 
+        """
+        self.log_episode(self.summary_writer, self.current_steps, len(self.episodes), tag="Evaluate/Reward")
+        self.current_steps = []
+
+    @classmethod
+    def log_episode(cls, summary_writer, episode, step, tag="Reward"):
+        """
+
+        :param tag:
         :param summary_writer:
         :param episode:
         :param step:
         """
-        summary_writer.add_scalar(tag="Reward/max", scalar_value=Record.max_records(episode), global_step=step)
-        summary_writer.add_scalar(tag="Reward/min", scalar_value=Record.max_records(episode), global_step=step)
-        summary_writer.add_scalar(tag="Reward/avg", scalar_value=Record.avg_records(episode), global_step=step)
-        summary_writer.add_scalar(tag="Reward/sum", scalar_value=Record.sum_records(episode), global_step=step)
+        summary_writer.add_scalar(tag=tag + "/max", scalar_value=Record.max_records(episode), global_step=step)
+        summary_writer.add_scalar(tag=tag + "/min", scalar_value=Record.max_records(episode), global_step=step)
+        summary_writer.add_scalar(tag=tag + "/avg", scalar_value=Record.avg_records(episode), global_step=step)
+        summary_writer.add_scalar(tag=tag + "/sum", scalar_value=Record.sum_records(episode), global_step=step)
