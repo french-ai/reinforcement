@@ -44,12 +44,13 @@ class Trainer:
         raise ValueError("this env (" + str(arg_env) + ") is not supported")
 
     @classmethod
-    def do_step(cls, observation, env, agent, logger=None, render=True):
+    def do_step(cls, observation, env, agent, learn=True, logger=None, render=True):
         """
 
         :param observation:
         :param env:
         :param agent:
+        :param learn:
         :param logger:
         :param render:
         :return:
@@ -58,7 +59,8 @@ class Trainer:
             env.render()
         action = agent.get_action(observation=observation)
         next_observation, reward, done, info = env.step(action)
-        agent.learn(observation, action, reward, next_observation, done)
+        if learn:
+            agent.learn(observation, action, reward, next_observation, done)
         if logger:
             logger.add_steps(Record(reward))
         return next_observation, done, reward
@@ -75,11 +77,29 @@ class Trainer:
         observation = env.reset()
         done = False
         while not done:
-            observation, done, reward = Trainer.do_step(observation=observation, env=env, agent=agent, logger=logger,
-                                                        render=render)
+            observation, done, reward = Trainer.do_step(observation=observation, env=env, agent=agent, learn=True,
+                                                        logger=logger, render=render)
         agent.episode_finished()
         if logger:
             logger.end_episode()
+
+    @classmethod
+    def evaluate(cls, env, agent, logger=None, render=True):
+        """
+
+        :param env:
+        :param agent:
+        :param logger:
+        :param render:
+        """
+        observation = env.reset()
+        done = False
+        while not done:
+            observation, done, reward = Trainer.do_step(observation=observation, env=env, agent=agent, learn=False,
+                                                        logger=logger, render=render)
+        agent.episode_finished()
+        if logger:
+            logger.evaluate()
 
     def train(self, max_episode=1000, render=True):
         """
