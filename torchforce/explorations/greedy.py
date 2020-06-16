@@ -4,10 +4,10 @@ from torchforce.explorations import GreedyExplorationInterface
 class Greedy(GreedyExplorationInterface):
 
     def be_greedy(self, step) -> bool:
-        """
+        """ Return True all time
 
-        :param step:
-        :return:
+        :param step: id of step
+        :type step: int
         """
         return True
 

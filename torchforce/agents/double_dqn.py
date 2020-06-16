@@ -12,10 +12,10 @@ from torchforce.memories import ExperienceReplay
 
 
 class DoubleDQN(DQN):
+    """ from 'Deep Reinforcement Learning with Double Q-learning' in https://arxiv.org/pdf/1509.06461.pdf """
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_copy=500,
-                 step_train=2, batch_size=32, gamma=0.99,
-                 loss=None, optimizer=None, greedy_exploration=None):
+                 step_train=2, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
         """
 
         :param action_space:
