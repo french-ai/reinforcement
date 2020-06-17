@@ -100,7 +100,7 @@ class Trainer:
         if logger:
             logger.evaluate()
 
-    def train(self, max_episode=1000, nb_evaluation=1, render=True):
+    def train(self, max_episode=1000, nb_evaluation=4, render=True):
         """
 
         :param nb_evaluation:
@@ -110,7 +110,8 @@ class Trainer:
         env = self.get_environment(self.environment)
         for i_episode in range(max_episode):
             self.do_episode(env=env, agent=self.agent, logger=self.logger, render=render)
-            if max_episode % (max_episode // nb_evaluation) == 0 and self.logger is not None:
+            if (i_episode == max_episode or i_episode % (
+                    max_episode // nb_evaluation) == 0) and self.logger is not None:
                 self.evaluate(env=env, agent=self.agent, logger=self.logger, render=render)
         env.close()
 
