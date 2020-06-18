@@ -9,6 +9,12 @@ from torchforce.agents import AgentInterface
 
 class AgentRandom(AgentInterface):
 
+    def enable_train(self):
+        pass
+
+    def disable_train(self):
+        pass
+
     def __init__(self, observation_space, action_space):
         """ Create random agent
 

@@ -42,6 +42,12 @@ class FakeEnv(gym.Env):
 
 class FakeAgent(AgentInterface):
 
+    def enable_train(self):
+        pass
+
+    def disable_train(self):
+        pass
+
     def save(self, file_name, dire_name="."):
         pass
 

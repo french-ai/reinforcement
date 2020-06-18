@@ -15,6 +15,12 @@ from torchforce.networks import SimpleNetwork
 
 class DQN(AgentInterface, metaclass=ABCMeta):
 
+    def enable_train(self):
+        self.trainable = True
+
+    def disable_train(self):
+        self.trainable = False
+
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_train=2,
                  batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
         """
@@ -89,13 +95,15 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         else:
             self.greedy_exploration = greedy_exploration
 
+        self.trainable = True
+
     def get_action(self, observation):
         """ Return action choice by the agents
 
         :param observation: stat of environment
         :type observation: gym.Space
         """
-        if not self.greedy_exploration.be_greedy(self.step):
+        if not self.greedy_exploration.be_greedy(self.step) and self.trainable:
             return self.action_space.sample()
 
         observation = torch.tensor([flatten(self.observation_space, observation)])
