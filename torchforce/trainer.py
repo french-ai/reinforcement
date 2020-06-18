@@ -74,6 +74,7 @@ class Trainer:
         :param logger:
         :param render:
         """
+        agent.enable_train()
         observation = env.reset()
         done = False
         while not done:
@@ -92,6 +93,7 @@ class Trainer:
         :param logger:
         :param render:
         """
+        agent.disable_train()
         observation = env.reset()
         done = False
         while not done:
