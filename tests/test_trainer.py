@@ -210,7 +210,14 @@ def test_trainer_train():
 
         trainer.train(max_episode=number_episode)
 
-        assert fake_agent.get_action_done // 2 == number_episode and fake_agent.learn_done == number_episode
+        if number_episode > 4:
+            eval = 5
+        elif number_episode > 0:
+            eval = 1
+        else:
+            eval = 0
+
+        assert fake_agent.get_action_done == number_episode + eval and fake_agent.learn_done == number_episode
         assert fake_agent.episode_finished_done == number_episode
-        assert fake_env.step_done // 2 == number_episode and fake_env.reset_done // 2 == number_episode
-        assert fake_env.render_done // 2 == number_episode
+        assert fake_env.step_done == number_episode + eval and fake_env.reset_done == number_episode + eval
+        assert fake_env.render_done == number_episode + eval

@@ -108,10 +108,9 @@ class Trainer:
         :param render:
         """
         env = self.get_environment(self.environment)
-        for i_episode in range(max_episode):
+        for i_episode in range(1, max_episode + 1):
             self.do_episode(env=env, agent=self.agent, logger=self.logger, render=render)
-            if (i_episode == max_episode or i_episode % (
-                    max_episode // nb_evaluation) == 0) and self.logger is not None:
+            if i_episode == 1 or i_episode == max_episode or i_episode % (max_episode // (nb_evaluation - 1)) == 0:
                 self.evaluate(env=env, agent=self.agent, logger=self.logger, render=render)
         env.close()
 
