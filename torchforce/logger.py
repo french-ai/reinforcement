@@ -114,6 +114,7 @@ class Logger:
 
         """
         self.log_episode(self.summary_writer, self.current_steps, len(self.episodes), tag="Evaluate/Reward")
+        self.write_log(self.log_dir, self.current_steps, len(self.episodes))
         self.current_steps = []
 
     @staticmethod
