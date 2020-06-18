@@ -197,3 +197,16 @@ def test_log_episode():
         Logger.log_episode(summary_writer, records, ite)
         assert (ite + 1) * 4 == len(summary_writer.add_scalar_call)
         assert ite == summary_writer.add_scalar_call[-1][2]
+
+
+def test_write_log():
+    list_steps = [[Record(1), Record(1), Record(1), Record(1)],
+                  [Record(2), Record(2), Record(2), Record(2)],
+                  [Record(1.0), Record(1.0), Record(1.0), Record(1.0)],
+                  [Record(2.0), Record(2.0), Record(2.0), Record(2.0)],
+                  [Record(1), Record(2), Record(3), Record(4)],
+                  [Record(-1), Record(1)],
+                  [Record(-10), Record(-15), Record(-20), Record(-15)]]
+
+    for ite, records in enumerate(list_steps):
+        Logger.write_log("./runs", records, ite)
