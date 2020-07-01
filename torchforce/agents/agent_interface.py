@@ -13,6 +13,22 @@ class AgentInterface(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
+    def enable_train(self):
+        """Enable train capacity
+
+        :return:
+        """
+        pass
+
+    @abc.abstractmethod
+    def disable_train(self):
+        """disable train capacity
+
+        :return:
+        """
+        pass
+
+    @abc.abstractmethod
     def learn(self, observation, action, reward, next_observation, done) -> None:
         """ learn from parameters
 

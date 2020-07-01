@@ -4,7 +4,7 @@ from torchforce.explorations import Greedy
 def test_greedy():
     exploration = Greedy()
 
-    exploration.be_greedy(0)
+    assert exploration.be_greedy(0) is True
 
 
 def test__str__():

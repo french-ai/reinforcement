@@ -82,9 +82,10 @@ class Logger:
 
         :param log_dir:
         """
+        self.log_dir = log_dir
         self.current_steps = []
         self.episodes = []
-        self.summary_writer = SummaryWriter(log_dir)
+        self.summary_writer = SummaryWriter(self.log_dir)
 
     def add_steps(self, steps):
         """
@@ -108,15 +109,39 @@ class Logger:
         self.episodes.append(self.current_steps)
         self.current_steps = []
 
-    @classmethod
-    def log_episode(cls, summary_writer, episode, step):
+    def evaluate(self):
         """
 
+        """
+        self.log_episode(self.summary_writer, self.current_steps, len(self.episodes), tag="Evaluate/Reward")
+        self.write_log(self.log_dir, self.current_steps, len(self.episodes))
+        self.current_steps = []
+
+    @staticmethod
+    def write_log(log_dir, episode, step):
+        """
+
+        :param log_dir:
+        :param episode:
+        :param step:
+        """
+        with open(log_dir + "/log.txt", "a+") as file:
+            max = Record.max_records(episode)
+            min = Record.min_records(episode)
+            avg = Record.avg_records(episode)
+            sum = Record.sum_records(episode)
+            file.writelines(str(step) + "," + str(max) + "," + str(min) + "," + str(avg) + "," + str(sum) + "\n")
+
+    @staticmethod
+    def log_episode(summary_writer, episode, step, tag="Reward"):
+        """
+
+        :param tag:
         :param summary_writer:
         :param episode:
         :param step:
         """
-        summary_writer.add_scalar(tag="Reward/max", scalar_value=Record.max_records(episode), global_step=step)
-        summary_writer.add_scalar(tag="Reward/min", scalar_value=Record.max_records(episode), global_step=step)
-        summary_writer.add_scalar(tag="Reward/avg", scalar_value=Record.avg_records(episode), global_step=step)
-        summary_writer.add_scalar(tag="Reward/sum", scalar_value=Record.sum_records(episode), global_step=step)
+        summary_writer.add_scalar(tag=tag + "/max", scalar_value=Record.max_records(episode), global_step=step)
+        summary_writer.add_scalar(tag=tag + "/min", scalar_value=Record.min_records(episode), global_step=step)
+        summary_writer.add_scalar(tag=tag + "/avg", scalar_value=Record.avg_records(episode), global_step=step)
+        summary_writer.add_scalar(tag=tag + "/sum", scalar_value=Record.sum_records(episode), global_step=step)

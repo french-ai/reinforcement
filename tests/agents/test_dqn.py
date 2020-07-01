@@ -233,3 +233,19 @@ def test__str__():
         agent.neural_network) + "-" + str(agent.memory) + "-" + str(agent.step_train) + "-" + str(
         agent.step) + "-" + str(agent.batch_size) + "-" + str(agent.gamma) + "-" + str(agent.loss) + "-" + str(
         agent.optimizer) + "-" + str(agent.greedy_exploration) == agent.__str__()
+
+
+def test_enable_train():
+    agent = DQN(Discrete(4), Box(1, 10, (4,)))
+
+    agent.trainable = False
+
+    agent.enable_train()
+    assert agent.trainable is True
+
+
+def test_disable_train():
+    agent = DQN(Discrete(4), Box(1, 10, (4,)))
+
+    agent.disable_train()
+    assert agent.trainable is False

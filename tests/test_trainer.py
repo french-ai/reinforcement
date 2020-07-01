@@ -42,6 +42,12 @@ class FakeEnv(gym.Env):
 
 class FakeAgent(AgentInterface):
 
+    def enable_train(self):
+        pass
+
+    def disable_train(self):
+        pass
+
     def save(self, file_name, dire_name="."):
         pass
 
@@ -75,6 +81,7 @@ class FakeLogger(Logger):
         self.add_steps_call = 0
         self.add_episode_call = 0
         self.end_episode_call = 0
+        self.evaluate_call = 0
 
     def add_steps(self, steps):
         self.add_steps_call += 1
@@ -84,6 +91,9 @@ class FakeLogger(Logger):
 
     def end_episode(self):
         self.end_episode_call += 1
+
+    def evaluate(self):
+        self.evaluate_call += 1
 
 
 def test_get_agent():
@@ -117,6 +127,27 @@ def test_do_episode():
     assert logger.add_steps_call == 1 and logger.add_episode_call == 0 and logger.end_episode_call == 1
 
 
+def test_evaluate():
+    fake_env = FakeEnv()
+    fake_agent = FakeAgent(observation_space=None, action_space=None)
+    logger = FakeLogger()
+
+    assert fake_agent.episode_finished_done == 0
+    assert fake_env.reset_done == 0
+
+    Trainer.evaluate(env=fake_env, agent=fake_agent)
+    assert fake_agent.episode_finished_done == 0 and fake_agent.learn_done == 0
+    assert fake_env.reset_done == 1
+    assert logger.add_steps_call == 0 and logger.add_episode_call == 0 and logger.end_episode_call == 0
+    assert logger.evaluate_call == 0
+
+    Trainer.evaluate(env=fake_env, agent=fake_agent, logger=logger)
+    assert fake_agent.episode_finished_done == 0 and fake_agent.learn_done == 0
+    assert fake_env.reset_done == 2
+    assert logger.add_steps_call == 1 and logger.add_episode_call == 0 and logger.end_episode_call == 0
+    assert logger.evaluate_call == 1
+
+
 def test_do_step():
     fake_env = FakeEnv()
     fake_agent = FakeAgent(observation_space=None, action_space=None)
@@ -138,6 +169,11 @@ def test_do_step():
     Trainer.do_step(observation=None, env=fake_env, agent=fake_agent, render=False)
     assert fake_agent.get_action_done == 3 and fake_agent.learn_done == 3 and fake_agent.episode_finished_done == 0
     assert fake_env.step_done == 3 and fake_env.reset_done == 0 and fake_env.render_done == 2
+    assert logger.add_steps_call == 1 and logger.add_episode_call == 0 and logger.end_episode_call == 0
+
+    Trainer.do_step(observation=None, env=fake_env, agent=fake_agent, learn=False)
+    assert fake_agent.get_action_done == 4 and fake_agent.learn_done == 3 and fake_agent.episode_finished_done == 0
+    assert fake_env.step_done == 4 and fake_env.reset_done == 0 and fake_env.render_done == 3
     assert logger.add_steps_call == 1 and logger.add_episode_call == 0 and logger.end_episode_call == 0
 
 
@@ -180,7 +216,14 @@ def test_trainer_train():
 
         trainer.train(max_episode=number_episode)
 
-        assert fake_agent.get_action_done == number_episode and fake_agent.learn_done == number_episode
+        if number_episode > 4:
+            eval = 5
+        elif number_episode > 0:
+            eval = 1
+        else:
+            eval = 0
+
+        assert fake_agent.get_action_done == number_episode + eval and fake_agent.learn_done == number_episode
         assert fake_agent.episode_finished_done == number_episode
-        assert fake_env.step_done == number_episode and fake_env.reset_done == number_episode
-        assert fake_env.render_done == number_episode
+        assert fake_env.step_done == number_episode + eval and fake_env.reset_done == number_episode + eval
+        assert fake_env.render_done == number_episode + eval
