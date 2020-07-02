@@ -3,6 +3,9 @@ import abc
 
 class AgentInterface(metaclass=abc.ABCMeta):
 
+    def __init__(self, device):
+        self.device = device
+
     @abc.abstractmethod
     def get_action(self, observation):
         """ Return action choice by the agents
