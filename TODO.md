@@ -5,13 +5,14 @@
 - [x] Update [requirements.txt](./requirements.txt)
 - [x] Design the architecture of code
 - [x] Choice test tool and init them
-- [ ] Choice docs tool and init this 
+- [x] Choice docs tool and init this 
 - [x] Config codecov
 - [x] Config codefactor
 - [x] Create Code style standard
 - [ ] Document it in [CONTRIBUTING.md](./CONTRIBUTING.md)
 - [x] List Agents for starting project
 - [x] List Environments for start project
+- [ ] Additif gpu option
 
 # Agents list
 
