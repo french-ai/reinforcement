@@ -12,7 +12,7 @@
 - [ ] Document it in [CONTRIBUTING.md](./CONTRIBUTING.md)
 - [x] List Agents for starting project
 - [x] List Environments for start project
-- [ ] Additif gpu option
+- [ ] Add gpu option
 
 # Agents list
 
@@ -27,6 +27,8 @@
 - [x] C51 = Categorical Deep Q Network (Bellamare *et al.*, [2017](https://arxiv.org/abs/1707.06887))
 - [ ] Rainbow (Hessel *et al.*, [2017](https://arxiv.org/abs/1710.02298))
 - [ ] Quantile Regression Deep Q Network (Dabney *et al.*, [2017](https://arxiv.org/abs/1710.10044))
+- [ ] Policy Gradient
+- [ ] Trust Region Policy Optimization
 - [ ] Proximal Policy Optimizations (Schulman *et al.*, [2017](https://arxiv.org/abs/1707.06347))
 
 # Explorations list
