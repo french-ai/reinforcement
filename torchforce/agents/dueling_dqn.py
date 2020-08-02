@@ -13,9 +13,12 @@ class DuelingDQN(DoubleDQN):
     """ from 'Dueling Network Architectures for Deep Reinforcement Learning' in https://arxiv.org/abs/1511.06581 """
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_copy=500,
-                 step_train=2, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
+                 step_train=2, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None,
+                 device=None):
         """
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param action_space:
         :param observation_space:
         :param memory:
@@ -34,16 +37,19 @@ class DuelingDQN(DoubleDQN):
                                                   action_shape=flatdim(action_space))
 
         if not isinstance(neural_network, BaseDuelingNetwork):
-            raise TypeError("neural_network need to be instance of torchforce.agents.BaseDuelingNetwork, not :" + str(type(neural_network)))
+            raise TypeError("neural_network need to be instance of torchforce.agents.BaseDuelingNetwork, not :" + str(
+                type(neural_network)))
 
         super().__init__(action_space, observation_space, memory=memory, neural_network=neural_network,
                          step_copy=step_copy, step_train=step_train, batch_size=batch_size, gamma=gamma, loss=loss,
-                         optimizer=optimizer, greedy_exploration=greedy_exploration)
+                         optimizer=optimizer, greedy_exploration=greedy_exploration, device=device)
 
     @classmethod
-    def load(cls, file_name, dire_name="."):
+    def load(cls, file_name, dire_name=".", device=None):
         """ load agent form dire_name/file_name
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param file_name: name of file for load
         :type file_name: string
         :param dire_name: name of directory where we would load it

@@ -12,9 +12,11 @@ class CategoricalDQN(DQN):
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, num_atoms=51,
                  r_min=-10, r_max=10, step_train=2, batch_size=32, gamma=0.99,
-                 optimizer=None, greedy_exploration=None):
+                 optimizer=None, greedy_exploration=None, device=None):
         """
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param action_space:
         :param observation_space:
         :param memory:
@@ -31,7 +33,7 @@ class CategoricalDQN(DQN):
         loss = None
 
         super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss,
-                         optimizer, greedy_exploration)
+                         optimizer, greedy_exploration, device=device)
 
         if neural_network is None:
             self.neural_network = C51Network(observation_shape=flatdim(observation_space),

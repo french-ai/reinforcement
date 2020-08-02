@@ -21,10 +21,13 @@ class DQN(AgentInterface, metaclass=ABCMeta):
     def disable_train(self):
         self.trainable = False
 
-    def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_train=2,
-                 batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
+    def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None,
+                 step_train=2, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None,
+                 device=None):
         """
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param action_space:
         :param observation_space:
         :param memory:
@@ -36,6 +39,7 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         :param optimizer:
         :param greedy_exploration:
         """
+
         if not isinstance(action_space, Discrete):
             raise TypeError(
                 "action_space need to be instance of gym.spaces.Space.Discrete, not :" + str(type(action_space)))
@@ -97,6 +101,9 @@ class DQN(AgentInterface, metaclass=ABCMeta):
 
         self.trainable = True
 
+        super().__init__(device)
+        self.neural_network.to(self.device)
+
     def get_action(self, observation):
         """ Return action choice by the agents
 
@@ -106,7 +113,7 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         if not self.greedy_exploration.be_greedy(self.step) and self.trainable:
             return self.action_space.sample()
 
-        observation = torch.tensor([flatten(self.observation_space, observation)])
+        observation = torch.tensor([flatten(self.observation_space, observation)], device=self.device)
 
         q_values = self.neural_network.forward(observation)
 
@@ -168,7 +175,7 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         dict_save["observation_space"] = pickle.dumps(self.observation_space)
         dict_save["action_space"] = pickle.dumps(self.action_space)
         dict_save["neural_network_class"] = pickle.dumps(type(self.neural_network))
-        dict_save["neural_network"] = self.neural_network.state_dict()
+        dict_save["neural_network"] = self.neural_network.cpu().state_dict()
         dict_save["step_train"] = pickle.dumps(self.step_train)
         dict_save["batch_size"] = pickle.dumps(self.batch_size)
         dict_save["gamma"] = pickle.dumps(self.gamma)
@@ -179,9 +186,11 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         torch.save(dict_save, os.path.abspath(os.path.join(dire_name, file_name)))
 
     @classmethod
-    def load(cls, file_name, dire_name="."):
+    def load(cls, file_name, dire_name=".", device=None):
         """ load agent form dire_name/file_name
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param file_name: name of file for load
         :type file_name: string
         :param dire_name: name of directory where we would load it
@@ -202,7 +211,8 @@ class DQN(AgentInterface, metaclass=ABCMeta):
                    gamma=pickle.loads(dict_save["gamma"]),
                    loss=pickle.loads(dict_save["loss"]),
                    optimizer=pickle.loads(dict_save["optimizer"]),
-                   greedy_exploration=pickle.loads(dict_save["greedy_exploration"]))
+                   greedy_exploration=pickle.loads(dict_save["greedy_exploration"]),
+                   device=device)
 
     def __str__(self):
         return 'DQN-' + str(self.observation_space) + "-" + str(self.action_space) + "-" + str(

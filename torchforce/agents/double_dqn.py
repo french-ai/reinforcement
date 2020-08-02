@@ -15,9 +15,12 @@ class DoubleDQN(DQN):
     """ from 'Deep Reinforcement Learning with Double Q-learning' in https://arxiv.org/pdf/1509.06461.pdf """
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_copy=500,
-                 step_train=2, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
+                 step_train=2, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None,
+                 device=None):
         """
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param action_space:
         :param observation_space:
         :param memory:
@@ -31,7 +34,7 @@ class DoubleDQN(DQN):
         :param greedy_exploration:
         """
         super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss,
-                         optimizer, greedy_exploration)
+                         optimizer, greedy_exploration, device=device)
 
         self.neural_network_target = deepcopy(self.neural_network)
         self.copy_online_to_target()
@@ -112,9 +115,11 @@ class DoubleDQN(DQN):
         torch.save(dict_save, os.path.abspath(os.path.join(dire_name, file_name)))
 
     @classmethod
-    def load(cls, file_name, dire_name="."):
+    def load(cls, file_name, dire_name=".", device=None):
         """ load agent form dire_name/file_name
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param file_name: name of file for load
         :type file_name: string
         :param dire_name: name of directory where we would load it

@@ -15,14 +15,17 @@ class AgentConstant(AgentInterface):
     def disable_train(self):
         pass
 
-    def __init__(self, observation_space, action_space):
+    def __init__(self, observation_space, action_space, device=None):
         """ Create AgentConstant
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param observation_space: Space for init observation size
         :type observation_space: gym.Space
         :param action_space: Space for init action size
         :type observation_space: gym.Space
         """
+        super().__init__(device)
         if not isinstance(action_space, Space):
             raise TypeError("action_space need to be instance of gym.spaces.Space, not :" + str(type(action_space)))
         if not isinstance(observation_space, Space):
@@ -81,9 +84,11 @@ class AgentConstant(AgentInterface):
         torch.save(dict_save, os.path.abspath(os.path.join(dire_name, file_name)))
 
     @classmethod
-    def load(cls, file_name, dire_name="."):
+    def load(cls, file_name, dire_name=".", device=None):
         """ Load agent form dire_name/file_name
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param file_name: name of file for load
         :type file_name: string
         :param dire_name: name of directory where we would load it
