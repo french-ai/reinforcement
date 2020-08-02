@@ -32,9 +32,6 @@ class CategoricalDQN(DQN):
         """
         loss = None
 
-        super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss,
-                         optimizer, greedy_exploration, device=device)
-
         if neural_network is None:
             self.neural_network = C51Network(observation_shape=flatdim(observation_space),
                                              action_shape=flatdim(action_space))
@@ -43,12 +40,15 @@ class CategoricalDQN(DQN):
         if optimizer is None:
             self.optimizer = optim.Adam(self.neural_network.parameters())
 
+        super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss,
+                         optimizer, greedy_exploration, device=device)
+
         self.num_atoms = num_atoms
         self.r_min = r_min
         self.r_max = r_max
 
         self.delta_z = (r_max - r_min) / float(num_atoms - 1)
-        self.z = torch.Tensor([r_min + i * self.delta_z for i in range(num_atoms)])
+        self.z = torch.tensor([r_min + i * self.delta_z for i in range(num_atoms)], device=self.device)
 
     def get_action(self, observation):
         """ Return action choice by the agents
@@ -56,7 +56,7 @@ class CategoricalDQN(DQN):
         :param observation: stat of environment
         :type observation: gym.Space
         """
-        observation = torch.tensor([flatten(self.observation_space, observation)])
+        observation = torch.tensor([flatten(self.observation_space, observation)], device=self.device)
 
         prediction = self.neural_network.forward(observation).detach()[0]
         q_values = prediction * self.z

@@ -70,7 +70,8 @@ class DuelingDQN(DoubleDQN):
                                  gamma=pickle.loads(dict_save["gamma"]),
                                  loss=pickle.loads(dict_save["loss"]),
                                  optimizer=pickle.loads(dict_save["optimizer"]),
-                                 greedy_exploration=pickle.loads(dict_save["greedy_exploration"]))
+                                 greedy_exploration=pickle.loads(dict_save["greedy_exploration"]),
+                                 device=device)
 
         dueling_dqn.step_copy = pickle.loads(dict_save["step_copy"])
 

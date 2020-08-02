@@ -43,6 +43,8 @@ class DoubleDQN(DQN):
         if optimizer is None:
             self.optimizer = optim.Adam(self.neural_network.parameters())
 
+        self.neural_network_target.to(self.device)
+
     def learn(self, observation, action, reward, next_observation, done) -> None:
         """ learn from parameters
 
@@ -140,7 +142,8 @@ class DoubleDQN(DQN):
                                gamma=pickle.loads(dict_save["gamma"]),
                                loss=pickle.loads(dict_save["loss"]),
                                optimizer=pickle.loads(dict_save["optimizer"]),
-                               greedy_exploration=pickle.loads(dict_save["greedy_exploration"]))
+                               greedy_exploration=pickle.loads(dict_save["greedy_exploration"]),
+                               device=device)
 
         double_dqn.step_copy = pickle.loads(dict_save["step_copy"])
 

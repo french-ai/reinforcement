@@ -93,7 +93,8 @@ class AgentRandom(AgentInterface):
         """
         dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
         return AgentRandom(observation_space=pickle.loads(dict_save["observation_space"]),
-                           action_space=pickle.loads(dict_save["action_space"]))
+                           action_space=pickle.loads(dict_save["action_space"]),
+                           device=device)
 
     def __str__(self):
         return 'AgentRandom-' + str(self.observation_space) + "-" + str(self.action_space)

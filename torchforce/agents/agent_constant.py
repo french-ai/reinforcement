@@ -96,7 +96,8 @@ class AgentConstant(AgentInterface):
         """
         dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
         agent = AgentConstant(observation_space=pickle.loads(dict_save["observation_space"]),
-                              action_space=pickle.loads(dict_save["action_space"]))
+                              action_space=pickle.loads(dict_save["action_space"]),
+                              device=device)
         agent.action = pickle.loads(dict_save["action"])
         return agent
 
