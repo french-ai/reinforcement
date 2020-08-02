@@ -1,5 +1,7 @@
 import abc
 
+import torch
+
 
 class AgentInterface(metaclass=abc.ABCMeta):
 
@@ -9,6 +11,10 @@ class AgentInterface(metaclass=abc.ABCMeta):
         :param device: torch device to run agent
         :type: torch.device
         """
+        if device is None:
+            device = torch.device("cpu")
+        if not isinstance(device, torch.device):
+            raise TypeError("device need to be torch.device instance")
         self.device = device
 
     @abc.abstractmethod

@@ -32,7 +32,7 @@ class MOCKAgentInterface(AgentInterface):
         pass
 
     @classmethod
-    def load(cls, file_name, dire_name="."):
+    def load(cls, file_name, dire_name=".", device=None):
         pass
 
     def __str__(self):
@@ -40,5 +40,13 @@ class MOCKAgentInterface(AgentInterface):
 
 
 def test_device():
-    device = torch.device
+    device = torch.device("cpu")
     assert device == MOCKAgentInterface(device).device
+
+    device = None
+    assert torch.device("cpu") == MOCKAgentInterface(device).device
+
+    devices = ["dzeqdzqd", 1512, object(), 151.515]
+    for device in devices:
+        with pytest.raises(TypeError):
+            MOCKAgentInterface(device)
