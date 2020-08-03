@@ -249,3 +249,28 @@ def test_disable_train():
 
     agent.disable_train()
     assert agent.trainable is False
+
+
+def test_device_gpu():
+    if torch.cuda.is_available():
+        network = Network()
+        memory = ExperienceReplay(max_size=5)
+
+        agent = DQN(Discrete(4), Discrete(4), memory, neural_network=network, device=torch.device("cuda"))
+
+        obs = [1, 2, 5, 0]
+        action = 0
+        reward = 0
+        next_obs = [5, 9, 4, 0]
+        done = False
+
+        obs_s = [obs, obs, obs]
+        actions = [1, 2, 3]
+        rewards = [-2.2, 5, 4]
+        next_obs_s = [next_obs, next_obs, next_obs]
+        dones = [False, True, False]
+
+        memory.extend(obs_s, actions, rewards, next_obs_s, dones)
+
+        agent.learn(obs, action, reward, next_obs, done)
+        agent.learn(obs, action, reward, next_obs, done)

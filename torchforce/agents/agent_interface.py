@@ -1,7 +1,21 @@
 import abc
 
+import torch
+
 
 class AgentInterface(metaclass=abc.ABCMeta):
+
+    def __init__(self, device):
+        """
+
+        :param device: torch device to run agent
+        :type: torch.device
+        """
+        if device is None:
+            device = torch.device("cpu")
+        if not isinstance(device, torch.device):
+            raise TypeError("device need to be torch.device instance")
+        self.device = device
 
     @abc.abstractmethod
     def get_action(self, observation):
@@ -65,9 +79,11 @@ class AgentInterface(metaclass=abc.ABCMeta):
 
     @classmethod
     @abc.abstractmethod
-    def load(cls, file_name, dire_name="."):
+    def load(cls, file_name, dire_name=".", device=None):
         """ load agent form dire_name/file_name
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param file_name: name of file for load
         :type file_name: string
         :param dire_name: name of directory where we would load it

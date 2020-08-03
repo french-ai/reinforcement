@@ -15,9 +15,12 @@ class DoubleDQN(DQN):
     """ from 'Deep Reinforcement Learning with Double Q-learning' in https://arxiv.org/pdf/1509.06461.pdf """
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_copy=500,
-                 step_train=2, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None):
+                 step_train=2, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None,
+                 device=None):
         """
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param action_space:
         :param observation_space:
         :param memory:
@@ -31,7 +34,7 @@ class DoubleDQN(DQN):
         :param greedy_exploration:
         """
         super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss,
-                         optimizer, greedy_exploration)
+                         optimizer, greedy_exploration, device=device)
 
         self.neural_network_target = deepcopy(self.neural_network)
         self.copy_online_to_target()
@@ -39,6 +42,8 @@ class DoubleDQN(DQN):
 
         if optimizer is None:
             self.optimizer = optim.Adam(self.neural_network.parameters())
+
+        self.neural_network_target.to(self.device)
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
         """ learn from parameters
@@ -64,7 +69,8 @@ class DoubleDQN(DQN):
         """
 
         """
-        observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size)
+        observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size,
+                                                                                      device=self.device)
 
         actions_next = torch.argmax(self.neural_network.forward(next_observations).detach(), dim=1)
         actions_next_one_hot = F.one_hot(actions_next.to(torch.int64), num_classes=self.action_space.n)
@@ -112,9 +118,11 @@ class DoubleDQN(DQN):
         torch.save(dict_save, os.path.abspath(os.path.join(dire_name, file_name)))
 
     @classmethod
-    def load(cls, file_name, dire_name="."):
+    def load(cls, file_name, dire_name=".", device=None):
         """ load agent form dire_name/file_name
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param file_name: name of file for load
         :type file_name: string
         :param dire_name: name of directory where we would load it
@@ -135,7 +143,8 @@ class DoubleDQN(DQN):
                                gamma=pickle.loads(dict_save["gamma"]),
                                loss=pickle.loads(dict_save["loss"]),
                                optimizer=pickle.loads(dict_save["optimizer"]),
-                               greedy_exploration=pickle.loads(dict_save["greedy_exploration"]))
+                               greedy_exploration=pickle.loads(dict_save["greedy_exploration"]),
+                               device=device)
 
         double_dqn.step_copy = pickle.loads(dict_save["step_copy"])
 

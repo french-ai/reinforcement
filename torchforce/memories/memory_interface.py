@@ -28,9 +28,10 @@ class MemoryInterface(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def sample(self, batch_size):
+    def sample(self, batch_size, device):
         """
 
+        :param device:
         :param batch_size:
         """
         pass

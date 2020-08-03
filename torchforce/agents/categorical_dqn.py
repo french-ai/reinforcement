@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
-from gym.spaces import flatdim, flatten
+from gym.spaces import Discrete, Space, flatdim, flatten
 
 from torchforce.agents import DQN
 from torchforce.memories import ExperienceReplay
@@ -12,9 +12,11 @@ class CategoricalDQN(DQN):
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, num_atoms=51,
                  r_min=-10, r_max=10, step_train=2, batch_size=32, gamma=0.99,
-                 optimizer=None, greedy_exploration=None):
+                 optimizer=None, greedy_exploration=None, device=None):
         """
 
+        :param device: torch device to run agent
+        :type: torch.device
         :param action_space:
         :param observation_space:
         :param memory:
@@ -30,23 +32,30 @@ class CategoricalDQN(DQN):
         """
         loss = None
 
-        super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss,
-                         optimizer, greedy_exploration)
+        if not isinstance(action_space, Discrete):
+            raise TypeError(
+                "action_space need to be instance of gym.spaces.Space.Discrete, not :" + str(type(action_space)))
+        if not isinstance(observation_space, Space):
+            raise TypeError(
+                "observation_space need to be instance of gym.spaces.Space.Discrete, not :" + str(
+                    type(observation_space)))
 
-        if neural_network is None:
-            self.neural_network = C51Network(observation_shape=flatdim(observation_space),
-                                             action_shape=flatdim(action_space))
+        if neural_network is None and optimizer is None:
+            neural_network = C51Network(observation_shape=flatdim(observation_space),
+                                        action_shape=flatdim(action_space))
             num_atoms = 51
 
-        if optimizer is None:
-            self.optimizer = optim.Adam(self.neural_network.parameters())
+            optimizer = optim.Adam(neural_network.parameters())
+
+        super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss,
+                         optimizer, greedy_exploration, device=device)
 
         self.num_atoms = num_atoms
         self.r_min = r_min
         self.r_max = r_max
 
         self.delta_z = (r_max - r_min) / float(num_atoms - 1)
-        self.z = torch.Tensor([r_min + i * self.delta_z for i in range(num_atoms)])
+        self.z = torch.tensor([r_min + i * self.delta_z for i in range(num_atoms)], device=self.device)
 
     def get_action(self, observation):
         """ Return action choice by the agents
@@ -54,7 +63,7 @@ class CategoricalDQN(DQN):
         :param observation: stat of environment
         :type observation: gym.Space
         """
-        observation = torch.tensor([flatten(self.observation_space, observation)])
+        observation = torch.tensor([flatten(self.observation_space, observation)], device=self.device)
 
         prediction = self.neural_network.forward(observation).detach()[0]
         q_values = prediction * self.z
@@ -68,7 +77,8 @@ class CategoricalDQN(DQN):
         """
         self.batch_size = 3
 
-        observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size)
+        observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size,
+                                                                                      device=self.device)
 
         actions = actions.to(torch.long)
         actions = F.one_hot(actions, num_classes=self.action_space.n)
@@ -88,11 +98,12 @@ class CategoricalDQN(DQN):
 
         l, u = b.floor().to(torch.int64), b.ceil().to(torch.int64)
 
-        m_prob = torch.zeros((self.batch_size, self.action_space.n, self.num_atoms))
+        m_prob = torch.zeros((self.batch_size, self.action_space.n, self.num_atoms), device=self.device)
 
         predictions_next = predictions_next[actions_next == 1, :]
 
-        offset = torch.linspace(0, (self.batch_size - 1) * self.num_atoms, self.batch_size).view(-1, 1)
+        offset = torch.linspace(0, (self.batch_size - 1) * self.num_atoms, self.batch_size).view(-1, 1).to(
+            device=self.device)
         offset = offset.expand(self.batch_size, self.num_atoms)
 
         u_index = (u + offset).view(-1).to(torch.int64)
@@ -100,7 +111,7 @@ class CategoricalDQN(DQN):
 
         predictions_next = (dones + (1 - dones) * predictions_next)
 
-        m_prob_action = m_prob[actions == 1, :].view(-1)
+        m_prob_action = m_prob[actions == 1, :].view(-1).to(device=self.device)
         m_prob_action.index_add_(0, u_index, (predictions_next * (u - b)).view(-1))
         m_prob_action.index_add_(0, l_index, (predictions_next * (b - l)).view(-1))
 

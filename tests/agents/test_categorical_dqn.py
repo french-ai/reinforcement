@@ -1,4 +1,5 @@
 import pytest
+import torch
 import torch.optim as optim
 from gym.spaces import Discrete, Box
 
@@ -108,3 +109,27 @@ def test__str__():
         agent.step) + "-" + str(agent.batch_size) + "-" + str(agent.gamma) + "-" + str(agent.loss) + "-" + str(
         agent.optimizer) + "-" + str(agent.greedy_exploration) + "-" + str(agent.num_atoms) + "-" + str(
         agent.r_min) + "-" + str(agent.r_max) + "-" + str(agent.delta_z) + "-" + str(agent.z) == agent.__str__()
+
+
+def test_device_gpu():
+    if torch.cuda.is_available():
+        memory = ExperienceReplay(max_size=5)
+
+        agent = CategoricalDQN(Discrete(4), Box(1, 10, (4,)), memory, device=torch.device("cuda"))
+
+        obs = [1, 2, 5, 0]
+        action = 0
+        reward = 0
+        next_obs = [5, 9, 4, 0]
+        done = False
+
+        obs_s = [obs, obs, obs]
+        actions = [1, 2, 3]
+        rewards = [-2.2, 5, 4]
+        next_obs_s = [next_obs, next_obs, next_obs]
+        dones = [False, True, False]
+
+        memory.extend(obs_s, actions, rewards, next_obs_s, dones)
+
+        agent.learn(obs, action, reward, next_obs, done)
+        agent.learn(obs, action, reward, next_obs, done)
