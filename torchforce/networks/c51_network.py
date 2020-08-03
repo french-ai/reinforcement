@@ -35,6 +35,7 @@ class C51Network(BaseNetwork):
             distributional.add_module("C51_Distributional_" + str(i) + "_Linear", nn.Linear(64, self.NUM_ATOMS))
             distributional.add_module("C51_Distributional_" + str(i) + "_Softmax", nn.Softmax(dim=1))
 
+            self.add_module("C51_Distributional_" + str(i) + "_Sequential", distributional)
             self.distributional_list.append(distributional)
 
     def forward(self, observation):

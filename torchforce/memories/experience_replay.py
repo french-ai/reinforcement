@@ -61,15 +61,16 @@ class ExperienceReplay(MemoryInterface):
         self.size = min(self.size + len_datas, self.max_size)
         self.index = idx_max
 
-    def sample(self, batch_size):
+    def sample(self, batch_size, device):
         """
 
+        :param device:
         :param batch_size:
         :return:
         """
         idxs = np.random.randint(self.size, size=batch_size)
 
-        return [torch.Tensor(list(V)) for V in self.buffer[idxs].T]
+        return [torch.Tensor(list(V)).to(device=device) for V in self.buffer[idxs].T]
 
     def __str__(self):
         return 'ExperienceReplay-' + str(self.max_size)

@@ -69,7 +69,8 @@ class DoubleDQN(DQN):
         """
 
         """
-        observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size)
+        observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size,
+                                                                                      device=self.device)
 
         actions_next = torch.argmax(self.neural_network.forward(next_observations).detach(), dim=1)
         actions_next_one_hot = F.one_hot(actions_next.to(torch.int64), num_classes=self.action_space.n)

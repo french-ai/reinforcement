@@ -88,7 +88,7 @@ def test_dueling_dqn_agent_instantiation_error_greedy_exploration():
 
     with pytest.raises(TypeError):
         DuelingDQN(Discrete(4), Discrete(3), neural_network=network, memory=memory,
-                  greedy_exploration="GREEDY_EXPLORATION_ERROR")
+                   greedy_exploration="GREEDY_EXPLORATION_ERROR")
 
 
 def test_dueling_dqn_agent_instantiation_custom_loss():
@@ -103,7 +103,7 @@ def test_dueling_dqn_agent_instantiation_custom_optimizer():
     memory = ExperienceReplay(max_size=5)
 
     DuelingDQN(Discrete(4), Discrete(3), neural_network=network, memory=memory,
-              optimizer=optim.RMSprop(network.parameters()))
+               optimizer=optim.RMSprop(network.parameters()))
 
 
 def test_dueling_dqn_agent_getaction():
@@ -122,7 +122,7 @@ def test_dueling_dqn_agent_getaction_non_greedy():
     memory = ExperienceReplay(max_size=5)
 
     agent = DuelingDQN(Discrete(4), Discrete(3), neural_network=network, memory=memory,
-                      greedy_exploration=EpsilonGreedy(1.))
+                       greedy_exploration=EpsilonGreedy(1.))
 
     observation = [0, 1, 2]
 
@@ -183,9 +183,9 @@ def test_agent_save_load():
     network = Network()
 
     agent = DuelingDQN(observation_space=space, action_space=Discrete(2), memory=ExperienceReplay(),
-                      neural_network=network, step_train=3, batch_size=12, gamma=0.50, loss=None,
-                      optimizer=torch.optim.Adam(network.parameters()), step_copy=300,
-                      greedy_exploration=EpsilonGreedy(0.2))
+                       neural_network=network, step_train=3, batch_size=12, gamma=0.50, loss=None,
+                       optimizer=torch.optim.Adam(network.parameters()), step_copy=300,
+                       greedy_exploration=EpsilonGreedy(0.2))
 
     agent.save(file_name="deed.pt")
     agent_l = DuelingDQN.load(file_name="deed.pt")
@@ -233,3 +233,29 @@ def test__str__():
         agent.neural_network) + "-" + str(agent.memory) + "-" + str(agent.step_train) + "-" + str(
         agent.step) + "-" + str(agent.batch_size) + "-" + str(agent.gamma) + "-" + str(agent.loss) + "-" + str(
         agent.optimizer) + "-" + str(agent.greedy_exploration) + "-" + str(agent.step_copy) == agent.__str__()
+
+
+def test_device_gpu():
+    if torch.cuda.is_available():
+        network = Network()
+        memory = ExperienceReplay(max_size=5)
+
+        agent = DuelingDQN(Discrete(4), Discrete(3), neural_network=network, memory=memory, step_copy=2,
+                           device=torch.device("cuda"))
+
+        obs = [1, 2, 5]
+        action = 0
+        reward = 0
+        next_obs = [5, 9, 4]
+        done = False
+
+        obs_s = [obs, obs, obs]
+        actions = [1, 2, 3]
+        rewards = [-2.2, 5, 4]
+        next_obs_s = [next_obs, next_obs, next_obs]
+        dones = [False, True, False]
+
+        memory.extend(obs_s, actions, rewards, next_obs_s, dones)
+
+        agent.learn(obs, action, reward, next_obs, done)
+        agent.learn(obs, action, reward, next_obs, done)

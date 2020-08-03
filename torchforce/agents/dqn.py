@@ -147,7 +147,8 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         """
 
         """
-        observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size)
+        observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size,
+                                                                                      device=self.device)
 
         q = rewards + self.gamma * torch.max(self.neural_network.forward(next_observations), dim=1)[0].detach() * (
                 1 - dones)

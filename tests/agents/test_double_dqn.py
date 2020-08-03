@@ -233,3 +233,29 @@ def test__str__():
         agent.neural_network) + "-" + str(agent.memory) + "-" + str(agent.step_train) + "-" + str(
         agent.step) + "-" + str(agent.batch_size) + "-" + str(agent.gamma) + "-" + str(agent.loss) + "-" + str(
         agent.optimizer) + "-" + str(agent.greedy_exploration) + "-" + str(agent.step_copy) == agent.__str__()
+
+
+def test_device_gpu():
+    if torch.cuda.is_available():
+        network = Network()
+        memory = ExperienceReplay(max_size=5)
+
+        agent = DoubleDQN(Discrete(4), Discrete(3), neural_network=network, memory=memory, step_copy=2,
+                          device=torch.device("cuda"))
+
+        obs = [1, 2, 5]
+        action = 0
+        reward = 0
+        next_obs = [5, 9, 4]
+        done = False
+
+        obs_s = [obs, obs, obs]
+        actions = [1, 2, 3]
+        rewards = [-2.2, 5, 4]
+        next_obs_s = [next_obs, next_obs, next_obs]
+        dones = [False, True, False]
+
+        memory.extend(obs_s, actions, rewards, next_obs_s, dones)
+
+        agent.learn(obs, action, reward, next_obs, done)
+        agent.learn(obs, action, reward, next_obs, done)
