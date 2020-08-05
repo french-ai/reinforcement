@@ -12,7 +12,7 @@
 - [ ] Document it in [CONTRIBUTING.md](./CONTRIBUTING.md)
 - [x] List Agents for starting project
 - [x] List Environments for start project
-- [ ] Add gpu option
+- [x] Add gpu option
 
 # Agents list
 
