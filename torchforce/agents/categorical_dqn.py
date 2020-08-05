@@ -102,8 +102,8 @@ class CategoricalDQN(DQN):
 
         predictions_next = predictions_next[actions_next == 1, :]
 
-        offset = torch.linspace(0, (self.batch_size - 1) * self.num_atoms, self.batch_size).view(-1, 1).to(
-            device=self.device)
+        offset = torch.linspace(0, (self.batch_size - 1) * self.num_atoms, self.batch_size, device=self.device).view(-1,
+                                                                                                                     1)
         offset = offset.expand(self.batch_size, self.num_atoms)
 
         u_index = (u + offset).view(-1).to(torch.int64)
@@ -111,7 +111,7 @@ class CategoricalDQN(DQN):
 
         predictions_next = (dones + (1 - dones) * predictions_next)
 
-        m_prob_action = m_prob[actions == 1, :].view(-1).to(device=self.device)
+        m_prob_action = m_prob[actions == 1, :].view(-1)
         m_prob_action.index_add_(0, u_index, (predictions_next * (u - b)).view(-1))
         m_prob_action.index_add_(0, l_index, (predictions_next * (b - l)).view(-1))
 
