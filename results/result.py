@@ -12,19 +12,17 @@ from torchforce.memories import ExperienceReplay
 from torchforce.networks import SimpleNetwork, SimpleDuelingNetwork, C51Network
 
 memory = [ExperienceReplay]
-step_train = [1, 2, 10]
-batch_size = [32, 64, 128]
-gamma = [0.99, 0.98]
+step_train = [1, 4, 32]
+batch_size = [32, 64]
+gamma = [0.99]
 loss = [torch.nn.MSELoss()]
 optimizer = [optim.Adam]
 lr = [0.1, 0.001, 0.0001]
 
 greedy_exploration = [EpsilonGreedy(0.1),
-                      EpsilonGreedy(0.2),
-                      EpsilonGreedy(0.4),
+                      EpsilonGreedy(0.6),
                       AdaptativeEpsilonGreedy(0.3, 0.1, 50000, 0),
-                      AdaptativeEpsilonGreedy(0.6, 0.1, 50000, 0),
-                      AdaptativeEpsilonGreedy(0.8, 0.1, 50000, 0)]
+                      AdaptativeEpsilonGreedy(0.8, 0.2, 50000, 0)]
 
 arg_all = [{"agent": {"class": [DQN, DoubleDQN],
                       "param": {"step_train": step_train,
@@ -38,7 +36,7 @@ arg_all = [{"agent": {"class": [DQN, DoubleDQN],
             "optimizer": {"class": optimizer,
                           "param": {"lr": lr}},
             "memory": {"class": memory,
-                       "param": {"max_size": [100, 300, 500]}},
+                       "param": {"max_size": [16, 32, 128]}},
             },
            {"agent": {"class": [DuelingDQN],
                       "param": {"step_train": step_train,
@@ -52,7 +50,7 @@ arg_all = [{"agent": {"class": [DQN, DoubleDQN],
             "optimizer": {"class": optimizer,
                           "param": {"lr": lr}},
             "memory": {"class": memory,
-                       "param": {"max_size": [100, 300, 500]}},
+                       "param": {"max_size": [16, 32, 128]}},
             },
            {"agent": {"class": [CategoricalDQN],
                       "param": {"step_train": step_train,
@@ -66,7 +64,7 @@ arg_all = [{"agent": {"class": [DQN, DoubleDQN],
             "optimizer": {"class": optimizer,
                           "param": {"lr": lr}},
             "memory": {"class": memory,
-                       "param": {"max_size": [100, 300, 500]}},
+                       "param": {"max_size": [16, 32, 128]}},
             }]
 
 
@@ -96,11 +94,16 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--env', type=str, help='name of environment', nargs='?', const=1, default="CartPole-v1")
     parser.add_argument('--max_episode', type=int, help='number of episode for train', nargs='?', const=1, default=500)
-    parser.add_argument('--render', type=bool, help='if show render on each step or not', nargs='?', const=1,
-                        default=False)
+    parser.add_argument('--render', type=bool, help='if show render on each step or not', nargs='?', default=False)
     args = parser.parse_args()
 
     env = gym.make(args.env)
+
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+    device = torch.device("cpu")
 
     for arg in arg_all:
         arg_agent = arg["agent"]
@@ -108,14 +111,18 @@ if __name__ == '__main__':
         arg_optimizer = arg["optimizer"]
         arg_memory = arg["memory"]
 
-        for class_neural_network in arg_neural_network["class"]:
-            for param_network in dict_mzip(arg_neural_network["param"]):
-
+        for class_agent in arg_agent["class"]:
+            print("###" + class_agent.__name__)
+            for class_neural_network in arg_neural_network["class"]:
+                print("  ##" + class_neural_network.__name__)
                 for class_optimizer in arg_optimizer["class"]:
-                    for param_optimizer in dict_mzip(arg_optimizer["param"]):
+                    print("    #" + class_optimizer.__name__)
 
-                        for class_agent in arg_agent["class"]:
-                            for param_agent in dict_mzip(arg_agent["param"]):
+                    for param_agent in dict_mzip(arg_agent["param"]):
+
+                        for param_network in dict_mzip(arg_neural_network["param"]):
+
+                            for param_optimizer in dict_mzip(arg_optimizer["param"]):
 
                                 for class_memory in arg_memory["class"]:
                                     for param_memory in dict_mzip(arg_memory["param"]):
@@ -130,7 +137,7 @@ if __name__ == '__main__':
                                         agent = class_agent(observation_space=env.observation_space,
                                                             action_space=env.action_space,
                                                             neural_network=neural_network,
-                                                            optimizer=optimizer, memory=memory,
+                                                            optimizer=optimizer, memory=memory, device=device,
                                                             **param_agent)
 
                                         log_dir = args.env + "/" + class_agent.__name__ + "/" + "-".join(
@@ -141,6 +148,6 @@ if __name__ == '__main__':
 
                                         trainer = Trainer(environment=env, agent=agent,
                                                           log_dir=log_dir)
-                                        # trainer.train(max_episode=args.max_episode, render=args.render)
+                                        trainer.train(max_episode=args.max_episode, render=args.render)
 
                                         agent.save(file_name="save.p", dire_name=log_dir)
