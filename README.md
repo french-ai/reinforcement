@@ -12,11 +12,11 @@ We want to create library for reinforcement learning with *pytorch*.
 
 ## Installation
 
-## Pytorch
+### Pytorch
 
 For installing *pytorch* follow [Quick Start Locally](https://pytorch.org/) for your config.
 
-## Torchforce
+### Torchforce
 Download files:
 
 ```bash
@@ -42,14 +42,14 @@ pip install .
 pip install ".[dev]" .
 ```
 
-### Get Started
-### Initializing an environment
+## Get Started
+### Initializing environment
 ```python
 import gym
 env = gym.make("CartPole-v1")
 ```
 
-### Initializing an agent
+### Initializing agent
 
 ```python
 from torchforce.agents import AgentRandom
@@ -58,35 +58,39 @@ observation_space = env.observation_space
 agent = AgentRandom(observation_space=observation_space, action_space=action_space)
 ```
 
-### Training
+### Train 
 
 Create Trainer
 ```python
 from torchforce import Trainer
-trainer = Trainer(environment=env, agent=agent)
+trainer = Trainer(environment=env, agent=agent, log_dir="./logs")
 ```
 Start training:
 ```python
-trainer.train(render=True)
-```
-Visualize training metrics:
-```bash
-tensorboard --logdir runs
+trainer.train(max_episode=100, nb_evaluation=4, render=True)
 ```
 
-### Evaluation
-*Not implemented yet*
+### Watch metrics
+Visualize training and evaluation metrics:
+```bash
+tensorboard --logdir logs
+```
 
 ## Environments
 
 We will use GYM environments for moments.
 
-*No environments yet*
-
 Watch [TODO](./TODO.md#environments-list) for environments in coming.
 
 ## Agents
-*No agents yet*
+
+Agent implemented:
+- AgentConstant, this agent choice one random action on start and will take her all next time
+- AgentRandom, this agent choice one random action each time
+- DQN, Deep Q Learning (Mnih *et al.*, [2013](https://arxiv.org/abs/1312.5602))
+- DoubleDQN, (van Hasselt *et al.*, [2016](https://arxiv.org/abs/1509.06461))
+- DuelingDQN, (Wang *et al.*, [2016](https://arxiv.org/abs/1511.06581))
+- CategoricalDQN, (Bellamare *et al.*, [2017](https://arxiv.org/abs/1707.06887))
 
 ## Examples
 *No Examples yet*
@@ -94,4 +98,4 @@ Watch [TODO](./TODO.md#environments-list) for environments in coming.
 ## Results
 You can see more [results](./results/README.md)
 
-*No result yet*
+*Coming soon*
