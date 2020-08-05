@@ -10,6 +10,10 @@ Example with agent: XXX, network: XXX,  Algo: Adam, Memories: ExperienceReplay, 
 
 ![CartPoleExemple.gif](https://github.com/french-ai/reinforcement/blob/master/result/ressources/cartpole.gif)
 
+
+![CartPoleTrainning.png](https://github.com/french-ai/reinforcement/blob/master/result/ressources/CartPoleTrainning.gif)
+![CartPoleEvaluation.png](https://github.com/french-ai/reinforcement/blob/master/result/ressources/CartPoleEvaluation.gif)
+
 ### Parameters range
 
 We test to train all this agent with this parameters
