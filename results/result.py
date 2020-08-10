@@ -13,7 +13,7 @@ from torchforce.networks import SimpleNetwork, SimpleDuelingNetwork, C51Network
 
 memory = [ExperienceReplay]
 step_train = [1, 4, 32]
-batch_size = [32, 64]
+batch_size = [1, 32, 64]
 gamma = [0.99]
 loss = [torch.nn.MSELoss()]
 optimizer = [optim.Adam]
@@ -118,13 +118,14 @@ if __name__ == '__main__':
                 for class_optimizer in arg_optimizer["class"]:
                     print("    #" + class_optimizer.__name__)
 
-                    for param_agent in dict_mzip(arg_agent["param"]):
+                    for class_memory in arg_memory["class"]:
 
-                        for param_network in dict_mzip(arg_neural_network["param"]):
+                        for param_agent in dict_mzip(arg_agent["param"]):
 
-                            for param_optimizer in dict_mzip(arg_optimizer["param"]):
+                            for param_network in dict_mzip(arg_neural_network["param"]):
 
-                                for class_memory in arg_memory["class"]:
+                                for param_optimizer in dict_mzip(arg_optimizer["param"]):
+
                                     for param_memory in dict_mzip(arg_memory["param"]):
                                         neural_network = class_neural_network(
                                             observation_shape=flatdim(env.observation_space),
@@ -140,10 +141,13 @@ if __name__ == '__main__':
                                                             optimizer=optimizer, memory=memory, device=device,
                                                             **param_agent)
 
-                                        log_dir = args.env + "/" + class_agent.__name__ + "/" + "-".join(
-                                            [str(x) for x in list(param_agent.values())]) + "_" + "-".join(
-                                            [str(x) for x in list(param_network.values())]) + "_" + "-".join(
-                                            [str(x) for x in list(param_optimizer.values())]) + "_" + "-".join(
+                                        log_dir = args.env + "/" + class_agent.__name__ + "/" + "_".join(
+                                            [str(x) for x in list(
+                                                param_agent.values())]) + "_" + class_neural_network.__name__ + "_" + "_".join(
+                                            [str(x) for x in list(
+                                                param_network.values())]) + "_" + class_optimizer.__name__ + "_" + "_".join(
+                                            [str(x) for x in list(
+                                                param_optimizer.values())]) + "_" + class_memory.__name__ + "_" + "_".join(
                                             [str(x) for x in list(param_memory.values())])
 
                                         trainer = Trainer(environment=env, agent=agent,
