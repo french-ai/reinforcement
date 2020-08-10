@@ -8,8 +8,6 @@ There are one subdirectory by environment used.
 
 Example with agent: DQN, network: SimpleNetwork,  Algo: Adam, Memorie: ExperienceReplay(max_size=32), Step train: 1, Batch size: 64, Gamma: 0.99, Exploration: EpsilonGreedy(0.1), Learning rate: 0.001
 
-1_64_0.99_EpsilonGreedy-0.1_SimpleNetwork__Adam_0.001_ExperienceReplay_16 
-
 
 ![CartPoleExemple.gif](./ressources/cartpole.gif)
 
