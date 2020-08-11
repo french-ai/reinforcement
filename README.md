@@ -96,6 +96,8 @@ Agent implemented:
 *No Examples yet*
 
 ## Results
-You can see more [results](./results/README.md)
 
-*Coming soon*
+![CartPoleExemple.gif](./results/ressources/cartpole.gif)
+
+You can see more [results](./results/README.md) and analysis
+
