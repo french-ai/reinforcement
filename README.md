@@ -97,7 +97,7 @@ Agent implemented:
 
 ## Results
 
-![CartPoleExemple.gif](https://github.com/french-ai/reinforcement/blob/master/result/ressources/cartpole.gif)
+![CartPoleExemple.gif](./results/ressources/cartpole.gif)
 
 You can see more [results](./results/README.md) and analysis
 
