@@ -1,6 +1,8 @@
 from argparse import ArgumentParser
 
 import gym
+import matplotlib.pyplot as plt
+from IPython import display
 
 from torchforce import Logger, Record
 from torchforce.agents import AgentInterface, AgentRandom, DQN, DoubleDQN, CategoricalDQN, DuelingDQN
@@ -115,6 +117,16 @@ class Trainer:
             if i_episode == 1 or i_episode == max_episode or i_episode % (max_episode // (nb_evaluation - 1)) == 0:
                 self.evaluate(env=env, agent=self.agent, logger=self.logger, render=render)
         env.close()
+
+    @classmethod
+    def render(cls, env, on_notebook=False):
+        if not on_notebook:
+            env.render()
+        else:
+            plt.figure(0)
+            plt.imshow(env.render(mode='rgb_array'))
+            display.display(plt.gcf())
+            display.clear_output(wait=True)
 
 
 def arg_to_agent(arg_agent) -> AgentInterface:

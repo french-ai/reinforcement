@@ -1,6 +1,7 @@
 from shutil import rmtree
 
 import gym
+import numpy as np
 import pytest
 
 from torchforce import Trainer, Logger
@@ -17,6 +18,7 @@ def test_arg_to_agent():
             arg_to_agent(agent)
 
     for agent in work_list:
+
         arg_to_agent(agent)
 
 
@@ -38,6 +40,7 @@ class FakeEnv(gym.Env):
 
     def render(self, mode='human'):
         self.render_done += 1
+        return np.random.rand(100, 100, 3) * 255
 
 
 class FakeAgent(AgentInterface):
@@ -227,3 +230,14 @@ def test_trainer_train():
         assert fake_agent.episode_finished_done == number_episode
         assert fake_env.step_done == number_episode + eval and fake_env.reset_done == number_episode + eval
         assert fake_env.render_done == number_episode + eval
+
+
+def test_render():
+    fake_env = FakeEnv()
+
+    Trainer.render(fake_env, on_notebook=False)
+
+    assert fake_env.step_done == 0 and fake_env.reset_done == 0 and fake_env.render_done == 1
+
+    Trainer.render(fake_env, on_notebook=True)
+    assert fake_env.step_done == 0 and fake_env.reset_done == 0 and fake_env.render_done == 2
