@@ -13,6 +13,7 @@
 - [x] List Agents for starting project
 - [x] List Environments for start project
 - [x] Add gpu option
+- [ ] Render on notebook/collab
 
 # Agents list
 
@@ -27,8 +28,8 @@
 - [x] C51 = Categorical Deep Q Network (Bellamare *et al.*, [2017](https://arxiv.org/abs/1707.06887))
 - [ ] Rainbow (Hessel *et al.*, [2017](https://arxiv.org/abs/1710.02298))
 - [ ] Quantile Regression Deep Q Network (Dabney *et al.*, [2017](https://arxiv.org/abs/1710.10044))
-- [ ] Policy Gradient
-- [ ] Trust Region Policy Optimization
+- [ ] Policy Gradient ([2000](https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf))
+- [ ] Trust Region Policy Optimization (Schulman *et al.*, [2015](https://arxiv.org/abs/1502.05477))
 - [ ] Proximal Policy Optimizations (Schulman *et al.*, [2017](https://arxiv.org/abs/1707.06347))
 
 # Explorations list

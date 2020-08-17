@@ -43,13 +43,13 @@ pip install ".[dev]" .
 ```
 
 ## Get Started
-### Initializing environment
+### Initialize environment
 ```python
 import gym
 env = gym.make("CartPole-v1")
 ```
 
-### Initializing agent
+### Initialize agent
 
 ```python
 from torchforce.agents import AgentRandom
