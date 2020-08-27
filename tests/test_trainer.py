@@ -282,6 +282,7 @@ def test_close():
     elif platform.system() == "Linux":
         from pyvirtualdisplay import Display
         trainer.img = Display(visible=0, size=(1400, 900))
+        trainer.img.start()
     trainer.close()
     assert fake_env.step_done == 0 and fake_env.reset_done == 0 and fake_env.render_done == 0
     assert fake_env.close_done == 2
