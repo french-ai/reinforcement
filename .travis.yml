@@ -9,6 +9,7 @@ matrix:
         - choco install python3 --version 3.7 --params "/InstallDir:C:\\Python"
         - export PATH="/c/Python:/c/Python/Scripts:$PATH"
         - python -m pip install --upgrade pip wheel
+        - pip install torch===1.6.0 torchvision===0.7.0 -f https://download.pytorch.org/whl/torch_stable.html
     - os: windows
       language: sh
       python: 3.6  # only works on linux
@@ -16,6 +17,7 @@ matrix:
         - choco install python3 --version 3.6 --params "/InstallDir:C:\\Python"
         - export PATH="/c/Python:/c/Python/Scripts:$PATH"
         - python -m pip install --upgrade pip wheel
+        - pip install torch===1.6.0 torchvision===0.7.0 -f https://download.pytorch.org/whl/torch_stable.html
     - os: linux
       python: 3.7  # only works on
     - os: linux
@@ -27,8 +29,9 @@ branches:
     - develop
 
 install:
-  - pip install ".[dev]" . # install package + dev dependencies
   - pip install --upgrade pytest
+  - pip install ".[dev]" . # install package + dev dependencies
+
 
 script:
   - pytest
