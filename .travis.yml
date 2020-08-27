@@ -6,7 +6,7 @@ matrix:
       language: sh
       python: 3.7  # only works on linux
       before_install:
-        - choco install python3 --version 3.7--params "/InstallDir:C:\\Python"
+        - choco install python3 --version 3.7 --params "/InstallDir:C:\\Python"
         - export PATH="/c/Python:/c/Python/Scripts:$PATH"
         - python -m pip install --upgrade pip wheel
     - os: windows
