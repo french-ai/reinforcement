@@ -175,7 +175,7 @@ class Trainer:
         self.environment.close()
         if hasattr(self, 'img'):
             if platform.system() == "Windows":
-                plt.close()
+                plt.close(plt.gcf())
             elif platform.system() == "Linux":
                 self.img.stop()
             delattr(self, 'img')

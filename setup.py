@@ -14,7 +14,7 @@ INSTALL_REQUIRES = [
 ]
 
 INSTALL_REQUIRES_NOTBOOK = [
-    'matplotlib', 'IPython'
+    'matplotlib', 'IPython', 'ipykernel'
 ]
 
 DEV_REQUIRES = [
