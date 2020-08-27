@@ -159,11 +159,17 @@ class Trainer:
     def _linux_render(self):
         if 'inline' in plt.get_backend():
             from pyvirtualdisplay import Display
+            from IPython import display
+            render = self.environment.render(mode='rgb_array')
             if not hasattr(self, 'img'):
-                self.img = Display(visible=0, size=(1400, 900))
-                self.img.start()
+                self.dis = Display(visible=0, size=(1400, 900))
+                self.dis.start()
+                self.img = plt.imshow(render)
+            else:
+                self.img.set_data(render)  # just update the data
+            display.display(plt.gcf())
+            display.clear_output(wait=True)
 
-            plt.imshow(self.environment.render('rgb_array'))
         else:
             self.environment.render()
 
@@ -177,7 +183,9 @@ class Trainer:
             if platform.system() == "Windows":
                 plt.close(plt.gcf())
             elif platform.system() == "Linux":
-                self.img.stop()
+                self.dis.stop()
+                plt.close(plt.gcf())
+                delattr(self, 'dis')
             delattr(self, 'img')
 
 
