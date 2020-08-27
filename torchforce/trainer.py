@@ -3,6 +3,7 @@ from argparse import ArgumentParser
 
 import gym
 import matplotlib.pyplot as plt
+from IPython import display
 
 from torchforce import Logger, Record
 from torchforce.agents import AgentInterface, AgentRandom, DQN, DoubleDQN, CategoricalDQN, DuelingDQN
@@ -128,7 +129,7 @@ class Trainer:
             if nb_evaluation != 0:
                 if i_episode == 1 or i_episode == max_episode or i_episode % (max_episode // (nb_evaluation - 1)) == 0:
                     self.evaluate(logger=self.logger, render=True)
-        self.environment.close()
+        self.close()
 
     def render(self):
         """ Show the environment
@@ -142,7 +143,6 @@ class Trainer:
 
     def _windows_render(self):
         if 'inline' in plt.get_backend():
-            from IPython import display
             render = self.environment.render(mode='rgb_array')
             if render is not None:
                 if not hasattr(self, 'img'):
@@ -159,11 +159,12 @@ class Trainer:
     def _linux_render(self):
         if 'inline' in plt.get_backend():
             from pyvirtualdisplay import Display
-            from IPython import display
             render = self.environment.render(mode='rgb_array')
             if not hasattr(self, 'img'):
-                self.dis = Display(visible=0, size=(1400, 900))
+                self.dis = Display()
                 self.dis.start()
+                plt.figure(figsize=(10, 10))
+                plt.axis('off')
                 self.img = plt.imshow(render)
             else:
                 self.img.set_data(render)  # just update the data
@@ -180,11 +181,8 @@ class Trainer:
         """
         self.environment.close()
         if hasattr(self, 'img'):
-            if platform.system() == "Windows":
-                plt.close(plt.gcf())
-            elif platform.system() == "Linux":
+            if platform.system() == "Linux":
                 self.dis.stop()
-                plt.close(plt.gcf())
                 delattr(self, 'dis')
             delattr(self, 'img')
 
