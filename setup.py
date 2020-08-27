@@ -15,12 +15,10 @@ INSTALL_REQUIRES = [
 ]
 
 INSTALL_REQUIRES_NOTBOOK = [
-    'matplotlib', 'IPython'
+    'matplotlib', 'IPython', 'ipykernel'
 ]
 
-if platform.system() == "Windows":
-    INSTALL_REQUIRES_NOTBOOK.append('ipykernel')
-elif platform.system() == "Linux":
+if platform.system() == "Linux":
     INSTALL_REQUIRES_NOTBOOK.append('pyvirtualdisplay')
 
 DEV_REQUIRES = [
