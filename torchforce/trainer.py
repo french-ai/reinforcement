@@ -161,7 +161,7 @@ class Trainer:
             from pyvirtualdisplay import Display
             render = self.environment.render(mode='rgb_array')
             if not hasattr(self, 'img'):
-                self.dis = Display()
+                self.dis = Display(visible=0)
                 self.dis.start()
                 plt.figure(figsize=(10, 10))
                 plt.axis('off')
