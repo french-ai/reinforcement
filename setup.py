@@ -3,7 +3,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import platform
 
 import setuptools
 
@@ -17,9 +16,6 @@ INSTALL_REQUIRES = [
 INSTALL_REQUIRES_NOTBOOK = [
     'matplotlib', 'IPython', 'ipykernel'
 ]
-
-if platform.system() == "Linux":
-    INSTALL_REQUIRES_NOTBOOK.append('pyvirtualdisplay')
 
 DEV_REQUIRES = [
     # testing and coverage

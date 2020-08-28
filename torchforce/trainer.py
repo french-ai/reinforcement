@@ -1,4 +1,3 @@
-import platform
 from argparse import ArgumentParser
 
 import gym
@@ -136,12 +135,6 @@ class Trainer:
 
         :return:
         """
-        if platform.system() == "Windows":
-            self._windows_render()
-        elif platform.system() == "Linux":
-            self._linux_render()
-
-    def _windows_render(self):
         if 'inline' in plt.get_backend():
             render = self.environment.render(mode='rgb_array')
             if render is not None:
@@ -156,26 +149,6 @@ class Trainer:
         else:
             self.environment.render()
 
-    def _linux_render(self):
-        if 'inline' in plt.get_backend():
-            from pyvirtualdisplay import Display
-            import os
-            render = self.environment.render(mode='rgb_array')
-            if not hasattr(self, 'img'):
-                self.dis = Display(visible=0)
-                self.dis.start()
-                os.environ["DISPLAY"] = ":" + str(self.dis.display) + "." + str(self.dis.screen)
-                plt.figure(figsize=(10, 10))
-                plt.axis('off')
-                self.img = plt.imshow(render)
-            else:
-                self.img.set_data(render)  # just update the data
-            display.display(plt.gcf())
-            display.clear_output(wait=True)
-
-        else:
-            self.environment.render()
-
     def close(self):
         """ Close environment, reset training part for the agent, close render is if on notebook
 
@@ -183,9 +156,6 @@ class Trainer:
         """
         self.environment.close()
         if hasattr(self, 'img'):
-            if platform.system() == "Linux":
-                self.dis.stop()
-                delattr(self, 'dis')
             delattr(self, 'img')
 
 

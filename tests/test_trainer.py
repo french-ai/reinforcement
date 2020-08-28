@@ -1,4 +1,3 @@
-import platform
 from shutil import rmtree
 
 import gym
@@ -277,13 +276,7 @@ def test_close():
     assert fake_env.step_done == 0 and fake_env.reset_done == 0 and fake_env.render_done == 0
     assert fake_env.close_done == 1
 
-    if platform.system() == "Windows":
-        trainer.img = plt.imshow(np.random.rand(100, 100, 3) * 255)
-    elif platform.system() == "Linux":
-        from pyvirtualdisplay import Display
-        trainer.dis = Display(visible=0, size=(1400, 900))
-        trainer.dis.start()
-        trainer.img = plt.imshow(np.random.rand(100, 100, 3) * 255)
+    trainer.img = plt.imshow(np.random.rand(100, 100, 3) * 255)
 
     trainer.close()
     assert fake_env.step_done == 0 and fake_env.reset_done == 0 and fake_env.render_done == 0
