@@ -159,10 +159,12 @@ class Trainer:
     def _linux_render(self):
         if 'inline' in plt.get_backend():
             from pyvirtualdisplay import Display
+            import os
             render = self.environment.render(mode='rgb_array')
             if not hasattr(self, 'img'):
                 self.dis = Display(visible=0)
                 self.dis.start()
+                os.environ["DISPLAY"] = ":" + str(self.dis.display) + "." + str(self.dis.screen)
                 plt.figure(figsize=(10, 10))
                 plt.axis('off')
                 self.img = plt.imshow(render)
