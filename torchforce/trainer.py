@@ -1,3 +1,4 @@
+import platform
 from argparse import ArgumentParser
 
 import gym
