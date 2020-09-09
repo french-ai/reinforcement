@@ -36,20 +36,26 @@ Install torchforce
 pip install .
 ```
 
+- to use it on notebook:
+
+```bash
+pip install ".[notebook]"
+```
+
 - to help development:
 
 ```bash
-pip install ".[dev]" .
+pip install ".[dev]"
 ```
 
 ## Get Started
-### Initializing environment
+### Initialize environment
 ```python
 import gym
 env = gym.make("CartPole-v1")
 ```
 
-### Initializing agent
+### Initialize agent
 
 ```python
 from torchforce.agents import AgentRandom

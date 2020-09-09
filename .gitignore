@@ -133,3 +133,6 @@ dmypy.json
 
 #tensorboard log
 runs/
+
+#log in exemples
+exemples/logs

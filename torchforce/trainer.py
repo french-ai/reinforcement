@@ -1,6 +1,10 @@
+import sys
+import time
 from argparse import ArgumentParser
 
 import gym
+import matplotlib.pyplot as plt
+from IPython import display
 
 from torchforce import Logger, Record
 from torchforce.agents import AgentInterface, AgentRandom, DQN, DoubleDQN, CategoricalDQN, DuelingDQN
@@ -14,7 +18,7 @@ class Trainer:
         :param agent:
         :param log_dir:
         """
-        self.environment = environment
+        self.environment = self.get_environment(environment)
         if isinstance(agent, type(AgentInterface)):
             action_space = self.get_environment(environment).action_space
             observation_space = self.get_environment(environment).observation_space
@@ -43,62 +47,69 @@ class Trainer:
 
         raise ValueError("this env (" + str(arg_env) + ") is not supported")
 
-    @classmethod
-    def do_step(cls, observation, env, agent, learn=True, logger=None, render=True):
+    def do_step(self, observation, learn=True, logger=None, render=True):
         """
+
 
         :param observation:
         :param env:
         :param agent:
         :param learn:
         :param logger:
-        :param render:
+        :param render: if show env render
+        :type render: bool
+        :param on_notebook: if render is on notebook
+        :type on_notebook: bool
         :return:
         """
         if render:
-            env.render()
-        action = agent.get_action(observation=observation)
-        next_observation, reward, done, info = env.step(action)
+            self.render()
+        action = self.agent.get_action(observation=observation)
+        next_observation, reward, done, info = self.environment.step(action)
         if learn:
-            agent.learn(observation, action, reward, next_observation, done)
+            self.agent.learn(observation, action, reward, next_observation, done)
         if logger:
             logger.add_steps(Record(reward))
         return next_observation, done, reward
 
-    @classmethod
-    def do_episode(cls, env, agent, logger=None, render=True):
+    def do_episode(self, logger=None, render=True):
         """
 
         :param env:
         :param agent:
         :param logger:
-        :param render:
+        :param render: if show env render
+        :type render: bool
+        :param on_notebook: if render is on notebook
+        :type on_notebook: bool
         """
-        agent.enable_train()
-        observation = env.reset()
+        self.agent.enable_train()
+        observation = self.environment.reset()
         done = False
         while not done:
-            observation, done, reward = Trainer.do_step(observation=observation, env=env, agent=agent, learn=True,
-                                                        logger=logger, render=render)
-        agent.episode_finished()
+            observation, done, reward = self.do_step(observation=observation,
+                                                     learn=True, logger=logger, render=render)
+        self.agent.episode_finished()
         if logger:
             logger.end_episode()
 
-    @classmethod
-    def evaluate(cls, env, agent, logger=None, render=True):
+    def evaluate(self, logger=None, render=True):
         """
 
         :param env:
         :param agent:
         :param logger:
-        :param render:
+        :param render: if show env render
+        :type render: bool
+        :param on_notebook: if render is on notebook
+        :type on_notebook: bool
         """
-        agent.disable_train()
-        observation = env.reset()
+        self.agent.disable_train()
+        observation = self.environment.reset()
         done = False
         while not done:
-            observation, done, reward = Trainer.do_step(observation=observation, env=env, agent=agent, learn=False,
-                                                        logger=logger, render=render)
+            observation, done, reward = self.do_step(observation=observation,
+                                                     learn=False, logger=logger, render=render)
         if logger:
             logger.evaluate()
 
@@ -107,14 +118,54 @@ class Trainer:
 
         :param nb_evaluation:
         :param max_episode:
-        :param render:
+        :param render: if show env render
+        :type render: bool
+        :param on_notebook: if render is on notebook
+        :type on_notebook: bool
         """
-        env = self.get_environment(self.environment)
+
+        self.environment.reset()
         for i_episode in range(1, max_episode + 1):
-            self.do_episode(env=env, agent=self.agent, logger=self.logger, render=render)
-            if i_episode == 1 or i_episode == max_episode or i_episode % (max_episode // (nb_evaluation - 1)) == 0:
-                self.evaluate(env=env, agent=self.agent, logger=self.logger, render=render)
-        env.close()
+            self.do_episode(logger=self.logger, render=render)
+            if nb_evaluation != 0:
+                if i_episode == 1 or i_episode == max_episode or i_episode % (max_episode // (nb_evaluation - 1)) == 0:
+                    self.evaluate(logger=self.logger, render=True)
+        self.close()
+
+    def render(self):
+        """ Show the environment
+
+        :return:
+        """
+        if 'inline' in plt.get_backend():
+            pub_thread = sys.stdout.pub_thread
+            try:
+                render = self.environment.render(mode='rgb_array')
+                if render is not None:
+                    if not hasattr(self, 'img'):
+                        plt.figure(figsize=(10, 10))
+                        plt.axis('off')
+                        self.img = plt.imshow(render)
+                    else:
+                        self.img.set_data(render)  # just update the data
+                    display.display(plt.gcf())
+            except Exception as e:
+                sys.stdout.pub_thread = pub_thread
+                self.environment.render()
+                time.sleep(0.5)
+            finally:
+                display.clear_output(wait=True)
+        else:
+            self.environment.render()
+
+    def close(self):
+        """ Close environment, reset training part for the agent, close render is if on notebook
+
+        :return:
+        """
+        self.environment.close()
+        if hasattr(self, 'img'):
+            delattr(self, 'img')
 
 
 def arg_to_agent(arg_agent) -> AgentInterface:

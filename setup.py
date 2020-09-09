@@ -12,9 +12,14 @@ INSTALL_REQUIRES = [
     'gym',
     'tensorboard',
 ]
+
+INSTALL_REQUIRES_NOTBOOK = [
+    'matplotlib', 'IPython', 'ipykernel'
+]
+
 DEV_REQUIRES = [
     # testing and coverage
-    'pytest', 'coverage', 'pytest-cov', 'codecov', 'sphinx', 'sphinx-glpi-theme'
+    'pytest', 'coverage', 'pytest-cov', 'codecov', 'sphinx', 'sphinx-glpi-theme',
 ]
 
 path = os.path.abspath(os.path.dirname(__file__))
@@ -32,10 +37,11 @@ setuptools.setup(
     url='https://github.com/french-ai/reinforcement',
     packages=setuptools.find_packages(),
     include_package_data=True,
-    python_requires=">=3.6",
+    python_requires=">=3.6.1",
     install_requires=INSTALL_REQUIRES,
     extras_require={
-        'dev': DEV_REQUIRES + INSTALL_REQUIRES,
+        'dev': INSTALL_REQUIRES + INSTALL_REQUIRES_NOTBOOK + DEV_REQUIRES,
+        "notebook": INSTALL_REQUIRES + INSTALL_REQUIRES_NOTBOOK
     },
     classifiers=[
         'Development Status :: Alpha',
