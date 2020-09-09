@@ -266,7 +266,7 @@ class FakeOutStream(iostream.OutStream):
         pass
 
     def getvalue(self):
-        raise NotImplemented
+        raise NotImplementedError
 
 
 def test_render():
