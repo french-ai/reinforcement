@@ -1,4 +1,5 @@
-import platform
+import sys
+import time
 from argparse import ArgumentParser
 
 import gym
@@ -137,15 +138,22 @@ class Trainer:
         :return:
         """
         if 'inline' in plt.get_backend():
-            render = self.environment.render(mode='rgb_array')
-            if render is not None:
-                if not hasattr(self, 'img'):
-                    plt.figure(figsize=(10, 10))
-                    plt.axis('off')
-                    self.img = plt.imshow(render)
-                else:
-                    self.img.set_data(render)  # just update the data
-                display.display(plt.gcf())
+            pub_thread = sys.stdout.pub_thread
+            try:
+                render = self.environment.render(mode='rgb_array')
+                if render is not None:
+                    if not hasattr(self, 'img'):
+                        plt.figure(figsize=(10, 10))
+                        plt.axis('off')
+                        self.img = plt.imshow(render)
+                    else:
+                        self.img.set_data(render)  # just update the data
+                    display.display(plt.gcf())
+            except Exception as e:
+                sys.stdout.pub_thread = pub_thread
+                self.environment.render()
+                time.sleep(0.5)
+            finally:
                 display.clear_output(wait=True)
         else:
             self.environment.render()

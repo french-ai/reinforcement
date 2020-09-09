@@ -1,9 +1,11 @@
+import sys
 from shutil import rmtree
 
 import gym
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
+from ipykernel import iostream
 
 from torchforce import Trainer, Logger
 from torchforce.agents import AgentInterface
@@ -45,6 +47,12 @@ class FakeEnv(gym.Env):
 
     def close(self):
         self.close_done += 1
+
+
+class FakeEnvRaise(FakeEnv):
+    def render(self, mode="human"):
+        if mode == "rgb_array":
+            raise Exception
 
 
 class FakeAgent(AgentInterface):
@@ -245,6 +253,22 @@ def test_trainer_train():
         assert fake_env.render_done == number_episode + eval
 
 
+class FakeOutStream(iostream.OutStream):
+
+    def __init__(self):
+        self.pub_thread = 11111
+        self.echo = 0
+
+    def write(self, string):
+        pass
+
+    def flush(self):
+        pass
+
+    def getvalue(self):
+        raise NotImplemented
+
+
 def test_render():
     fake_env = FakeEnv()
     fake_agent = FakeAgent(observation_space=None, action_space=None)
@@ -258,12 +282,22 @@ def test_render():
     from IPython.testing.globalipapp import get_ipython
 
     get_ipython().run_line_magic('matplotlib', 'inline')
+
+    sys.stdout = FakeOutStream()
     # init inline
     trainer.render()
     assert fake_env.step_done == 0 and fake_env.reset_done == 0 and fake_env.render_done == 2
     # maj inline
     trainer.render()
     assert fake_env.step_done == 0 and fake_env.reset_done == 0 and fake_env.render_done == 3
+
+    ## Test when rgba mode is not supported from gym env
+
+    fake_env = FakeEnvRaise()
+    trainer = Trainer(environment=fake_env, agent=fake_agent)
+
+    # init inline
+    trainer.render()
 
 
 def test_close():
