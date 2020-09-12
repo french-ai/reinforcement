@@ -4,9 +4,9 @@ Trainer -- train.py
 You can start training by using train.py.
 
 # Training
-Go to torchforce directory
+Go to blobrl directory
 ```bash
-cd torchforce
+cd blobrl
 ```
 start training
 ```bash

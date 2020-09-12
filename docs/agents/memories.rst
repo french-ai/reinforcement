@@ -4,7 +4,7 @@ Memories package
 Memory\_interface
 --------------------------------------------
 
-.. automodule:: torchforce.memories.memory_interface
+.. automodule:: blobrl.memories.memory_interface
    :members:
    :undoc-members:
    :show-inheritance:
@@ -12,7 +12,7 @@ Memory\_interface
 Experience\_replay
 ---------------------------------------------
 
-.. automodule:: torchforce.memories.experience_replay
+.. automodule:: blobrl.memories.experience_replay
    :members:
    :undoc-members:
    :show-inheritance:

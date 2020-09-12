@@ -1,6 +1,6 @@
 import abc
 
-from torchforce.networks import BaseNetwork
+from blobrl.networks import BaseNetwork
 
 
 class BaseDuelingNetwork(BaseNetwork):

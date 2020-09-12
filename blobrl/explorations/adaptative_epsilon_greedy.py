@@ -1,4 +1,4 @@
-from torchforce.explorations import EpsilonGreedy
+from blobrl.explorations import EpsilonGreedy
 
 
 class AdaptativeEpsilonGreedy(EpsilonGreedy):

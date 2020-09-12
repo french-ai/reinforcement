@@ -6,8 +6,8 @@ import gym
 import matplotlib.pyplot as plt
 from IPython import display
 
-from torchforce import Logger, Record
-from torchforce.agents import AgentInterface, AgentRandom, DQN, DoubleDQN, CategoricalDQN, DuelingDQN
+from blobrl import Logger, Record
+from blobrl.agents import AgentInterface, AgentRandom, DQN, DoubleDQN, CategoricalDQN, DuelingDQN
 
 
 class Trainer:

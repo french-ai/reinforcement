@@ -1,6 +1,6 @@
 from random import random
 
-from torchforce.explorations import GreedyExplorationInterface
+from blobrl.explorations import GreedyExplorationInterface
 
 
 class EpsilonGreedy(GreedyExplorationInterface):

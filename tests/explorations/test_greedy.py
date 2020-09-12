@@ -1,4 +1,4 @@
-from torchforce.explorations import Greedy
+from blobrl.explorations import Greedy
 
 
 def test_greedy():

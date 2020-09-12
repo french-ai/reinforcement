@@ -1,5 +1,5 @@
 [run]
-source = torchforce
+source = blobrl
 omit =
     tests/*
 [report]

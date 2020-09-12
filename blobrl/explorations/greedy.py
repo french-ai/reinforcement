@@ -1,4 +1,4 @@
-from torchforce.explorations import GreedyExplorationInterface
+from blobrl.explorations import GreedyExplorationInterface
 
 
 class Greedy(GreedyExplorationInterface):

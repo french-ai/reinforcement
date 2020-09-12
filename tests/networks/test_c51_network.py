@@ -1,8 +1,8 @@
 import pytest
 import torch
-from gym.spaces import Discrete, Box
+from gym.spaces import Discrete
 
-from torchforce.networks import C51Network
+from blobrl.networks import C51Network
 
 
 def test_c51_init():
