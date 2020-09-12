@@ -13,7 +13,7 @@
 - [x] List Agents for starting project
 - [x] List Environments for start project
 - [x] Add gpu option
-- [ ] Render on notebook/collab
+- [x] Render on notebook/collab
 
 # Agents list
 
