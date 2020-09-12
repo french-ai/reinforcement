@@ -3,10 +3,10 @@ import torch
 import torch.optim as optim
 from gym.spaces import Discrete, Box
 
-from torchforce.agents import CategoricalDQN
-from torchforce.explorations import Greedy, EpsilonGreedy
-from torchforce.memories import ExperienceReplay
-from torchforce.networks import C51Network
+from blobrl.agents import CategoricalDQN
+from blobrl.explorations import Greedy, EpsilonGreedy
+from blobrl.memories import ExperienceReplay
+from blobrl.networks import C51Network
 
 
 def test_categorical_dqn_agent_instantiation():

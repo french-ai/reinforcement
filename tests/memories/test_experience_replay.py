@@ -1,6 +1,6 @@
 import torch
 
-from torchforce.memories import ExperienceReplay
+from blobrl.memories import ExperienceReplay
 
 
 def test_experience_replay():

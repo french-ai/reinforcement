@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 from gym.spaces import Box, Dict, Discrete, MultiBinary, MultiDiscrete, Tuple
 
-from torchforce.agents import AgentConstant
+from blobrl.agents import AgentConstant
 
 
 def test_agent_don_t_work_with_no_space():

@@ -1,4 +1,4 @@
-from torchforce.explorations import EpsilonGreedy
+from blobrl.explorations import EpsilonGreedy
 
 
 def test_epsilon_greedy():

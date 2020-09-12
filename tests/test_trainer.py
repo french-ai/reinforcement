@@ -7,9 +7,9 @@ import numpy as np
 import pytest
 from ipykernel import iostream
 
-from torchforce import Trainer, Logger
-from torchforce.agents import AgentInterface
-from torchforce.trainer import arg_to_agent
+from blobrl import Trainer, Logger
+from blobrl.agents import AgentInterface
+from blobrl.trainer import arg_to_agent
 
 
 def test_arg_to_agent():

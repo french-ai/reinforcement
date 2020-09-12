@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-from torchforce.memories import MemoryInterface
+from blobrl.memories import MemoryInterface
 
 
 class ExperienceReplay(MemoryInterface):

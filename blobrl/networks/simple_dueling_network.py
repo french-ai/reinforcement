@@ -1,7 +1,7 @@
 import numpy as np
-
-from torchforce.networks import BaseDuelingNetwork
 from torch import nn
+
+from blobrl.networks import BaseDuelingNetwork
 
 
 class SimpleDuelingNetwork(BaseDuelingNetwork):
