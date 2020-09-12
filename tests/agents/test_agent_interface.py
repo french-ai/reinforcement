@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from torchforce.agents import AgentInterface
+from blobrl.agents import AgentInterface
 
 
 def test_can_t_instantiate_agent_interface():

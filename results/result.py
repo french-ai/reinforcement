@@ -5,11 +5,11 @@ import torch
 from gym.spaces import flatdim
 from torch import optim
 
-from torchforce import Trainer
-from torchforce.agents import DQN, DoubleDQN, DuelingDQN, CategoricalDQN
-from torchforce.explorations import EpsilonGreedy, AdaptativeEpsilonGreedy
-from torchforce.memories import ExperienceReplay
-from torchforce.networks import SimpleNetwork, SimpleDuelingNetwork, C51Network
+from blobrl import Trainer
+from blobrl.agents import DQN, DoubleDQN, DuelingDQN, CategoricalDQN
+from blobrl.explorations import EpsilonGreedy, AdaptativeEpsilonGreedy
+from blobrl.memories import ExperienceReplay
+from blobrl.networks import SimpleNetwork, SimpleDuelingNetwork, C51Network
 
 memory = [ExperienceReplay]
 step_train = [1, 4, 32]

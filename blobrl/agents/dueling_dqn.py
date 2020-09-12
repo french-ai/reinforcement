@@ -4,9 +4,9 @@ import pickle
 import torch
 from gym.spaces import flatdim
 
-from torchforce.agents import DoubleDQN
-from torchforce.memories import ExperienceReplay
-from torchforce.networks import SimpleDuelingNetwork, BaseDuelingNetwork
+from blobrl.agents import DoubleDQN
+from blobrl.memories import ExperienceReplay
+from blobrl.networks import SimpleDuelingNetwork, BaseDuelingNetwork
 
 
 class DuelingDQN(DoubleDQN):
@@ -37,7 +37,7 @@ class DuelingDQN(DoubleDQN):
                                                   action_shape=flatdim(action_space))
 
         if not isinstance(neural_network, BaseDuelingNetwork):
-            raise TypeError("neural_network need to be instance of torchforce.agents.BaseDuelingNetwork, not :" + str(
+            raise TypeError("neural_network need to be instance of blobrl.agents.BaseDuelingNetwork, not :" + str(
                 type(neural_network)))
 
         super().__init__(action_space, observation_space, memory=memory, neural_network=neural_network,

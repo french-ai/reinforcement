@@ -2,7 +2,7 @@ import pytest
 import torch
 from gym.spaces import Discrete
 
-from torchforce.networks import SimpleDuelingNetwork
+from blobrl.networks import SimpleDuelingNetwork
 
 
 def test_simple_network_init():

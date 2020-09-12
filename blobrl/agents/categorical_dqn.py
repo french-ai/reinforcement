@@ -3,9 +3,9 @@ import torch.nn.functional as F
 import torch.optim as optim
 from gym.spaces import Discrete, Space, flatdim, flatten
 
-from torchforce.agents import DQN
-from torchforce.memories import ExperienceReplay
-from torchforce.networks import C51Network
+from blobrl.agents import DQN
+from blobrl.memories import ExperienceReplay
+from blobrl.networks import C51Network
 
 
 class CategoricalDQN(DQN):

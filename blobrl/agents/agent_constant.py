@@ -4,7 +4,7 @@ import pickle
 import torch
 from gym.spaces import Space
 
-from torchforce.agents import AgentInterface
+from blobrl.agents import AgentInterface
 
 
 class AgentConstant(AgentInterface):

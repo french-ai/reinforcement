@@ -7,10 +7,10 @@ import torch.nn.functional as F
 import torch.optim as optim
 from gym.spaces import Discrete, Space, flatdim, flatten
 
-from torchforce.agents import AgentInterface
-from torchforce.explorations import GreedyExplorationInterface, EpsilonGreedy
-from torchforce.memories import MemoryInterface, ExperienceReplay
-from torchforce.networks import SimpleNetwork
+from blobrl.agents import AgentInterface
+from blobrl.explorations import GreedyExplorationInterface, EpsilonGreedy
+from blobrl.memories import MemoryInterface, ExperienceReplay
+from blobrl.networks import SimpleNetwork
 
 
 class DQN(AgentInterface, metaclass=ABCMeta):
@@ -59,18 +59,18 @@ class DQN(AgentInterface, metaclass=ABCMeta):
 
         if not isinstance(memory, MemoryInterface):
             raise TypeError(
-                "memory need to be instance of torchforces.memories.MemoryInterface, not :" + str(type(memory)))
+                "memory need to be instance of blobrls.memories.MemoryInterface, not :" + str(type(memory)))
 
         if loss is not None and not isinstance(loss, torch.nn.Module):
-            raise TypeError("loss need to be instance of torchforces.memories.MemoryInterface, not :" + str(type(loss)))
+            raise TypeError("loss need to be instance of blobrls.memories.MemoryInterface, not :" + str(type(loss)))
 
         if optimizer is not None and not isinstance(optimizer, optim.Optimizer):
             raise TypeError(
-                "optimizer need to be instance of torchforces.memories.MemoryInterface, not :" + str(type(optimizer)))
+                "optimizer need to be instance of blobrls.memories.MemoryInterface, not :" + str(type(optimizer)))
 
         if greedy_exploration is not None and not isinstance(greedy_exploration, GreedyExplorationInterface):
             raise TypeError(
-                "greedy_exploration need to be instance of torchforces.explorations.GreedyExplorationInterface, not :" + str(
+                "greedy_exploration need to be instance of blobrls.explorations.GreedyExplorationInterface, not :" + str(
                     type(greedy_exploration)))
 
         self.observation_space = observation_space

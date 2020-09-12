@@ -1,7 +1,7 @@
 Getting started
 ===============
 
-# Install Torchforce
+# Install BlobRL
  Follow [installation](./installation.md).
 
 ### Initializing an environment
@@ -13,7 +13,7 @@ env = gym.make("CartPole-v1")
 ### Initializing an agent
 
 ```python
-from torchforce.agents import AgentRandom
+from blobrl.agents import AgentRandom
 action_space = env.action_space
 observation_space = env.observation_space
 agent = AgentRandom(observation_space=observation_space, action_space=action_space)
@@ -23,7 +23,7 @@ agent = AgentRandom(observation_space=observation_space, action_space=action_spa
 
 Create Trainer
 ```python
-from torchforce import Trainer
+from blobrl import Trainer
 trainer = Trainer(environment=env, agent=agent)
 ```
 Start training:

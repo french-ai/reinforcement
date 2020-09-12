@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from torchforce.networks import BaseNetwork
+from blobrl.networks import BaseNetwork
 
 
 class C51Network(BaseNetwork):

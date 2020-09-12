@@ -29,7 +29,7 @@ with open(os.path.abspath(path + '/README.md')) as f:
 
 setuptools.setup(
     author="french ai team",
-    name='torchforce',
+    name='blobrl',
     license="Apache-2.0",
     description='Reinforcement learning with pytorch ',
     long_description=README,
@@ -49,6 +49,7 @@ setuptools.setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Software Development :: Libraries',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Intended Audience :: Developers',

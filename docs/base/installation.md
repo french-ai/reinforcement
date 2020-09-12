@@ -5,7 +5,7 @@ Installation
 
 For installing *pytorch* follow [Quick Start Locally](https://pytorch.org/) for your config.
 
-## Installation of torchforce
+## Installation of blobrl
 Download files:
 
 ```bash
@@ -17,7 +17,7 @@ Move to reinforcement directory:
 ```bash
 cd reinforcement
 ```
-Install torchforce
+Install blobrl
 
 - to use it:
 

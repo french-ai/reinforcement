@@ -8,10 +8,10 @@ import torch.nn.functional as F
 import torch.optim as optim
 from gym.spaces import Discrete, Box, MultiBinary, MultiDiscrete, Dict, Tuple
 
-from torchforce.agents import DoubleDQN
-from torchforce.explorations import Greedy, EpsilonGreedy
-from torchforce.memories import ExperienceReplay
-from torchforce.networks import BaseNetwork
+from blobrl.agents import DoubleDQN
+from blobrl.explorations import Greedy, EpsilonGreedy
+from blobrl.memories import ExperienceReplay
+from blobrl.networks import BaseNetwork
 
 
 class Network(BaseNetwork):

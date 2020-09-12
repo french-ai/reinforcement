@@ -1,7 +1,7 @@
 import pytest
 from torch.utils.tensorboard import SummaryWriter
 
-from torchforce import Record, Logger
+from blobrl import Record, Logger
 
 
 class FakeSummaryWriter(SummaryWriter):

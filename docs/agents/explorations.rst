@@ -4,7 +4,7 @@ Explorations package
 Greedy\_exploration\_interface
 -------------------------------------------------------------
 
-.. automodule:: torchforce.explorations.greedy_exploration_interface
+.. automodule:: blobrl.explorations.greedy_exploration_interface
    :members:
    :undoc-members:
    :show-inheritance:
@@ -12,7 +12,7 @@ Greedy\_exploration\_interface
 Adaptative\_epsilon\_greedy
 ----------------------------------------------------------
 
-.. automodule:: torchforce.explorations.adaptative_epsilon_greedy
+.. automodule:: blobrl.explorations.adaptative_epsilon_greedy
    :members:
    :undoc-members:
    :show-inheritance:
@@ -20,7 +20,7 @@ Adaptative\_epsilon\_greedy
 Epsilon\_greedy
 ----------------------------------------------
 
-.. automodule:: torchforce.explorations.epsilon_greedy
+.. automodule:: blobrl.explorations.epsilon_greedy
    :members:
    :undoc-members:
    :show-inheritance:
@@ -28,7 +28,7 @@ Epsilon\_greedy
 Greedy
 -------------------------------------
 
-.. automodule:: torchforce.explorations.greedy
+.. automodule:: blobrl.explorations.greedy
    :members:
    :undoc-members:
    :show-inheritance:

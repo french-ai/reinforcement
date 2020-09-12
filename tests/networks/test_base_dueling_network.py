@@ -1,6 +1,6 @@
 import pytest
 
-from torchforce.networks import BaseNetwork
+from blobrl.networks import BaseNetwork
 
 
 def test_init_base_network_fail():

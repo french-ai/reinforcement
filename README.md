@@ -1,7 +1,7 @@
-﻿TorchForce : Reinforcement Learning library with Pytorch
+﻿BlobRL : Reinforcement Learning library with Pytorch
 ============
 
-[![Read the Docs](https://img.shields.io/readthedocs/torchforce?style=for-the-badge)](https://torchforce.readthedocs.io/en/latest/?badge=latest)
+[![Read the Docs](https://img.shields.io/readthedocs/blobrl?style=for-the-badge)](https://blobrl.readthedocs.io/en/latest/?badge=latest)
 [![Build Status](https://img.shields.io/travis/french-ai/reinforcement?branch=master.svg&style=for-the-badge)](https://travis-ci.org/french-ai/reinforcement)
 [![CodeFactor](https://www.codefactor.io/repository/github/french-ai/reinforcement/badge?style=for-the-badge)](https://www.codefactor.io/repository/github/french-ai/reinforcement)
 [![Codecov](https://img.shields.io/codecov/c/github/french-ai/reinforcement?style=for-the-badge)](https://codecov.io/gh/french-ai/reinforcement)
@@ -16,7 +16,7 @@ We want to create library for reinforcement learning with *pytorch*.
 
 For installing *pytorch* follow [Quick Start Locally](https://pytorch.org/) for your config.
 
-### Torchforce
+### BlobRL
 Download files:
 
 ```bash
@@ -28,7 +28,7 @@ Move to reinforcement directory:
 ```bash
 cd reinforcement
 ```
-Install torchforce
+Install blobrl
 
 - to use it:
 
@@ -58,7 +58,7 @@ env = gym.make("CartPole-v1")
 ### Initialize agent
 
 ```python
-from torchforce.agents import AgentRandom
+from blobrl.agents import AgentRandom
 action_space = env.action_space
 observation_space = env.observation_space
 agent = AgentRandom(observation_space=observation_space, action_space=action_space)
@@ -68,7 +68,7 @@ agent = AgentRandom(observation_space=observation_space, action_space=action_spa
 
 Create Trainer
 ```python
-from torchforce import Trainer
+from blobrl import Trainer
 trainer = Trainer(environment=env, agent=agent, log_dir="./logs")
 ```
 Start training:

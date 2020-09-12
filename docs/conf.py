@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('../'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'torchforce'
+project = 'blobrl'
 copyright = '2020, franch ai team'
 author = 'franch ai team'
 master_doc = 'index'

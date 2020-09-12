@@ -1,4 +1,4 @@
-from torchforce.explorations import AdaptativeEpsilonGreedy
+from blobrl.explorations import AdaptativeEpsilonGreedy
 
 
 def test_adaptative_epsilon_greedy_step_min():

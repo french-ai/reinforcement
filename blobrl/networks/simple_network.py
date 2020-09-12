@@ -1,7 +1,7 @@
 import numpy as np
 import torch.nn as nn
 
-from torchforce.networks import BaseNetwork
+from blobrl.networks import BaseNetwork
 
 
 class SimpleNetwork(BaseNetwork):
