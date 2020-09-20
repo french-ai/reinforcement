@@ -61,10 +61,10 @@ class FakeAgent(AgentInterface):
     def load(cls, file_name, dire_name=".", device=None):
         pass
 
-    def enable_train(self):
+    def enable_exploration(self):
         pass
 
-    def disable_train(self):
+    def disable_exploration(self):
         pass
 
     def save(self, file_name, dire_name="."):

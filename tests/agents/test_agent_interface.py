@@ -16,10 +16,10 @@ class MOCKAgentInterface(AgentInterface):
     def get_action(self, observation):
         pass
 
-    def enable_train(self):
+    def enable_exploration(self):
         pass
 
-    def disable_train(self):
+    def disable_exploration(self):
         pass
 
     def learn(self, observation, action, reward, next_observation, done) -> None:

@@ -240,14 +240,14 @@ def test_enable_train():
 
     agent.trainable = False
 
-    agent.enable_train()
+    agent.enable_exploration()
     assert agent.trainable is True
 
 
 def test_disable_train():
     agent = DQN(Discrete(4), Box(1, 10, (4,)))
 
-    agent.disable_train()
+    agent.disable_exploration()
     assert agent.trainable is False
 
 

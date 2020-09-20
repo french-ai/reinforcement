@@ -9,10 +9,10 @@ from blobrl.agents import AgentInterface
 
 class AgentConstant(AgentInterface):
 
-    def enable_train(self):
+    def enable_exploration(self):
         pass
 
-    def disable_train(self):
+    def disable_exploration(self):
         pass
 
     def __init__(self, observation_space, action_space, device=None):
