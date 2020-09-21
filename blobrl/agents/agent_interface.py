@@ -27,7 +27,7 @@ class AgentInterface(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def enable_train(self):
+    def enable_exploration(self):
         """Enable train capacity
 
         :return:
@@ -35,7 +35,7 @@ class AgentInterface(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def disable_train(self):
+    def disable_exploration(self):
         """disable train capacity
 
         :return:

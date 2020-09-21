@@ -15,10 +15,10 @@ from blobrl.networks import SimpleNetwork
 
 class DQN(AgentInterface, metaclass=ABCMeta):
 
-    def enable_train(self):
+    def enable_exploration(self):
         self.trainable = True
 
-    def disable_train(self):
+    def disable_exploration(self):
         self.trainable = False
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None,

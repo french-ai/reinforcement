@@ -83,7 +83,7 @@ class Trainer:
         :param on_notebook: if render is on notebook
         :type on_notebook: bool
         """
-        self.agent.enable_train()
+        self.agent.enable_exploration()
         observation = self.environment.reset()
         done = False
         while not done:
@@ -104,7 +104,7 @@ class Trainer:
         :param on_notebook: if render is on notebook
         :type on_notebook: bool
         """
-        self.agent.disable_train()
+        self.agent.disable_exploration()
         observation = self.environment.reset()
         done = False
         while not done:
