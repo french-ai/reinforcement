@@ -16,7 +16,7 @@ def get_last_layers(space, last_dim):
 
         return list(map(map_box(last_dim), np.empty(space.shape).tolist()))
     elif isinstance(space, Discrete):
-        return nn.Linear(last_dim, flatdim(space))
+        return nn.Sequential(*[nn.Linear(last_dim, flatdim(space)), nn.Softmax()])
     elif isinstance(space, Tuple):
         return [get_last_layers(s, last_dim) for s in space]
     elif isinstance(space, Dict):

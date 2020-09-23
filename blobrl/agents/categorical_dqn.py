@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
-from gym.spaces import Discrete, Space, flatdim, flatten
+from gym.spaces import Discrete, Space, flatten
 
 from blobrl.agents import DQN
 from blobrl.memories import ExperienceReplay
@@ -37,12 +37,12 @@ class CategoricalDQN(DQN):
                 "action_space need to be instance of gym.spaces.Space.Discrete, not :" + str(type(action_space)))
         if not isinstance(observation_space, Space):
             raise TypeError(
-                "observation_space need to be instance of gym.spaces.Space.Discrete, not :" + str(
+                "observation_space need to be instance of gym.spaces.Space, not :" + str(
                     type(observation_space)))
 
         if neural_network is None and optimizer is None:
-            neural_network = C51Network(observation_shape=flatdim(observation_space),
-                                        action_shape=flatdim(action_space))
+            neural_network = C51Network(observation_space=observation_space,
+                                        action_space=action_space)
             num_atoms = 51
 
             optimizer = optim.Adam(neural_network.parameters())

@@ -18,8 +18,8 @@ class Network(BaseDuelingNetwork):
     def __str__(self):
         return 'Network'
 
-    def __init__(self, observation_shape=None, action_shape=None):
-        super().__init__(observation_shape, action_shape)
+    def __init__(self, observation_space=None, action_space=None):
+        super().__init__(observation_space, action_space)
         self.dense = nn.Linear(3, 4)
 
     def forward(self, x):
@@ -171,6 +171,7 @@ test_list = [*base_list.values(), dict_list, tuple_list]
 
 def test_agent_save_load():
     for space in test_list:
+        print(space)
         agent = DuelingDQN(observation_space=space, action_space=Discrete(2))
 
         agent.save(file_name="deed.pt")

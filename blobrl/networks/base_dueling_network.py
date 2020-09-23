@@ -5,13 +5,13 @@ from blobrl.networks import BaseNetwork
 
 class BaseDuelingNetwork(BaseNetwork):
     @abc.abstractmethod
-    def __init__(self, observation_shape, action_shape):
+    def __init__(self, observation_space, action_space):
         """
 
-        :param observation_shape:
-        :param action_shape:
+        :param observation_space:
+        :param action_space:
         """
-        super().__init__(observation_shape=observation_shape, action_shape=action_shape)
+        super().__init__(observation_space=observation_space, action_space=action_space)
 
         self.features = None
         self.advantage = None

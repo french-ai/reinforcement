@@ -131,8 +131,8 @@ class DoubleDQN(DQN):
         dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
 
         neural_network = pickle.loads(dict_save["neural_network_class"])(
-            observation_shape=flatdim(pickle.loads(dict_save["observation_space"])),
-            action_shape=flatdim(pickle.loads(dict_save["action_space"])))
+            observation_space=pickle.loads(dict_save["observation_space"]),
+            action_space=pickle.loads(dict_save["action_space"]))
         neural_network.load_state_dict(dict_save["neural_network"])
 
         double_dqn = DoubleDQN(observation_space=pickle.loads(dict_save["observation_space"]),

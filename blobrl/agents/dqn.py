@@ -5,7 +5,7 @@ from abc import ABCMeta
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
-from gym.spaces import Discrete, Space, flatdim, flatten
+from gym.spaces import Discrete, Space, flatten
 
 from blobrl.agents import AgentInterface
 from blobrl.explorations import GreedyExplorationInterface, EpsilonGreedy
@@ -42,18 +42,18 @@ class DQN(AgentInterface, metaclass=ABCMeta):
 
         if not isinstance(action_space, Discrete):
             raise TypeError(
-                "action_space need to be instance of gym.spaces.Space.Discrete, not :" + str(type(action_space)))
+                "action_space need to be instance of gym.spaces.Space, not :" + str(type(action_space)))
         if not isinstance(observation_space, Space):
             raise TypeError(
-                "observation_space need to be instance of gym.spaces.Space.Discrete, not :" + str(
+                "observation_space need to be instance of gym.spaces.Space not :" + str(
                     type(observation_space)))
 
         if neural_network is None and optimizer is not None:
             raise TypeError("If neural_network is None, optimizer need to be None not " + str(type(optimizer)))
 
         if neural_network is None:
-            neural_network = SimpleNetwork(observation_shape=flatdim(observation_space),
-                                           action_shape=flatdim(action_space))
+            neural_network = SimpleNetwork(observation_space=observation_space,
+                                           action_space=action_space)
         if not isinstance(neural_network, torch.nn.Module):
             raise TypeError("neural_network need to be instance of torch.nn.Module, not :" + str(type(neural_network)))
 
@@ -200,8 +200,8 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
 
         neural_network = pickle.loads(dict_save["neural_network_class"])(
-            observation_shape=flatdim(pickle.loads(dict_save["observation_space"])),
-            action_shape=flatdim(pickle.loads(dict_save["action_space"])))
+            observation_space=pickle.loads(dict_save["observation_space"]),
+            action_space=pickle.loads(dict_save["action_space"]))
         neural_network.load_state_dict(dict_save["neural_network"])
 
         return DQN(observation_space=pickle.loads(dict_save["observation_space"]),

@@ -49,7 +49,7 @@ def test_categorical_dqn_agent_instantiation_error_greedy_exploration():
 
 
 def test_categorical_dqn_agent_instantiation_custom_optimizer():
-    c51 = C51Network((1), (1))
+    c51 = C51Network(Discrete(1), Discrete(1))
 
     CategoricalDQN(Discrete(4), Discrete(4), neural_network=c51, optimizer=optim.RMSprop(c51.parameters()))
 

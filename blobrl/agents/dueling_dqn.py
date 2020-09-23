@@ -2,7 +2,6 @@ import os
 import pickle
 
 import torch
-from gym.spaces import flatdim
 
 from blobrl.agents import DoubleDQN
 from blobrl.memories import ExperienceReplay
@@ -33,8 +32,8 @@ class DuelingDQN(DoubleDQN):
         """
 
         if neural_network is None:
-            neural_network = SimpleDuelingNetwork(observation_shape=flatdim(observation_space),
-                                                  action_shape=flatdim(action_space))
+            neural_network = SimpleDuelingNetwork(observation_space=observation_space,
+                                                  action_space=action_space)
 
         if not isinstance(neural_network, BaseDuelingNetwork):
             raise TypeError("neural_network need to be instance of blobrl.agents.BaseDuelingNetwork, not :" + str(
@@ -58,8 +57,8 @@ class DuelingDQN(DoubleDQN):
         dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
 
         neural_network = pickle.loads(dict_save["neural_network_class"])(
-            observation_shape=flatdim(pickle.loads(dict_save["observation_space"])),
-            action_shape=flatdim(pickle.loads(dict_save["action_space"])))
+            observation_space=pickle.loads(dict_save["observation_space"]),
+            action_space=pickle.loads(dict_save["action_space"]))
         neural_network.load_state_dict(dict_save["neural_network"])
 
         dueling_dqn = DuelingDQN(observation_space=pickle.loads(dict_save["observation_space"]),

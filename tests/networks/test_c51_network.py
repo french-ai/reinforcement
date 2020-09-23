@@ -1,6 +1,6 @@
 import pytest
 import torch
-from gym.spaces import Discrete
+from gym.spaces import Discrete, flatdim
 
 from blobrl.networks import C51Network
 
@@ -13,22 +13,23 @@ def test_c51_init():
                  [Discrete(1), "zdzd"],
                  ["zdzd", (1, 4, 7)],
                  [(1, 4, 7), "zdzd"],
-                 [Discrete(1), Discrete(1)]]
+                 [15, 24]]
 
     for ob, ac in list_fail:
         with pytest.raises(TypeError):
-            C51Network(observation_shape=ob, action_shape=ac)
+            C51Network(observation_space=ob, action_space=ac)
 
-    list_work = [[(454), (4)],
-                 [(454, 54), (5, 2)],
-                 [(454, 54, 45), (4, 5, 3)]]
+    list_work = [[Discrete(1), Discrete(1)],
+                 [Discrete(10), Discrete(20)],
+                 [Discrete(1), Discrete(20)]]
     for ob, ac in list_work:
-        C51Network(observation_shape=ob, action_shape=ac)
+        C51Network(observation_space=ob, action_space=ac)
 
 
 def test_c51_forward():
-    list_work = [[(454, 54), (4, 2)],
-                 [(454, 54, 45), (5, 1, 2)]]
+    list_work = [[Discrete(1), Discrete(1)],
+                 [Discrete(10), Discrete(20)],
+                 [Discrete(1), Discrete(20)]]
     for ob, ac in list_work:
-        simple_network = C51Network(observation_shape=ob, action_shape=ac)
-        simple_network.forward(torch.rand((2, *ob)))
+        simple_network = C51Network(observation_space=ob, action_space=ac)
+        simple_network.forward(torch.rand((2, flatdim(ob))))

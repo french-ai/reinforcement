@@ -1,34 +1,35 @@
 import numpy as np
 import torch
 import torch.nn as nn
+from gym.spaces import Space, flatdim
 
 from blobrl.networks import BaseNetwork
 
 
 class C51Network(BaseNetwork):
-    def __init__(self, observation_shape, action_shape):
+    def __init__(self, observation_space, action_space):
         """
 
-        :param observation_shape:
-        :param action_shape:
+        :param observation_space:
+        :param action_space:
         """
-        super().__init__(observation_shape=observation_shape, action_shape=action_shape)
+        super().__init__(observation_space=observation_space, action_space=action_space)
 
-        if not isinstance(observation_shape, (tuple, int)):
-            raise TypeError("observation_space need to be Space not " + str(type(observation_shape)))
-        if not isinstance(action_shape, (tuple, int)):
-            raise TypeError("action_space need to be Space not " + str(type(action_shape)))
+        if not isinstance(observation_space, Space):
+            raise TypeError("observation_space need to be Space not " + str(type(observation_space)))
+        if not isinstance(action_space, Space):
+            raise TypeError("action_space need to be Space not " + str(type(action_space)))
 
         self.NUM_ATOMS = 51
 
         self.network = nn.Sequential()
-        self.network.add_module("C51_Linear_Input", nn.Linear(np.prod(self.observation_space), 64))
+        self.network.add_module("C51_Linear_Input", nn.Linear(np.prod(flatdim(self.observation_space)), 64))
         self.network.add_module("C51_LeakyReLU_Input", nn.LeakyReLU())
         self.network.add_module("C51_Linear_1", nn.Linear(64, 64))
         self.network.add_module("C51_LeakyReLU_1", nn.LeakyReLU())
 
         self.distributional_list = []
-        self.len_distributional = np.prod(self.action_space)
+        self.len_distributional = np.prod(flatdim(self.action_space))
 
         for i in range(self.len_distributional):
             distributional = nn.Sequential()
