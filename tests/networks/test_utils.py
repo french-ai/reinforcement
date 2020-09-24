@@ -1,5 +1,4 @@
 from blobrl.networks import get_last_layers
-from gym.spaces import flatdim
 from gym.spaces import Box, Discrete, MultiDiscrete, MultiBinary, Tuple, Dict
 import torch.nn as nn
 
@@ -20,8 +19,9 @@ def test_get_last_layers():
         Discrete(100),
         Discrete(5),
 
+        MultiDiscrete([1]),
         MultiDiscrete([10, 110, 3, 50]),
-        MultiDiscrete([1, 1, 1, 1]),
+        MultiDiscrete([1, 1, 1]),
         MultiDiscrete([100, 3, 3, 5]),
 
         MultiDiscrete([[100, 3], [3, 5]]),
@@ -47,10 +47,11 @@ def test_get_last_layers():
         nn.Linear(10, 100),
         nn.Linear(10, 5),
 
+        [nn.Sequential(*[nn.Linear(10, 10), nn.Softmax()])],
         [nn.Sequential(*[nn.Linear(10, 10), nn.Softmax()]), nn.Sequential(*[nn.Linear(10, 110), nn.Softmax()]),
          nn.Sequential(*[nn.Linear(10, 3), nn.Softmax()]), nn.Sequential(*[nn.Linear(10, 50), nn.Softmax()])],
         [nn.Sequential(*[nn.Linear(10, 1), nn.Softmax()]), nn.Sequential(*[nn.Linear(10, 1), nn.Softmax()]),
-         nn.Sequential(*[nn.Linear(10, 1), nn.Softmax()]), nn.Sequential(*[nn.Linear(10, 1), nn.Softmax()])],
+         nn.Sequential(*[nn.Linear(10, 1), nn.Softmax()])],
         [nn.Sequential(*[nn.Linear(10, 100), nn.Softmax()]), nn.Sequential(*[nn.Linear(10, 3), nn.Softmax()]),
          nn.Sequential(*[nn.Linear(10, 3), nn.Softmax()]), nn.Sequential(*[nn.Linear(10, 5), nn.Softmax()])],
 

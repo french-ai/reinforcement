@@ -20,7 +20,7 @@ class Network(BaseNetwork):
         return 'Network'
 
     def __init__(self, observation_space=None, action_space=None):
-        super().__init__(observation_space, action_space)
+        super().__init__(Discrete(1), Discrete(1))
         self.dense = nn.Linear(4, 4)
 
     def forward(self, x):

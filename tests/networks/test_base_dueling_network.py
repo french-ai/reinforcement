@@ -1,8 +1,14 @@
 import pytest
+import torch
+from gym.spaces import flatdim
 
-from blobrl.networks import BaseNetwork
+from blobrl.networks import BaseDuelingNetwork
+from tests.networks import TestBaseNetwork
+
+TestBaseNetwork.__test__ = False
 
 
-def test_init_base_network_fail():
-    with pytest.raises(TypeError):
-        BaseNetwork(None, None)
+class TestBaseDuelingNetwork(TestBaseNetwork):
+    __test__ = True
+
+    network = BaseDuelingNetwork

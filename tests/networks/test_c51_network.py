@@ -1,35 +1,33 @@
 import pytest
 import torch
-from gym.spaces import Discrete, flatdim
+from gym.spaces import flatdim
 
 from blobrl.networks import C51Network
+from tests.networks import TestBaseNetwork
+
+TestBaseNetwork.__test__ = False
 
 
-def test_c51_init():
-    list_fail = [[None, None],
-                 ["dedrfe", "qdzq"],
-                 [1215.4154, 157.48],
-                 ["zdzd", (Discrete(1))],
-                 [Discrete(1), "zdzd"],
-                 ["zdzd", (1, 4, 7)],
-                 [(1, 4, 7), "zdzd"],
-                 [15, 24]]
+class TestC51Network(TestBaseNetwork):
+    __test__ = True
 
-    for ob, ac in list_fail:
-        with pytest.raises(TypeError):
-            C51Network(observation_space=ob, action_space=ac)
+    network = C51Network
 
-    list_work = [[Discrete(1), Discrete(1)],
-                 [Discrete(10), Discrete(20)],
-                 [Discrete(1), Discrete(20)]]
-    for ob, ac in list_work:
-        C51Network(observation_space=ob, action_space=ac)
+    def test_init(self):
+        for ob, ac in self.list_fail:
+            with pytest.raises(TypeError):
+                self.network(observation_space=ob, action_space=ac)
 
+        for ob, ac in self.list_work:
+            self.network(observation_space=ob, action_space=ac)
 
-def test_c51_forward():
-    list_work = [[Discrete(1), Discrete(1)],
-                 [Discrete(10), Discrete(20)],
-                 [Discrete(1), Discrete(20)]]
-    for ob, ac in list_work:
-        simple_network = C51Network(observation_space=ob, action_space=ac)
-        simple_network.forward(torch.rand((2, flatdim(ob))))
+    def test_forward(self):
+        for ob, ac in self.list_work:
+            network = self.network(observation_space=ob, action_space=ac)
+            network.forward(torch.rand((1, flatdim(ob))))
+
+    def test_str_(self):
+        for ob, ac in self.list_work:
+            network = self.network(observation_space=ob, action_space=ac)
+
+            assert 'C51Network-' + str(ob) + "-" + str(ac) == network.__str__()

@@ -15,11 +15,6 @@ class C51Network(BaseNetwork):
         """
         super().__init__(observation_space=observation_space, action_space=action_space)
 
-        if not isinstance(observation_space, Space):
-            raise TypeError("observation_space need to be Space not " + str(type(observation_space)))
-        if not isinstance(action_space, Space):
-            raise TypeError("action_space need to be Space not " + str(type(action_space)))
-
         self.NUM_ATOMS = 51
 
         self.network = nn.Sequential()

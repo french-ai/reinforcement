@@ -22,7 +22,7 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         self.trainable = False
 
     def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None,
-                 step_train=2, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None,
+                 step_train=1, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None,
                  device=None):
         """
 
@@ -40,7 +40,7 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         :param greedy_exploration:
         """
 
-        if not isinstance(action_space, Discrete):
+        if not isinstance(action_space, Space):
             raise TypeError(
                 "action_space need to be instance of gym.spaces.Space, not :" + str(type(action_space)))
         if not isinstance(observation_space, Space):
