@@ -31,11 +31,11 @@ class SimpleNetwork(BaseNetwork):
         x = observation.view(observation.shape[0], -1)
         x = self.network(x)
 
-        def map_forward(last_layers):
+        def map_forward(last_tensor):
             def mp(layers):
                 if isinstance(layers, list):
                     return [mp(layers) for layers in layers]
-                return layers(last_layers)
+                return layers(last_tensor)
 
             return mp
 

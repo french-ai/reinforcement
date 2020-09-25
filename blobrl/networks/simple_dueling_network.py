@@ -27,13 +27,9 @@ class SimpleDuelingNetwork(BaseDuelingNetwork):
         self.features.add_module("NetWorkSimple_LeakyReLU_1", nn.LeakyReLU())
         self.features.add_module("NetWorkSimple_Linear_Output", nn.Linear(64, 64))
 
-        self.advantage = nn.Sequential(
-            nn.Linear(64, 64),
-            nn.LeakyReLU(),
-            get_last_layers(self.action_space, last_dim=64)
-        )
+        self.advantage_outputs = get_last_layers(self.action_space, last_dim=64)
 
-        self.value = nn.Sequential(
+        self.value_outputs = nn.Sequential(
             nn.Linear(64, 64),
             nn.LeakyReLU(),
             nn.Linear(64, 1)
