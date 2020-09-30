@@ -33,7 +33,7 @@ class DoubleDQN(DQN):
         :param optimizer:
         :param greedy_exploration:
         """
-        super().__init__(action_space, observation_space, memory, neural_network, step_train, batch_size, gamma, loss,
+        super().__init__(observation_space, action_space, memory, neural_network, step_train, batch_size, gamma, loss,
                          optimizer, greedy_exploration, device=device)
 
         self.neural_network_target = deepcopy(self.neural_network)

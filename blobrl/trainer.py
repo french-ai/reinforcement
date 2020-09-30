@@ -52,14 +52,10 @@ class Trainer:
 
 
         :param observation:
-        :param env:
-        :param agent:
         :param learn:
         :param logger:
         :param render: if show env render
         :type render: bool
-        :param on_notebook: if render is on notebook
-        :type on_notebook: bool
         :return:
         """
         if render:
@@ -75,13 +71,9 @@ class Trainer:
     def do_episode(self, logger=None, render=True):
         """
 
-        :param env:
-        :param agent:
         :param logger:
         :param render: if show env render
         :type render: bool
-        :param on_notebook: if render is on notebook
-        :type on_notebook: bool
         """
         self.agent.enable_exploration()
         observation = self.environment.reset()
@@ -96,13 +88,9 @@ class Trainer:
     def evaluate(self, logger=None, render=True):
         """
 
-        :param env:
-        :param agent:
         :param logger:
         :param render: if show env render
         :type render: bool
-        :param on_notebook: if render is on notebook
-        :type on_notebook: bool
         """
         self.agent.disable_exploration()
         observation = self.environment.reset()
@@ -120,8 +108,6 @@ class Trainer:
         :param max_episode:
         :param render: if show env render
         :type render: bool
-        :param on_notebook: if render is on notebook
-        :type on_notebook: bool
         """
 
         self.environment.reset()

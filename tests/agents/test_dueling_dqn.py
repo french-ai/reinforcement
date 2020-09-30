@@ -171,7 +171,6 @@ test_list = [*base_list.values(), dict_list, tuple_list]
 
 def test_agent_save_load():
     for space in test_list:
-        print(space)
         agent = DuelingDQN(observation_space=space, action_space=Discrete(2))
 
         agent.save(file_name="deed.pt")

@@ -1,6 +1,6 @@
 import pytest
 import torch
-from gym.spaces import flatdim
+from gym.spaces import flatdim, flatten
 
 from blobrl.networks import SimpleNetwork
 from tests.networks import TestBaseNetwork
@@ -31,3 +31,8 @@ class TestSimpleNetwork(TestBaseNetwork):
             network = self.network(observation_space=ob, action_space=ac)
 
             assert 'SimpleNetwork-' + str(ob) + "-" + str(ac) == network.__str__()
+
+    def test_call_network(self):
+        for ob, ac in self.list_work:
+            self.network(observation_space=ob, action_space=ac)(
+                torch.tensor([flatten(ob, ob.sample())]).float())

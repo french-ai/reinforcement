@@ -94,6 +94,5 @@ def test_get_last_layers():
     ]
 
     for in_value, out_value in zip(in_values, out_values):
-        print(in_value)
         out_value_gen = get_last_layers(in_value, 10)
         valid_dim(out_value, out_value_gen)

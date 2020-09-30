@@ -28,18 +28,16 @@ class SimpleNetwork(BaseNetwork):
         :param observation:
         :return:
         """
+
         x = observation.view(observation.shape[0], -1)
         x = self.network(x)
 
-        def map_forward(last_tensor):
-            def mp(layers):
-                if isinstance(layers, list):
-                    return [mp(layers) for layers in layers]
-                return layers(last_tensor)
+        def forwards(last_tensor, layers):
+            if isinstance(layers, list):
+                return [forwards(last_tensor, layers) for layers in layers]
+            return layers(last_tensor)
 
-            return mp
-
-        return list(map(map_forward(x), self.outputs))
+        return forwards(x, self.outputs)
 
     def __str__(self):
         return 'SimpleNetwork-' + str(self.observation_space) + "-" + str(self.action_space)

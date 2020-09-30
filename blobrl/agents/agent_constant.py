@@ -25,14 +25,7 @@ class AgentConstant(AgentInterface):
         :param action_space: Space for init action size
         :type observation_space: gym.Space
         """
-        super().__init__(device)
-        if not isinstance(action_space, Space):
-            raise TypeError("action_space need to be instance of gym.spaces.Space, not :" + str(type(action_space)))
-        if not isinstance(observation_space, Space):
-            raise TypeError(
-                "observation_space need to be instance of gym.spaces.Space, not :" + str(type(observation_space)))
-        self.action_space = action_space
-        self.observation_space = observation_space
+        super().__init__(observation_space, action_space, device)
 
         self.action = self.action_space.sample()
 

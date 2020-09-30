@@ -5,7 +5,7 @@ from abc import ABCMeta
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
-from gym.spaces import Discrete, Space, flatten
+from gym.spaces import Discrete, MultiDiscrete, flatten
 
 from blobrl.agents import AgentInterface
 from blobrl.explorations import GreedyExplorationInterface, EpsilonGreedy
@@ -16,18 +16,17 @@ from blobrl.networks import SimpleNetwork
 class DQN(AgentInterface, metaclass=ABCMeta):
 
     def enable_exploration(self):
-        self.trainable = True
+        self.with_exploration = True
 
     def disable_exploration(self):
-        self.trainable = False
+        self.with_exploration = False
 
-    def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None,
+    def __init__(self, observation_space, action_space, memory=ExperienceReplay(), neural_network=None,
                  step_train=1, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None,
                  device=None):
         """
 
-        :param device: torch device to run agent
-        :type: torch.device
+
         :param action_space:
         :param observation_space:
         :param memory:
@@ -38,15 +37,13 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         :param loss:
         :param optimizer:
         :param greedy_exploration:
+        :param device: torch device to run agent
+        :type: torch.device
         """
 
-        if not isinstance(action_space, Space):
+        if not isinstance(action_space, (Discrete, MultiDiscrete)):
             raise TypeError(
-                "action_space need to be instance of gym.spaces.Space, not :" + str(type(action_space)))
-        if not isinstance(observation_space, Space):
-            raise TypeError(
-                "observation_space need to be instance of gym.spaces.Space not :" + str(
-                    type(observation_space)))
+                "action_space need to be instance of Discrete or MultiDiscrete, not :" + str(type(action_space)))
 
         if neural_network is None and optimizer is not None:
             raise TypeError("If neural_network is None, optimizer need to be None not " + str(type(optimizer)))
@@ -99,9 +96,9 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         else:
             self.greedy_exploration = greedy_exploration
 
-        self.trainable = True
+        self.with_exploration = True
 
-        super().__init__(device)
+        super().__init__(observation_space=observation_space, action_space=action_space, device=device)
         self.neural_network.to(self.device)
 
     def get_action(self, observation):
@@ -110,14 +107,20 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         :param observation: stat of environment
         :type observation: gym.Space
         """
-        if not self.greedy_exploration.be_greedy(self.step) and self.trainable:
+        if not self.greedy_exploration.be_greedy(self.step) and self.with_exploration:
             return self.action_space.sample()
 
-        observation = torch.tensor([flatten(self.observation_space, observation)], device=self.device)
+        observation = torch.tensor([flatten(self.observation_space, observation)], device=self.device).float()
 
         q_values = self.neural_network.forward(observation)
 
-        return torch.argmax(q_values).detach().item()
+        def return_values(values):
+            if isinstance(values, list):
+                return [return_values(v) for v in values]
+            else:
+                return torch.argmax(values).detach().item()
+
+        return return_values(q_values)
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
         """ learn from parameters
@@ -150,16 +153,33 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size,
                                                                                       device=self.device)
 
-        q = rewards + self.gamma * self.neural_network.forward(next_observations).max(1)[0].detach() * (
-                1 - dones)
+        pred_next_observation = self.neural_network.forward(next_observations)
+        pred_observation = self.neural_network.forward(observations)
 
-        actions_one_hot = F.one_hot(actions.to(torch.int64), num_classes=self.action_space.n)
-        q_values_predict = self.neural_network.forward(observations) * actions_one_hot
-        q_predict = torch.max(q_values_predict, dim=1)
+        def apply_loss(pno, po, ac, n_c):
+            if isinstance(pno, list):
+                print(ac.shape)
+                [apply_loss(n, p, a, c) for n, p, a, c in
+                 zip(pno, po, ac.permute(1, 0, *[i for i in range(2, len(ac.shape))]), n_c)]
+            else:
 
-        self.optimizer.zero_grad()
-        loss = self.loss(q_predict[0], q)
-        loss.backward()
+                q = rewards + self.gamma * pno.max(1)[0].detach() * (
+                        1 - dones)
+
+                actions_one_hot = F.one_hot(ac.to(torch.int64), num_classes=n_c)
+                print(po.shape, ac.shape, actions_one_hot.shape, n_c)
+                q_values_predict = po * actions_one_hot
+                q_predict = torch.max(q_values_predict, dim=1)
+
+                self.optimizer.zero_grad()
+                loss = self.loss(q_predict[0], q)
+                loss.backward(retain_graph=True)
+
+        if isinstance(self.action_space, Discrete):
+            apply_loss(pred_next_observation, pred_observation, actions, self.action_space.n)
+        # find space for one_hot encore action in apply loss
+        elif isinstance(self.action_space, MultiDiscrete):
+            apply_loss(pred_next_observation, pred_observation, actions, self.action_space.nvec)
         self.optimizer.step()
 
     def save(self, file_name, dire_name="."):

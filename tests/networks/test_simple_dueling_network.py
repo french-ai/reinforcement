@@ -1,5 +1,6 @@
 import pytest
 import torch
+import numpy as np
 from gym.spaces import flatdim
 
 from blobrl.networks import SimpleDuelingNetwork
@@ -31,3 +32,7 @@ class TestSimpleDuelingNetwork(TestBaseDuelingNetwork):
             network = self.network(observation_space=ob, action_space=ac)
 
             assert 'SimpleDuelingNetwork-' + str(ob) + "-" + str(ac) == network.__str__()
+
+    def test_call_network(self):
+        for ob, ac in self.list_work:
+            self.network(observation_space=ob, action_space=ac)(torch.from_numpy(np.array(ob.sample())))

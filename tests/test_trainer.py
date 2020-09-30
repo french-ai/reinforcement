@@ -7,6 +7,9 @@ import numpy as np
 import pytest
 from ipykernel import iostream
 
+from gym.spaces import Discrete
+
+
 from blobrl import Trainer, Logger
 from blobrl.agents import AgentInterface
 from blobrl.trainer import arg_to_agent
@@ -71,7 +74,7 @@ class FakeAgent(AgentInterface):
         pass
 
     def __init__(self, observation_space, action_space, device=None):
-        super().__init__(device)
+        super().__init__(Discrete(1), Discrete(1), device)
         self.get_action_done = 0
         self.learn_done = 0
         self.episode_finished_done = 0

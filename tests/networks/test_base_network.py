@@ -1,4 +1,6 @@
 import pytest
+import torch
+import numpy as np
 
 from blobrl.networks import BaseNetwork
 from gym.spaces import Discrete, MultiDiscrete, MultiBinary, Box, Tuple, Dict
@@ -28,9 +30,9 @@ class TestBaseNetwork:
 
         [Tuple([Discrete(1), MultiDiscrete([1, 1])]), Tuple([Discrete(1), MultiDiscrete([1, 1])])],
         [Dict({"first": Discrete(1), "second": MultiDiscrete([1, 1])}),
-         Dict({"first": Discrete(1), "second": MultiDiscrete([1, 1])})],
-
+         Dict({"first": Discrete(1), "second": MultiDiscrete([1, 1])})]
     ]
+
     list_fail = [
         [None, None],
         ["dedrfe", "qdzq"],
