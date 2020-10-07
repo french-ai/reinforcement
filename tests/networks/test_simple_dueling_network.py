@@ -1,7 +1,6 @@
 import pytest
 import torch
-import numpy as np
-from gym.spaces import flatdim
+from gym.spaces import flatdim, flatten
 
 from blobrl.networks import SimpleDuelingNetwork
 from tests.networks import TestBaseDuelingNetwork
@@ -35,4 +34,5 @@ class TestSimpleDuelingNetwork(TestBaseDuelingNetwork):
 
     def test_call_network(self):
         for ob, ac in self.list_work:
-            self.network(observation_space=ob, action_space=ac)(torch.from_numpy(np.array(ob.sample())))
+            self.network(observation_space=ob, action_space=ac)(
+                torch.tensor([flatten(ob, ob.sample())]).float())

@@ -1,7 +1,4 @@
 import pytest
-import torch
-import numpy as np
-
 from blobrl.networks import BaseNetwork
 from gym.spaces import Discrete, MultiDiscrete, MultiBinary, Box, Tuple, Dict
 

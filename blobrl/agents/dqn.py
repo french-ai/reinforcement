@@ -153,34 +153,34 @@ class DQN(AgentInterface, metaclass=ABCMeta):
         observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size,
                                                                                       device=self.device)
 
-        pred_next_observation = self.neural_network.forward(next_observations)
-        pred_observation = self.neural_network.forward(observations)
-
-        def apply_loss(pno, po, ac, n_c):
-            if isinstance(pno, list):
-                print(ac.shape)
-                [apply_loss(n, p, a, c) for n, p, a, c in
-                 zip(pno, po, ac.permute(1, 0, *[i for i in range(2, len(ac.shape))]), n_c)]
-            else:
-
-                q = rewards + self.gamma * pno.max(1)[0].detach() * (
-                        1 - dones)
-
-                actions_one_hot = F.one_hot(ac.to(torch.int64), num_classes=n_c)
-                print(po.shape, ac.shape, actions_one_hot.shape, n_c)
-                q_values_predict = po * actions_one_hot
-                q_predict = torch.max(q_values_predict, dim=1)
-
-                self.optimizer.zero_grad()
-                loss = self.loss(q_predict[0], q)
-                loss.backward(retain_graph=True)
+        next_prediction = self.neural_network.forward(next_observations)
+        prediction = self.neural_network.forward(observations)
 
         if isinstance(self.action_space, Discrete):
-            apply_loss(pred_next_observation, pred_observation, actions, self.action_space.n)
+            self.apply_loss(next_prediction, prediction, actions, rewards, dones, self.action_space.n)
         # find space for one_hot encore action in apply loss
         elif isinstance(self.action_space, MultiDiscrete):
-            apply_loss(pred_next_observation, pred_observation, actions, self.action_space.nvec)
+            self.apply_loss(next_prediction, prediction, actions, rewards, dones, self.action_space.nvec)
         self.optimizer.step()
+
+    def apply_loss(self, next_prediction, prediction, actions, rewards, dones, len_space):
+        if isinstance(next_prediction, list):
+            [self.apply_loss(n, p, a, rewards, dones, c) for n, p, a, c in
+             zip(next_prediction, prediction, actions.permute(1, 0, *[i for i in range(2, len(actions.shape))]),
+                 len_space)]
+        else:
+
+            q = rewards + self.gamma * next_prediction.max(1)[0].detach() * (
+                    1 - dones)
+
+            actions_one_hot = F.one_hot(actions.to(torch.int64), num_classes=len_space)
+            print(prediction.shape, actions.shape, actions_one_hot.shape, len_space)
+            q_values_predict = prediction * actions_one_hot
+            q_predict = torch.max(q_values_predict, dim=1)
+
+            self.optimizer.zero_grad()
+            loss = self.loss(q_predict[0], q)
+            loss.backward(retain_graph=True)
 
     def save(self, file_name, dire_name="."):
         """ Save agent at dire_name/file_name

@@ -13,7 +13,7 @@ def get_last_layers(space, last_dim):
 
         return map_box(last_dim, np.empty(space.shape).tolist())
     elif isinstance(space, Discrete):
-        return nn.Sequential(*[nn.Linear(last_dim, flatdim(space)), nn.Softmax()])
+        return nn.Sequential(*[nn.Linear(last_dim, flatdim(space)), nn.Softmax(dim=1)])
     elif isinstance(space, Tuple):
         return [get_last_layers(s, last_dim) for s in space]
     elif isinstance(space, Dict):
@@ -31,7 +31,7 @@ def get_last_layers(space, last_dim):
             if isinstance(n, list):
                 return [map_multidiscrete(ld, x) for x in n]
 
-            return nn.Sequential(*[nn.Linear(ld, n), nn.Softmax(1)])
+            return nn.Sequential(*[nn.Linear(ld, n), nn.Softmax(dim=1)])
 
         return map_multidiscrete(last_dim, space.nvec.tolist())
     else:

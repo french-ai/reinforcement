@@ -75,7 +75,8 @@ class TestDQN(TestAgentInterface):
             for ge in [Greedy(), EpsilonGreedy(1.)]:
                 agent = self.agent(o, a, greedy_exploration=ge)
 
-                agent.get_action(o.sample())
+                for i in range(20):
+                    agent.get_action(o.sample())
 
     def test_learn(self):
         for o, a in self.list_work:
@@ -84,15 +85,8 @@ class TestDQN(TestAgentInterface):
 
             agent = self.agent(observation_space=o, action_space=a, memory=memory, neural_network=network)
 
-            agent.learn(flatten(o, o.sample()), a.sample(), 0, flatten(o, o.sample()), False)
-            agent.learn(flatten(o, o.sample()), a.sample(), 0, flatten(o, o.sample()), False)
-            agent.learn(flatten(o, o.sample()), a.sample(), 0, flatten(o, o.sample()), False)
-            agent.learn(flatten(o, o.sample()), a.sample(), 0, flatten(o, o.sample()), False)
-            agent.learn(flatten(o, o.sample()), a.sample(), 0, flatten(o, o.sample()), False)
-            agent.learn(flatten(o, o.sample()), a.sample(), 0, flatten(o, o.sample()), False)
-
-    def test_train(self):
-        pass
+            for i in range(20):
+                agent.learn(flatten(o, o.sample()), a.sample(), 0, flatten(o, o.sample()), False)
 
     def test_episode_finished(self):
         for o, a in self.list_work:
@@ -130,7 +124,7 @@ class TestDQN(TestAgentInterface):
 
             agent = self.agent(observation_space=o, action_space=a, memory=ExperienceReplay(),
                                neural_network=network,
-                               step_train=3, batch_size=12, gamma=0.50, loss=None,
+                               step_train=3, batch_size=12, gamma=0.50,
                                optimizer=torch.optim.Adam(network.parameters()),
                                greedy_exploration=EpsilonGreedy(0.2))
 
@@ -195,6 +189,7 @@ class TestDQN(TestAgentInterface):
             assert agent.with_exploration is False
 
     def test__str__(self):
+        raise Exception()
         for o, a in self.list_work:
             agent = self.agent(o, a)
 
