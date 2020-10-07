@@ -5,8 +5,6 @@ from blobrl.agents import AgentRandom
 
 from tests.agents import TestAgentInterface
 
-TestAgentInterface.__test__ = False
-
 
 class TestAgentRandom(TestAgentInterface):
     __test__ = True

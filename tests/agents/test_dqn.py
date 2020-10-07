@@ -10,9 +10,6 @@ from blobrl.networks import SimpleNetwork
 
 from tests.agents import TestAgentInterface
 
-TestAgentInterface.__test__ = False
-
-
 class TestDQN(TestAgentInterface):
     __test__ = True
 
@@ -72,6 +69,7 @@ class TestDQN(TestAgentInterface):
 
     def test_get_action(self):
         for o, a in self.list_work:
+            assert 1
             for ge in [Greedy(), EpsilonGreedy(1.)]:
                 agent = self.agent(o, a, greedy_exploration=ge)
 

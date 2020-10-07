@@ -5,8 +5,6 @@ from gym.spaces import flatdim, flatten
 from blobrl.networks import SimpleNetwork
 from tests.networks import TestBaseNetwork
 
-TestBaseNetwork.__test__ = False
-
 
 class TestSimpleNetwork(TestBaseNetwork):
     __test__ = True

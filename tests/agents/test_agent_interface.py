@@ -96,3 +96,7 @@ class TestAgentInterface:
 
             if torch.cuda.is_available():
                 self.agent(o, a, torch.device("cuda"))
+
+    def test__str__(self):
+
+        pass

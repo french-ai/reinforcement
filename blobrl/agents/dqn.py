@@ -1,6 +1,5 @@
 import os
 import pickle
-from abc import ABCMeta
 
 import torch
 import torch.nn.functional as F
@@ -13,7 +12,7 @@ from blobrl.memories import MemoryInterface, ExperienceReplay
 from blobrl.networks import SimpleNetwork
 
 
-class DQN(AgentInterface, metaclass=ABCMeta):
+class DQN(AgentInterface):
 
     def enable_exploration(self):
         self.with_exploration = True

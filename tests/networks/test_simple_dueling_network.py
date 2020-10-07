@@ -5,8 +5,6 @@ from gym.spaces import flatdim, flatten
 from blobrl.networks import SimpleDuelingNetwork
 from tests.networks import TestBaseDuelingNetwork
 
-TestBaseDuelingNetwork.__test__ = False
-
 
 class TestSimpleDuelingNetwork(TestBaseDuelingNetwork):
     __test__ = True

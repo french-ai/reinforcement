@@ -4,7 +4,6 @@ import pytest
 from blobrl.agents import AgentConstant
 from tests.agents import TestAgentInterface
 
-TestAgentInterface.__test__ = False
 
 
 class TestAgentConstant(TestAgentInterface):

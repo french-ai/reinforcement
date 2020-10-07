@@ -1,12 +1,10 @@
 import pytest
 import torch
-import numpy as np
+
 from gym.spaces import flatdim
 from gym.spaces import Discrete, MultiDiscrete, MultiBinary, Box, Tuple, Dict
 from blobrl.networks import C51Network
 from tests.networks import TestBaseNetwork
-
-TestBaseNetwork.__test__ = False
 
 
 class TestC51Network(TestBaseNetwork):

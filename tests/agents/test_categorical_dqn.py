@@ -3,11 +3,7 @@ from blobrl.networks import C51Network
 
 from tests.agents import TestDQN
 
-TestDQN.__test__ = False
-
-
 class TestCategorical_dqn(TestDQN):
-    __test__ = True
 
     agent = CategoricalDQN
     network = C51Network
