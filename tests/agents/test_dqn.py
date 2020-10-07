@@ -189,7 +189,6 @@ class TestDQN(TestAgentInterface):
             assert agent.with_exploration is False
 
     def test__str__(self):
-        raise Exception()
         for o, a in self.list_work:
             agent = self.agent(o, a)
 
