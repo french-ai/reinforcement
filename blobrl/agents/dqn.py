@@ -20,7 +20,7 @@ class DQN(AgentInterface):
     def disable_exploration(self):
         self.with_exploration = False
 
-    def __init__(self, observation_space, action_space, memory=ExperienceReplay(), neural_network=None,
+    def __init__(self, observation_space, action_space, memory=ExperienceReplay(), network=None,
                  step_train=1, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None,
                  device=None):
         """
@@ -29,7 +29,7 @@ class DQN(AgentInterface):
         :param action_space:
         :param observation_space:
         :param memory:
-        :param neural_network:
+        :param network:
         :param step_train:
         :param batch_size:
         :param gamma:
@@ -44,14 +44,14 @@ class DQN(AgentInterface):
             raise TypeError(
                 "action_space need to be instance of Discrete or MultiDiscrete, not :" + str(type(action_space)))
 
-        if neural_network is None and optimizer is not None:
-            raise TypeError("If neural_network is None, optimizer need to be None not " + str(type(optimizer)))
+        if network is None and optimizer is not None:
+            raise TypeError("If network is None, optimizer need to be None not " + str(type(optimizer)))
 
-        if neural_network is None:
-            neural_network = SimpleNetwork(observation_space=observation_space,
-                                           action_space=action_space)
-        if not isinstance(neural_network, torch.nn.Module):
-            raise TypeError("neural_network need to be instance of torch.nn.Module, not :" + str(type(neural_network)))
+        if network is None:
+            network = SimpleNetwork(observation_space=observation_space,
+                                    action_space=action_space)
+        if not isinstance(network, torch.nn.Module):
+            raise TypeError("network need to be instance of torch.nn.Module, not :" + str(type(network)))
 
         if not isinstance(memory, MemoryInterface):
             raise TypeError(
@@ -71,7 +71,7 @@ class DQN(AgentInterface):
 
         self.observation_space = observation_space
         self.action_space = action_space
-        self.neural_network = neural_network
+        self.network = network
         self.memory = memory
 
         self.step_train = step_train
@@ -86,7 +86,7 @@ class DQN(AgentInterface):
             self.loss = loss
 
         if optimizer is None:
-            self.optimizer = optim.Adam(self.neural_network.parameters())
+            self.optimizer = optim.Adam(self.network.parameters())
         else:
             self.optimizer = optimizer
 
@@ -98,7 +98,7 @@ class DQN(AgentInterface):
         self.with_exploration = True
 
         super().__init__(observation_space=observation_space, action_space=action_space, device=device)
-        self.neural_network.to(self.device)
+        self.network.to(self.device)
 
     def get_action(self, observation):
         """ Return action choice by the agents
@@ -111,7 +111,7 @@ class DQN(AgentInterface):
 
         observation = torch.tensor([flatten(self.observation_space, observation)], device=self.device).float()
 
-        q_values = self.neural_network.forward(observation)
+        q_values = self.network.forward(observation)
 
         def return_values(values):
             if isinstance(values, list):
@@ -152,19 +152,21 @@ class DQN(AgentInterface):
         observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size,
                                                                                       device=self.device)
 
-        next_prediction = self.neural_network.forward(next_observations)
-        prediction = self.neural_network.forward(observations)
+        next_prediction = self.network.forward(next_observations)
+        prediction = self.network.forward(observations)
 
         if isinstance(self.action_space, Discrete):
-            self.apply_loss(next_prediction, prediction, actions, rewards, dones, self.action_space.n)
+            self.apply_loss(next_prediction, prediction, actions, rewards, next_observations, dones,
+                            self.action_space.n)
         # find space for one_hot encore action in apply loss
         elif isinstance(self.action_space, MultiDiscrete):
-            self.apply_loss(next_prediction, prediction, actions, rewards, dones, self.action_space.nvec)
+            self.apply_loss(next_prediction, prediction, actions, rewards, next_observations, dones,
+                            self.action_space.nvec)
         self.optimizer.step()
 
-    def apply_loss(self, next_prediction, prediction, actions, rewards, dones, len_space):
+    def apply_loss(self, next_prediction, prediction, actions, rewards, next_observations, dones, len_space):
         if isinstance(next_prediction, list):
-            [self.apply_loss(n, p, a, rewards, dones, c) for n, p, a, c in
+            [self.apply_loss(n, p, a, rewards, next_observations, dones, c) for n, p, a, c in
              zip(next_prediction, prediction, actions.permute(1, 0, *[i for i in range(2, len(actions.shape))]),
                  len_space)]
         else:
@@ -194,8 +196,8 @@ class DQN(AgentInterface):
         dict_save = dict()
         dict_save["observation_space"] = pickle.dumps(self.observation_space)
         dict_save["action_space"] = pickle.dumps(self.action_space)
-        dict_save["neural_network_class"] = pickle.dumps(type(self.neural_network))
-        dict_save["neural_network"] = self.neural_network.cpu().state_dict()
+        dict_save["network_class"] = pickle.dumps(type(self.network))
+        dict_save["network"] = self.network.cpu().state_dict()
         dict_save["step_train"] = pickle.dumps(self.step_train)
         dict_save["batch_size"] = pickle.dumps(self.batch_size)
         dict_save["gamma"] = pickle.dumps(self.gamma)
@@ -218,14 +220,14 @@ class DQN(AgentInterface):
         """
         dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
 
-        neural_network = pickle.loads(dict_save["neural_network_class"])(
+        network = pickle.loads(dict_save["network_class"])(
             observation_space=pickle.loads(dict_save["observation_space"]),
             action_space=pickle.loads(dict_save["action_space"]))
-        neural_network.load_state_dict(dict_save["neural_network"])
+        network.load_state_dict(dict_save["network"])
 
         return DQN(observation_space=pickle.loads(dict_save["observation_space"]),
                    action_space=pickle.loads(dict_save["action_space"]),
-                   neural_network=neural_network,
+                   network=network,
                    step_train=pickle.loads(dict_save["step_train"]),
                    batch_size=pickle.loads(dict_save["batch_size"]),
                    gamma=pickle.loads(dict_save["gamma"]),
@@ -236,6 +238,6 @@ class DQN(AgentInterface):
 
     def __str__(self):
         return 'DQN-' + str(self.observation_space) + "-" + str(self.action_space) + "-" + str(
-            self.neural_network) + "-" + str(self.memory) + "-" + str(self.step_train) + "-" + str(
+            self.network) + "-" + str(self.memory) + "-" + str(self.step_train) + "-" + str(
             self.step) + "-" + str(self.batch_size) + "-" + str(self.gamma) + "-" + str(self.loss) + "-" + str(
             self.optimizer) + "-" + str(self.greedy_exploration)

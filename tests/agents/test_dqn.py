@@ -10,6 +10,7 @@ from blobrl.networks import SimpleNetwork
 
 from tests.agents import TestAgentInterface
 
+
 class TestDQN(TestAgentInterface):
     __test__ = True
 
@@ -53,7 +54,7 @@ class TestDQN(TestAgentInterface):
             self.agent(o, a)
             for n in [object(), "dada", 154, 12.1]:
                 with pytest.raises(TypeError):
-                    self.agent(o, a, neural_network=n)
+                    self.agent(o, a, network=n)
                 with pytest.raises(TypeError):
                     self.agent(o, a, memory=n)
                 with pytest.raises(TypeError):
@@ -81,7 +82,7 @@ class TestDQN(TestAgentInterface):
             network = self.network(o, a)
             memory = ExperienceReplay(max_size=5)
 
-            agent = self.agent(observation_space=o, action_space=a, memory=memory, neural_network=network)
+            agent = self.agent(observation_space=o, action_space=a, memory=memory, network=network)
 
             for i in range(20):
                 agent.learn(flatten(o, o.sample()), a.sample(), 0, flatten(o, o.sample()), False)
@@ -121,7 +122,7 @@ class TestDQN(TestAgentInterface):
             network = self.network(o, a)
 
             agent = self.agent(observation_space=o, action_space=a, memory=ExperienceReplay(),
-                               neural_network=network,
+                               network=network,
                                step_train=3, batch_size=12, gamma=0.50,
                                optimizer=torch.optim.Adam(network.parameters()),
                                greedy_exploration=EpsilonGreedy(0.2))
@@ -133,8 +134,8 @@ class TestDQN(TestAgentInterface):
 
             assert agent.observation_space == agent_l.observation_space
             assert a == agent_l.action_space
-            assert isinstance(agent.neural_network, type(agent_l.neural_network))
-            for a, b in zip(agent.neural_network.state_dict(), agent_l.neural_network.state_dict()):
+            assert isinstance(agent.network, type(agent_l.network))
+            for a, b in zip(agent.network.state_dict(), agent_l.network.state_dict()):
                 assert a == b
             assert agent.step_train == agent_l.step_train
             assert agent.batch_size == agent_l.batch_size
@@ -167,7 +168,7 @@ class TestDQN(TestAgentInterface):
             network = self.network(o, a)
             memory = ExperienceReplay(max_size=5)
 
-            agent = self.agent(o, a, memory, neural_network=network)
+            agent = self.agent(o, a, memory, network=network)
             agent.episode_finished()
 
     def test_enable_train(self):
@@ -191,6 +192,6 @@ class TestDQN(TestAgentInterface):
             agent = self.agent(o, a)
 
             assert 'DQN-' + str(agent.observation_space) + "-" + str(agent.action_space) + "-" + str(
-                agent.neural_network) + "-" + str(agent.memory) + "-" + str(agent.step_train) + "-" + str(
+                agent.network) + "-" + str(agent.memory) + "-" + str(agent.step_train) + "-" + str(
                 agent.step) + "-" + str(agent.batch_size) + "-" + str(agent.gamma) + "-" + str(agent.loss) + "-" + str(
                 agent.optimizer) + "-" + str(agent.greedy_exploration) == agent.__str__()

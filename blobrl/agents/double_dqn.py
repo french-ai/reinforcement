@@ -5,7 +5,7 @@ from copy import deepcopy
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
-from gym.spaces import flatdim
+from gym.spaces import Discrete, MultiDiscrete
 
 from blobrl.agents import DQN
 from blobrl.memories import ExperienceReplay
@@ -14,7 +14,7 @@ from blobrl.memories import ExperienceReplay
 class DoubleDQN(DQN):
     """ from 'Deep Reinforcement Learning with Double Q-learning' in https://arxiv.org/pdf/1509.06461.pdf """
 
-    def __init__(self, action_space, observation_space, memory=ExperienceReplay(), neural_network=None, step_copy=500,
+    def __init__(self, observation_space, action_space, memory=ExperienceReplay(), network=None, step_copy=500,
                  step_train=2, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None,
                  device=None):
         """
@@ -24,7 +24,7 @@ class DoubleDQN(DQN):
         :param action_space:
         :param observation_space:
         :param memory:
-        :param neural_network:
+        :param network:
         :param step_copy:
         :param step_train:
         :param batch_size:
@@ -33,17 +33,17 @@ class DoubleDQN(DQN):
         :param optimizer:
         :param greedy_exploration:
         """
-        super().__init__(observation_space, action_space, memory, neural_network, step_train, batch_size, gamma, loss,
+        super().__init__(observation_space, action_space, memory, network, step_train, batch_size, gamma, loss,
                          optimizer, greedy_exploration, device=device)
 
-        self.neural_network_target = deepcopy(self.neural_network)
+        self.network_target = deepcopy(self.network)
         self.copy_online_to_target()
         self.step_copy = step_copy
 
         if optimizer is None:
-            self.optimizer = optim.Adam(self.neural_network.parameters())
+            self.optimizer = optim.Adam(self.network.parameters())
 
-        self.neural_network_target.to(self.device)
+        self.network_target.to(self.device)
 
     def learn(self, observation, action, reward, next_observation, done) -> None:
         """ learn from parameters
@@ -72,25 +72,45 @@ class DoubleDQN(DQN):
         observations, actions, rewards, next_observations, dones = self.memory.sample(self.batch_size,
                                                                                       device=self.device)
 
-        actions_next = torch.argmax(self.neural_network.forward(next_observations).detach(), dim=1)
-        actions_next_one_hot = F.one_hot(actions_next.to(torch.int64), num_classes=self.action_space.n)
-        q_next = self.neural_network_target.forward(next_observations).detach() * actions_next_one_hot
+        next_prediction = self.network.forward(next_observations)
+        prediction = self.network.forward(observations)
+        target_next_prediction = self.network_target.forward(next_observations)
 
-        q = rewards + self.gamma * torch.max(q_next, dim=1)[0] * (1 - dones)
-
-        actions_one_hot = F.one_hot(actions.to(torch.int64), num_classes=self.action_space.n)
-        q_predict = torch.max(self.neural_network.forward(observations) * actions_one_hot, dim=1)[0]
-
-        self.optimizer.zero_grad()
-        loss = self.loss(q_predict, q)
-        loss.backward()
+        if isinstance(self.action_space, Discrete):
+            self.apply_loss(next_prediction, prediction, actions, rewards, next_observations, dones,
+                            self.action_space.n, target_next_prediction)
+        # find space for one_hot encore action in apply loss
+        elif isinstance(self.action_space, MultiDiscrete):
+            self.apply_loss(next_prediction, prediction, actions, rewards, next_observations, dones,
+                            self.action_space.nvec, target_next_prediction)
         self.optimizer.step()
+
+    def apply_loss(self, next_prediction, prediction, actions, rewards, next_observations, dones, len_space,
+                   target_next_prediction):
+        if isinstance(next_prediction, list):
+            [self.apply_loss(n, p, a, rewards, next_observations, dones, c, t) for n, p, a, c, t in
+             zip(next_prediction, prediction, actions.permute(1, 0, *[i for i in range(2, len(actions.shape))]),
+                 len_space, target_next_prediction)]
+        else:
+
+            actions_next = torch.argmax(next_prediction.detach(), dim=1)
+            actions_next_one_hot = F.one_hot(actions_next.to(torch.int64), num_classes=len_space)
+            q_next = target_next_prediction.detach() * actions_next_one_hot
+
+            q = rewards + self.gamma * torch.max(q_next, dim=1)[0] * (1 - dones)
+
+            actions_one_hot = F.one_hot(actions.to(torch.int64), num_classes=len_space)
+            q_predict = torch.max(prediction * actions_one_hot, dim=1)[0]
+
+            self.optimizer.zero_grad()
+            loss = self.loss(q_predict, q)
+            loss.backward(retain_graph=True)
 
     def copy_online_to_target(self):
         """
 
         """
-        self.neural_network_target.load_state_dict(self.neural_network.state_dict())
+        self.network_target.load_state_dict(self.network.state_dict())
 
     def save(self, file_name, dire_name="."):
         """ Save agent at dire_name/file_name
@@ -105,8 +125,8 @@ class DoubleDQN(DQN):
         dict_save = dict()
         dict_save["observation_space"] = pickle.dumps(self.observation_space)
         dict_save["action_space"] = pickle.dumps(self.action_space)
-        dict_save["neural_network_class"] = pickle.dumps(type(self.neural_network))
-        dict_save["neural_network"] = self.neural_network.state_dict()
+        dict_save["network_class"] = pickle.dumps(type(self.network))
+        dict_save["network"] = self.network.state_dict()
         dict_save["step_train"] = pickle.dumps(self.step_train)
         dict_save["batch_size"] = pickle.dumps(self.batch_size)
         dict_save["gamma"] = pickle.dumps(self.gamma)
@@ -130,14 +150,14 @@ class DoubleDQN(DQN):
         """
         dict_save = torch.load(os.path.abspath(os.path.join(dire_name, file_name)))
 
-        neural_network = pickle.loads(dict_save["neural_network_class"])(
+        network = pickle.loads(dict_save["network_class"])(
             observation_space=pickle.loads(dict_save["observation_space"]),
             action_space=pickle.loads(dict_save["action_space"]))
-        neural_network.load_state_dict(dict_save["neural_network"])
+        network.load_state_dict(dict_save["network"])
 
         double_dqn = DoubleDQN(observation_space=pickle.loads(dict_save["observation_space"]),
                                action_space=pickle.loads(dict_save["action_space"]),
-                               neural_network=neural_network,
+                               network=network,
                                step_train=pickle.loads(dict_save["step_train"]),
                                batch_size=pickle.loads(dict_save["batch_size"]),
                                gamma=pickle.loads(dict_save["gamma"]),
@@ -152,6 +172,6 @@ class DoubleDQN(DQN):
 
     def __str__(self):
         return 'DoubleDQN-' + str(self.observation_space) + "-" + str(self.action_space) + "-" + str(
-            self.neural_network) + "-" + str(self.memory) + "-" + str(self.step_train) + "-" + str(
+            self.network) + "-" + str(self.memory) + "-" + str(self.step_train) + "-" + str(
             self.step) + "-" + str(self.batch_size) + "-" + str(self.gamma) + "-" + str(self.loss) + "-" + str(
             self.optimizer) + "-" + str(self.greedy_exploration) + "-" + str(self.step_copy)

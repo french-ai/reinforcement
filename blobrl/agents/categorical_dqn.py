@@ -10,7 +10,7 @@ from blobrl.networks import C51Network
 
 class CategoricalDQN(DQN):
 
-    def __init__(self, observation_space, action_space, memory=ExperienceReplay(), neural_network=None, num_atoms=51,
+    def __init__(self, observation_space, action_space, memory=ExperienceReplay(), network=None, num_atoms=51,
                  r_min=-10, r_max=10, step_train=2, batch_size=32, gamma=0.99,
                  optimizer=None, greedy_exploration=None, device=None):
         """
@@ -20,7 +20,7 @@ class CategoricalDQN(DQN):
         :param action_space:
         :param observation_space:
         :param memory:
-        :param neural_network:
+        :param network:
         :param num_atoms:
         :param r_min:
         :param r_max:
@@ -30,15 +30,15 @@ class CategoricalDQN(DQN):
         :param optimizer:
         :param greedy_exploration:
         """
-        if neural_network is None and optimizer is None:
-            neural_network = C51Network(observation_space=observation_space,
-                                        action_space=action_space)
+        if network is None and optimizer is None:
+            network = C51Network(observation_space=observation_space,
+                                 action_space=action_space)
             num_atoms = 51
 
-            optimizer = optim.Adam(neural_network.parameters())
+            optimizer = optim.Adam(network.parameters())
 
-        super().__init__(action_space=action_space, observation_space=observation_space, memory=memory,
-                         neural_network=neural_network, step_train=step_train, batch_size=batch_size, gamma=gamma,
+        super().__init__(observation_space=observation_space, action_space=action_space, memory=memory,
+                         network=network, step_train=step_train, batch_size=batch_size, gamma=gamma,
                          loss=None, optimizer=optimizer, greedy_exploration=greedy_exploration, device=device)
 
         self.num_atoms = num_atoms
@@ -59,7 +59,7 @@ class CategoricalDQN(DQN):
 
         observation = torch.tensor([flatten(self.observation_space, observation)], device=self.device).float()
 
-        prediction = self.neural_network.forward(observation)
+        prediction = self.network.forward(observation)
 
         def return_values(values):
             if isinstance(values, list):
@@ -71,10 +71,10 @@ class CategoricalDQN(DQN):
 
         return return_values(prediction)
 
-    def apply_loss(self, next_prediction, prediction, actions, rewards, dones, len_space):
+    def apply_loss(self, next_prediction, prediction, actions, rewards, next_observations, dones, len_space):
         if isinstance(next_prediction, list):
             print(len_space)
-            [self.apply_loss(n, p, a, rewards, dones, c) for n, p, a, c in
+            [self.apply_loss(n, p, a, rewards, next_observations, dones, c) for n, p, a, c in
              zip(next_prediction, prediction, actions.permute(1, 0, *[i for i in range(2, len(actions.shape))]),
                  len_space)]
         else:
@@ -121,7 +121,7 @@ class CategoricalDQN(DQN):
 
     def __str__(self):
         return 'CategoricalDQN-' + str(self.observation_space) + "-" + str(self.action_space) + "-" + str(
-            self.neural_network) + "-" + str(self.memory) + "-" + str(self.step_train) + "-" + str(
+            self.network) + "-" + str(self.memory) + "-" + str(self.step_train) + "-" + str(
             self.step) + "-" + str(self.batch_size) + "-" + str(self.gamma) + "-" + str(self.loss) + "-" + str(
             self.optimizer) + "-" + str(self.greedy_exploration) + "-" + str(self.num_atoms) + "-" + str(
             self.r_min) + "-" + str(self.r_max) + "-" + str(self.delta_z) + "-" + str(self.z)

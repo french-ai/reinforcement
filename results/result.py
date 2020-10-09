@@ -31,7 +31,7 @@ arg_all = [{"agent": {"class": [DQN, DoubleDQN],
                                 "greedy_exploration": greedy_exploration
                                 }
                       },
-            "neural_network": {"class": [SimpleNetwork],
+            "network": {"class": [SimpleNetwork],
                                "param": {}},
             "optimizer": {"class": optimizer,
                           "param": {"lr": lr}},
@@ -45,7 +45,7 @@ arg_all = [{"agent": {"class": [DQN, DoubleDQN],
                                 "greedy_exploration": greedy_exploration
                                 }
                       },
-            "neural_network": {"class": [SimpleDuelingNetwork],
+            "network": {"class": [SimpleDuelingNetwork],
                                "param": {}},
             "optimizer": {"class": optimizer,
                           "param": {"lr": lr}},
@@ -59,7 +59,7 @@ arg_all = [{"agent": {"class": [DQN, DoubleDQN],
                                 "greedy_exploration": greedy_exploration
                                 }
                       },
-            "neural_network": {"class": [C51Network],
+            "network": {"class": [C51Network],
                                "param": {}},
             "optimizer": {"class": optimizer,
                           "param": {"lr": lr}},
@@ -107,14 +107,14 @@ if __name__ == '__main__':
 
     for arg in arg_all:
         arg_agent = arg["agent"]
-        arg_neural_network = arg["neural_network"]
+        arg_network = arg["network"]
         arg_optimizer = arg["optimizer"]
         arg_memory = arg["memory"]
 
         for class_agent in arg_agent["class"]:
             print("###" + class_agent.__name__)
-            for class_neural_network in arg_neural_network["class"]:
-                print("  ##" + class_neural_network.__name__)
+            for class_network in arg_network["class"]:
+                print("  ##" + class_network.__name__)
                 for class_optimizer in arg_optimizer["class"]:
                     print("    #" + class_optimizer.__name__)
 
@@ -122,28 +122,28 @@ if __name__ == '__main__':
 
                         for param_agent in dict_mzip(arg_agent["param"]):
 
-                            for param_network in dict_mzip(arg_neural_network["param"]):
+                            for param_network in dict_mzip(arg_network["param"]):
 
                                 for param_optimizer in dict_mzip(arg_optimizer["param"]):
 
                                     for param_memory in dict_mzip(arg_memory["param"]):
-                                        neural_network = class_neural_network(
+                                        network = class_network(
                                             observation_shape=flatdim(env.observation_space),
                                             action_shape=flatdim(env.action_space),
                                             **param_network)
-                                        optimizer = class_optimizer(neural_network.parameters(), **param_optimizer)
+                                        optimizer = class_optimizer(network.parameters(), **param_optimizer)
 
                                         memory = class_memory(**param_memory)
 
                                         agent = class_agent(observation_space=env.observation_space,
                                                             action_space=env.action_space,
-                                                            neural_network=neural_network,
+                                                            network=network,
                                                             optimizer=optimizer, memory=memory, device=device,
                                                             **param_agent)
 
                                         log_dir = args.env + "/" + class_agent.__name__ + "/" + "_".join(
                                             [str(x) for x in list(
-                                                param_agent.values())]) + "_" + class_neural_network.__name__ + "_" + "_".join(
+                                                param_agent.values())]) + "_" + class_network.__name__ + "_" + "_".join(
                                             [str(x) for x in list(
                                                 param_network.values())]) + "_" + class_optimizer.__name__ + "_" + "_".join(
                                             [str(x) for x in list(

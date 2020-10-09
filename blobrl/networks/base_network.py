@@ -20,6 +20,8 @@ class BaseNetwork(nn.Module, metaclass=abc.ABCMeta):
 
         self.observation_space = observation_space
         self.action_space = action_space
+        self.outputs = None
+        self.network = None
 
     @abc.abstractmethod
     def forward(self, observation):
