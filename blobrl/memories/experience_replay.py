@@ -38,28 +38,8 @@ class ExperienceReplay(MemoryInterface):
         :param next_observations:
         :param dones:
         """
-        datas = np.array((observations, actions, rewards, next_observations, dones)).T
-
-        len_datas = len(datas)
-
-        if len_datas > self.max_size:
-            datas = datas[-self.max_size:]
-            len_datas = self.max_size
-
-        datas[:, 0] = [np.array(observation) for observation in datas[:, 0]]
-        datas[:, 3] = [np.array(next_observation) for next_observation in datas[:, 3]]
-
-        idx_max = self.index + len_datas
-
-        if idx_max > self.max_size:
-            idx_max = self.max_size - idx_max
-            self.buffer[self.index:self.max_size] = datas[:idx_max]
-            self.buffer[:idx_max] = datas[idx_max:]
-        else:
-            self.buffer[self.index:idx_max] = datas
-
-        self.size = min(self.size + len_datas, self.max_size)
-        self.index = idx_max
+        for o, a, r, n, d in zip(observations, actions, rewards, next_observations, dones):
+            self.append(o, a, r, n, d)
 
     def sample(self, batch_size, device):
         """

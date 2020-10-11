@@ -60,7 +60,6 @@ class C51Network(BaseNetwork):
         """
         x = observation.view(observation.shape[0], -1)
         x = self.network(x)
-        print(self.action_space)
         if isinstance(self.action_space, Discrete):
             q = [distributionalLayer(x) for distributionalLayer in self.distributional_list]
             q = torch.cat(q)

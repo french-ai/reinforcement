@@ -14,6 +14,8 @@ class BaseDuelingNetwork(BaseNetwork):
 
         if not isinstance(network, BaseNetwork):
             raise TypeError("network need to be instance of BaseNetwork, not :" + str(type(network)))
+        if isinstance(network, BaseDuelingNetwork):
+            raise TypeError("network can't be instance of BaseDuelingNetwork :" + str(type(network)))
 
         super().__init__(observation_space=network.observation_space, action_space=network.action_space)
         self.network = network

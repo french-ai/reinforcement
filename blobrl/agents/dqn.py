@@ -175,7 +175,6 @@ class DQN(AgentInterface):
                     1 - dones)
 
             actions_one_hot = F.one_hot(actions.to(torch.int64), num_classes=len_space)
-            print(prediction.shape, actions.shape, actions_one_hot.shape, len_space)
             q_values_predict = prediction * actions_one_hot
             q_predict = torch.max(q_values_predict, dim=1)
 

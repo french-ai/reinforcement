@@ -2,11 +2,10 @@ from argparse import ArgumentParser
 
 import gym
 import torch
-from gym.spaces import flatdim
 from torch import optim
 
 from blobrl import Trainer
-from blobrl.agents import DQN, DoubleDQN, DuelingDQN, CategoricalDQN
+from blobrl.agents import DQN, DoubleDQN, CategoricalDQN
 from blobrl.explorations import EpsilonGreedy, AdaptativeEpsilonGreedy
 from blobrl.memories import ExperienceReplay
 from blobrl.networks import SimpleNetwork, SimpleDuelingNetwork, C51Network
@@ -21,8 +20,8 @@ lr = [0.1, 0.001, 0.0001]
 
 greedy_exploration = [EpsilonGreedy(0.1),
                       EpsilonGreedy(0.6),
-                      AdaptativeEpsilonGreedy(0.3, 0.1, 50000, 0),
-                      AdaptativeEpsilonGreedy(0.8, 0.2, 50000, 0)]
+                      AdaptativeEpsilonGreedy(0.3, 0.1, 30000, 0),
+                      AdaptativeEpsilonGreedy(0.8, 0.2, 10000, 0)]
 
 arg_all = [{"agent": {"class": [DQN, DoubleDQN],
                       "param": {"step_train": step_train,
@@ -31,22 +30,8 @@ arg_all = [{"agent": {"class": [DQN, DoubleDQN],
                                 "greedy_exploration": greedy_exploration
                                 }
                       },
-            "network": {"class": [SimpleNetwork],
-                               "param": {}},
-            "optimizer": {"class": optimizer,
-                          "param": {"lr": lr}},
-            "memory": {"class": memory,
-                       "param": {"max_size": [16, 32, 128]}},
-            },
-           {"agent": {"class": [DuelingDQN],
-                      "param": {"step_train": step_train,
-                                "batch_size": batch_size,
-                                "gamma": gamma,
-                                "greedy_exploration": greedy_exploration
-                                }
-                      },
-            "network": {"class": [SimpleDuelingNetwork],
-                               "param": {}},
+            "network": {"class": [SimpleNetwork, SimpleDuelingNetwork],
+                        "param": {}},
             "optimizer": {"class": optimizer,
                           "param": {"lr": lr}},
             "memory": {"class": memory,
@@ -60,7 +45,7 @@ arg_all = [{"agent": {"class": [DQN, DoubleDQN],
                                 }
                       },
             "network": {"class": [C51Network],
-                               "param": {}},
+                        "param": {}},
             "optimizer": {"class": optimizer,
                           "param": {"lr": lr}},
             "memory": {"class": memory,
@@ -128,8 +113,8 @@ if __name__ == '__main__':
 
                                     for param_memory in dict_mzip(arg_memory["param"]):
                                         network = class_network(
-                                            observation_shape=flatdim(env.observation_space),
-                                            action_shape=flatdim(env.action_space),
+                                            observation_space=env.observation_space,
+                                            action_space=env.action_space,
                                             **param_network)
                                         optimizer = class_optimizer(network.parameters(), **param_optimizer)
 
@@ -152,6 +137,6 @@ if __name__ == '__main__':
 
                                         trainer = Trainer(environment=env, agent=agent,
                                                           log_dir=log_dir)
-                                        trainer.train(max_episode=args.max_episode, render=args.render)
+                                        trainer.train(max_episode=args.max_episode, render=False)
 
                                         agent.save(file_name="save.p", dire_name=log_dir)

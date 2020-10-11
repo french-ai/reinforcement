@@ -15,7 +15,7 @@ class DoubleDQN(DQN):
     """ from 'Deep Reinforcement Learning with Double Q-learning' in https://arxiv.org/pdf/1509.06461.pdf """
 
     def __init__(self, observation_space, action_space, memory=ExperienceReplay(), network=None, step_copy=500,
-                 step_train=2, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None,
+                 step_train=1, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None,
                  device=None):
         """
 

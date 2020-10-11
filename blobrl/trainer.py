@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from IPython import display
 
 from blobrl import Logger, Record
-from blobrl.agents import AgentInterface, AgentRandom, DQN, DoubleDQN, CategoricalDQN, DuelingDQN
+from blobrl.agents import AgentInterface, AgentRandom, DQN, DoubleDQN, CategoricalDQN
 
 
 class Trainer:
@@ -115,7 +115,7 @@ class Trainer:
             self.do_episode(logger=self.logger, render=render)
             if nb_evaluation != 0:
                 if i_episode == 1 or i_episode == max_episode or i_episode % (max_episode // (nb_evaluation - 1)) == 0:
-                    self.evaluate(logger=self.logger, render=True)
+                    self.evaluate(logger=self.logger, render=render)
         self.close()
 
     def render(self):
@@ -168,8 +168,6 @@ def arg_to_agent(arg_agent) -> AgentInterface:
         return DoubleDQN
     if arg_agent == "categorical_dqn":
         return CategoricalDQN
-    if arg_agent == "dueling_dqn":
-        return DuelingDQN
     raise ValueError("this agent (" + str(arg_agent) + ") is not implemented")
 
 
@@ -180,9 +178,6 @@ if __name__ == '__main__':
     parser.add_argument('--max_episode', type=int, help='number of episode to train', nargs='?', const=1, default=100)
     parser.add_argument('--render', type=bool, help='if show render on each step or not', nargs='?', const=1,
                         default=False)
-    # parser.add_argument('--train', type=bool, help='if train agent or not', nargs='?', const=1,
-    #                    default=True)
-    # parser.add_argument('--file_path', type=str, help='path to file for load trained agent')
     args = parser.parse_args()
 
     trainer = Trainer(environment=args.env, agent=arg_to_agent(args.agent))

@@ -73,12 +73,10 @@ class CategoricalDQN(DQN):
 
     def apply_loss(self, next_prediction, prediction, actions, rewards, next_observations, dones, len_space):
         if isinstance(next_prediction, list):
-            print(len_space)
             [self.apply_loss(n, p, a, rewards, next_observations, dones, c) for n, p, a, c in
              zip(next_prediction, prediction, actions.permute(1, 0, *[i for i in range(2, len(actions.shape))]),
                  len_space)]
         else:
-            print(len_space, next_prediction.shape, self.action_space)
             actions = F.one_hot(actions.long(), num_classes=len_space)
 
             q_values_next = next_prediction * self.z
