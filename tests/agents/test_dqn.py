@@ -2,6 +2,7 @@ import os
 import pytest
 import torch
 from gym.spaces import Discrete, Box, MultiBinary, MultiDiscrete, Dict, Tuple, flatten
+import torch.optim as optim
 
 from blobrl.agents import DQN
 from blobrl.explorations import Greedy, EpsilonGreedy
@@ -54,15 +55,18 @@ class TestDQN(TestAgentInterface):
             self.agent(o, a)
             for n in [object(), "dada", 154, 12.1]:
                 with pytest.raises(TypeError):
+                    self.agent(o, a, optimizer=n)
+                with pytest.raises(TypeError):
                     self.agent(o, a, network=n)
                 with pytest.raises(TypeError):
                     self.agent(o, a, memory=n)
                 with pytest.raises(TypeError):
                     self.agent(o, a, loss=n)
                 with pytest.raises(TypeError):
-                    self.agent(o, a, optimizer=n)
-                with pytest.raises(TypeError):
                     self.agent(o, a, greedy_exploration=n)
+            with pytest.raises(TypeError):
+                net = self.network(o, a)
+                self.agent(o, a, optimizer=optim.Adam(net.parameters()), network=None)
 
         for o, a in self.list_fail:
             with pytest.raises(TypeError):

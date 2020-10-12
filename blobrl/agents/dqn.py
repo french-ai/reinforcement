@@ -44,31 +44,29 @@ class DQN(AgentInterface):
             raise TypeError(
                 "action_space need to be instance of Discrete or MultiDiscrete, not :" + str(type(action_space)))
 
-        if network is None and optimizer is not None:
-            raise TypeError("If network is None, optimizer need to be None not " + str(type(optimizer)))
-
-        if network is None:
-            network = SimpleNetwork(observation_space=observation_space,
-                                    action_space=action_space)
-        if not isinstance(network, torch.nn.Module):
-            raise TypeError("network need to be instance of torch.nn.Module, not :" + str(type(network)))
-
         if not isinstance(memory, MemoryInterface):
             raise TypeError(
                 "memory need to be instance of blobrls.memories.MemoryInterface, not :" + str(type(memory)))
 
         if loss is not None and not isinstance(loss, torch.nn.Module):
-            raise TypeError("loss need to be instance of blobrls.memories.MemoryInterface, not :" + str(type(loss)))
+            raise TypeError("loss need to be instance of torch.nn.Module, not :" + str(type(loss)))
 
         if optimizer is not None and not isinstance(optimizer, optim.Optimizer):
             raise TypeError(
-                "optimizer need to be instance of blobrls.memories.MemoryInterface, not :" + str(type(optimizer)))
+                "optimizer need to be instance of torch.optim.Optimizer, not :" + str(type(optimizer)))
+
+        if network is None and optimizer is not None:
+            raise TypeError("If network is None, optimizer need to be None not " + str(type(optimizer)))
 
         if greedy_exploration is not None and not isinstance(greedy_exploration, GreedyExplorationInterface):
             raise TypeError(
                 "greedy_exploration need to be instance of blobrls.explorations.GreedyExplorationInterface, not :" + str(
                     type(greedy_exploration)))
-
+        if network is None:
+            network = SimpleNetwork(observation_space=observation_space,
+                                    action_space=action_space)
+        if not isinstance(network, torch.nn.Module):
+            raise TypeError("network need to be instance of torch.nn.Module, not :" + str(type(network)))
         self.observation_space = observation_space
         self.action_space = action_space
         self.network = network
