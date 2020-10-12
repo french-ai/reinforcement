@@ -75,7 +75,9 @@ class TestDQN(TestAgentInterface):
                 agent = self.agent(o, a, greedy_exploration=ge)
 
                 for i in range(20):
-                    agent.get_action(o.sample())
+                    act = agent.get_action(o.sample())
+                    if isinstance(a, Discrete):
+                        assert act in range(a.n)
 
     def test_learn(self):
         for o, a in self.list_work:

@@ -65,7 +65,7 @@ class CategoricalDQN(DQN):
             if isinstance(values, list):
                 return [return_values(v) for v in values]
             else:
-                q_values = values * self.z
+                q_values = values[0] * self.z
                 q_values = torch.sum(q_values, dim=1)
                 return torch.argmax(q_values).detach().item()
 

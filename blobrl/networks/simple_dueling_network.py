@@ -1,8 +1,5 @@
-import numpy as np
 from torch import nn
-from gym.spaces import Space, flatdim
-from .utils import get_last_layers
-from blobrl.networks import BaseDuelingNetwork, SimpleNetwork
+from blobrl.networks import BaseDuelingNetwork
 
 
 class SimpleDuelingNetwork(BaseDuelingNetwork):

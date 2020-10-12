@@ -30,12 +30,13 @@ arg_all = [{"agent": {"class": [DQN, DoubleDQN],
                                 "greedy_exploration": greedy_exploration
                                 }
                       },
-            "network": {"class": [SimpleNetwork, SimpleDuelingNetwork],
+            "network": {"class": [SimpleNetwork],
                         "param": {}},
             "optimizer": {"class": optimizer,
                           "param": {"lr": lr}},
             "memory": {"class": memory,
                        "param": {"max_size": [16, 32, 128]}},
+            "dueling": True
             },
            {"agent": {"class": [CategoricalDQN],
                       "param": {"step_train": step_train,
@@ -50,6 +51,7 @@ arg_all = [{"agent": {"class": [DQN, DoubleDQN],
                           "param": {"lr": lr}},
             "memory": {"class": memory,
                        "param": {"max_size": [16, 32, 128]}},
+            "dueling": False
             }]
 
 
@@ -140,3 +142,35 @@ if __name__ == '__main__':
                                         trainer.train(max_episode=args.max_episode, render=False)
 
                                         agent.save(file_name="save.p", dire_name=log_dir)
+                                        if arg["dueling"]:
+                                            base_network = class_network(
+                                                observation_space=env.observation_space,
+                                                action_space=env.action_space,
+                                                **param_network)
+
+                                            network = SimpleDuelingNetwork(base_network)
+
+                                            optimizer = class_optimizer(network.parameters(), **param_optimizer)
+
+                                            memory = class_memory(**param_memory)
+
+                                            agent = class_agent(observation_space=env.observation_space,
+                                                                action_space=env.action_space,
+                                                                network=network,
+                                                                optimizer=optimizer, memory=memory, device=device,
+                                                                **param_agent)
+
+                                            log_dir = args.env + "/" + class_agent.__name__ + "/" + "_".join(
+                                                [str(x) for x in list(
+                                                    param_agent.values())]) + "_" + SimpleDuelingNetwork.__name__ + "_" + "_".join(
+                                                [str(x) for x in list(
+                                                    param_network.values())]) + "_" + class_optimizer.__name__ + "_" + "_".join(
+                                                [str(x) for x in list(
+                                                    param_optimizer.values())]) + "_" + class_memory.__name__ + "_" + "_".join(
+                                                [str(x) for x in list(param_memory.values())])
+
+                                            trainer = Trainer(environment=env, agent=agent,
+                                                              log_dir=log_dir)
+                                            trainer.train(max_episode=args.max_episode, render=False)
+
+                                            agent.save(file_name="save.p", dire_name=log_dir)

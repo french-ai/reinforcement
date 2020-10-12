@@ -17,7 +17,7 @@ from blobrl.trainer import arg_to_agent
 
 def test_arg_to_agent():
     fail_list = ["dzdzqd", None, 123, 123.123, [], {}, object]
-    work_list = ["agent_random", "dqn", "double_dqn", "categorical_dqn", "dueling_dqn"]
+    work_list = ["agent_random", "dqn", "double_dqn", "categorical_dqn"]
 
     for agent in fail_list:
         with pytest.raises(ValueError):
