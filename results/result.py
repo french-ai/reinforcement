@@ -1,4 +1,6 @@
 from argparse import ArgumentParser
+from os import path
+import shutil
 
 import gym
 import torch
@@ -13,7 +15,7 @@ from blobrl.networks import SimpleNetwork, SimpleDuelingNetwork, C51Network
 memory = [ExperienceReplay]
 step_train = [1, 4, 32]
 batch_size = [1, 32, 64]
-gamma = [0.99]
+gamma = [0.99, 0.98, 0.95]
 loss = [torch.nn.MSELoss()]
 optimizer = [optim.Adam]
 lr = [0.1, 0.001, 0.0001]
@@ -114,19 +116,6 @@ if __name__ == '__main__':
                                 for param_optimizer in dict_mzip(arg_optimizer["param"]):
 
                                     for param_memory in dict_mzip(arg_memory["param"]):
-                                        network = class_network(
-                                            observation_space=env.observation_space,
-                                            action_space=env.action_space,
-                                            **param_network)
-                                        optimizer = class_optimizer(network.parameters(), **param_optimizer)
-
-                                        memory = class_memory(**param_memory)
-
-                                        agent = class_agent(observation_space=env.observation_space,
-                                                            action_space=env.action_space,
-                                                            network=network,
-                                                            optimizer=optimizer, memory=memory, device=device,
-                                                            **param_agent)
 
                                         log_dir = args.env + "/" + class_agent.__name__ + "/" + "_".join(
                                             [str(x) for x in list(
@@ -137,29 +126,33 @@ if __name__ == '__main__':
                                                 param_optimizer.values())]) + "_" + class_memory.__name__ + "_" + "_".join(
                                             [str(x) for x in list(param_memory.values())])
 
-                                        trainer = Trainer(environment=env, agent=agent,
-                                                          log_dir=log_dir)
-                                        trainer.train(max_episode=args.max_episode, render=False)
+                                        try:
+                                            if not path.exists(log_dir):
+                                                network = class_network(
+                                                    observation_space=env.observation_space,
+                                                    action_space=env.action_space,
+                                                    **param_network)
+                                                optimizer = class_optimizer(network.parameters(), **param_optimizer)
 
-                                        agent.save(file_name="save.p", dire_name=log_dir)
+                                                memory = class_memory(**param_memory)
+
+                                                agent = class_agent(observation_space=env.observation_space,
+                                                                    action_space=env.action_space,
+                                                                    network=network,
+                                                                    optimizer=optimizer, memory=memory, device=device,
+                                                                    **param_agent)
+
+                                                trainer = Trainer(environment=env, agent=agent,
+                                                                  log_dir=log_dir)
+                                                trainer.train(max_episode=args.max_episode, render=False)
+
+                                                agent.save(file_name="save.p", dire_name=log_dir)
+                                        except KeyboardInterrupt:
+                                            del trainer
+                                            shutil.rmtree(log_dir)
+                                            break
+
                                         if arg["dueling"]:
-                                            base_network = class_network(
-                                                observation_space=env.observation_space,
-                                                action_space=env.action_space,
-                                                **param_network)
-
-                                            network = SimpleDuelingNetwork(base_network)
-
-                                            optimizer = class_optimizer(network.parameters(), **param_optimizer)
-
-                                            memory = class_memory(**param_memory)
-
-                                            agent = class_agent(observation_space=env.observation_space,
-                                                                action_space=env.action_space,
-                                                                network=network,
-                                                                optimizer=optimizer, memory=memory, device=device,
-                                                                **param_agent)
-
                                             log_dir = args.env + "/" + class_agent.__name__ + "/" + "_".join(
                                                 [str(x) for x in list(
                                                     param_agent.values())]) + "_" + SimpleDuelingNetwork.__name__ + "_" + "_".join(
@@ -169,8 +162,32 @@ if __name__ == '__main__':
                                                     param_optimizer.values())]) + "_" + class_memory.__name__ + "_" + "_".join(
                                                 [str(x) for x in list(param_memory.values())])
 
-                                            trainer = Trainer(environment=env, agent=agent,
-                                                              log_dir=log_dir)
-                                            trainer.train(max_episode=args.max_episode, render=False)
+                                            try:
+                                                if not path.exists(log_dir):
+                                                    base_network = class_network(
+                                                        observation_space=env.observation_space,
+                                                        action_space=env.action_space,
+                                                        **param_network)
 
-                                            agent.save(file_name="save.p", dire_name=log_dir)
+                                                    network = SimpleDuelingNetwork(base_network)
+
+                                                    optimizer = class_optimizer(network.parameters(), **param_optimizer)
+
+                                                    memory = class_memory(**param_memory)
+
+                                                    agent = class_agent(observation_space=env.observation_space,
+                                                                        action_space=env.action_space,
+                                                                        network=network,
+                                                                        optimizer=optimizer, memory=memory,
+                                                                        device=device,
+                                                                        **param_agent)
+
+                                                    trainer = Trainer(environment=env, agent=agent,
+                                                                      log_dir=log_dir)
+                                                    trainer.train(max_episode=args.max_episode, render=False)
+
+                                                    agent.save(file_name="save.p", dire_name=log_dir)
+                                            except KeyboardInterrupt:
+                                                del trainer
+                                                shutil.rmtree(log_dir)
+                                                break
