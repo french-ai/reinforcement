@@ -15,7 +15,7 @@ from blobrl.networks import SimpleNetwork, SimpleDuelingNetwork, C51Network
 memory = [ExperienceReplay]
 step_train = [1, 4, 32]
 batch_size = [1, 32, 64]
-gamma = [0.99, 0.98, 0.95]
+gamma = [1.0, 0.99, 0.98, 0.95]
 loss = [torch.nn.MSELoss()]
 optimizer = [optim.Adam]
 lr = [0.1, 0.001, 0.0001]
@@ -82,7 +82,7 @@ def dict_mzip(x):
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--env', type=str, help='name of environment', nargs='?', const=1, default="CartPole-v1")
-    parser.add_argument('--max_episode', type=int, help='number of episode for train', nargs='?', const=1, default=500)
+    parser.add_argument('--max_episode', type=int, help='number of episode for train', nargs='?', const=1, default=300)
     parser.add_argument('--render', type=bool, help='if show render on each step or not', nargs='?', default=False)
     args = parser.parse_args()
 

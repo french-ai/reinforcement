@@ -6,7 +6,7 @@ from blobrl.memories import MemoryInterface
 
 class ExperienceReplay(MemoryInterface):
 
-    def __init__(self, max_size=300):
+    def __init__(self, max_size=5000):
         """
 
         :param max_size:

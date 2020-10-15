@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
-from gym.spaces import Discrete, Space, flatten
+from gym.spaces import flatten
 
 from blobrl.agents import DQN
 from blobrl.memories import ExperienceReplay
@@ -11,7 +11,7 @@ from blobrl.networks import C51Network
 class CategoricalDQN(DQN):
 
     def __init__(self, observation_space, action_space, memory=ExperienceReplay(), network=None, num_atoms=51,
-                 r_min=-10, r_max=10, step_train=2, batch_size=32, gamma=0.99,
+                 r_min=-10, r_max=10, step_train=1, batch_size=32, gamma=1.0,
                  optimizer=None, greedy_exploration=None, device=None):
         """
 

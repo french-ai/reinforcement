@@ -21,7 +21,7 @@ class DQN(AgentInterface):
         self.with_exploration = False
 
     def __init__(self, observation_space, action_space, memory=ExperienceReplay(), network=None,
-                 step_train=1, batch_size=32, gamma=0.99, loss=None, optimizer=None, greedy_exploration=None,
+                 step_train=1, batch_size=32, gamma=1.00, loss=None, optimizer=None, greedy_exploration=None,
                  device=None):
         """
 
@@ -67,9 +67,12 @@ class DQN(AgentInterface):
                                     action_space=action_space)
         if not isinstance(network, torch.nn.Module):
             raise TypeError("network need to be instance of torch.nn.Module, not :" + str(type(network)))
-        self.observation_space = observation_space
-        self.action_space = action_space
+
+        super().__init__(observation_space=observation_space, action_space=action_space, device=device)
+
         self.network = network
+        self.network.to(self.device)
+
         self.memory = memory
 
         self.step_train = step_train
@@ -84,7 +87,7 @@ class DQN(AgentInterface):
             self.loss = loss
 
         if optimizer is None:
-            self.optimizer = optim.Adam(self.network.parameters())
+            self.optimizer = optim.Adam(self.network.parameters(), lr=0.01)
         else:
             self.optimizer = optimizer
 
@@ -94,9 +97,6 @@ class DQN(AgentInterface):
             self.greedy_exploration = greedy_exploration
 
         self.with_exploration = True
-
-        super().__init__(observation_space=observation_space, action_space=action_space, device=device)
-        self.network.to(self.device)
 
     def get_action(self, observation):
         """ Return action choice by the agents
