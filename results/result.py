@@ -13,9 +13,9 @@ from blobrl.memories import ExperienceReplay
 from blobrl.networks import SimpleNetwork, SimpleDuelingNetwork, C51Network
 
 memory = [ExperienceReplay]
-step_train = [1, 4, 32]
-batch_size = [1, 32, 64]
-gamma = [1.0, 0.99, 0.98, 0.95]
+step_train = [1, 32]
+batch_size = [32, 64]
+gamma = [1.0, 0.99, 0.95]
 loss = [torch.nn.MSELoss()]
 optimizer = [optim.Adam]
 lr = [0.1, 0.001, 0.0001]
@@ -37,7 +37,7 @@ arg_all = [{"agent": {"class": [DQN, DoubleDQN],
             "optimizer": {"class": optimizer,
                           "param": {"lr": lr}},
             "memory": {"class": memory,
-                       "param": {"max_size": [16, 32, 128]}},
+                       "param": {"max_size": [512, 2048]}},
             "dueling": True
             },
            {"agent": {"class": [CategoricalDQN],
@@ -52,7 +52,7 @@ arg_all = [{"agent": {"class": [DQN, DoubleDQN],
             "optimizer": {"class": optimizer,
                           "param": {"lr": lr}},
             "memory": {"class": memory,
-                       "param": {"max_size": [16, 32, 128]}},
+                       "param": {"max_size": [512, 2048]}},
             "dueling": False
             }]
 

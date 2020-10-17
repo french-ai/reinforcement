@@ -50,14 +50,14 @@
 
 # Network
 
-- [ ] base network support discrete action space
-- [ ] base network support continuous action space
-- [ ] base network support discrete observation space
-- [ ] base network support continuous observation space
-- [ ] simple network support discrete/continuous action/observation space
-- [ ] c51 network support discrete/continuous action/observation space
-- [ ] base dueling network support discrete/continuous action/observation space
-- [ ] simple dueling network support discrete/continuous action/observation space
+- [x] base network support discrete action space
+- [x] base network support continuous action space
+- [x] base network support discrete observation space
+- [x] base network support continuous observation space
+- [x] simple network support discrete/continuous action/observation space
+- [x] c51 network support discrete action/observation space
+- [x] base dueling network support discrete/continuous action/observation space
+- [x] simple dueling network support discrete/continuous action/observation space
 
 # Explorations list
 

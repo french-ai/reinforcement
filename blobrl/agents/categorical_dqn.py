@@ -77,13 +77,14 @@ class CategoricalDQN(DQN):
              zip(next_prediction, prediction, actions.permute(1, 0, *[i for i in range(2, len(actions.shape))]),
                  len_space)]
         else:
-            actions = F.one_hot(actions.long(), num_classes=len_space)
 
             q_values_next = next_prediction * self.z
             q_values_next = torch.sum(q_values_next, dim=2)
 
-            actions_next = torch.argmax(q_values_next, dim=1).long()
-            actions_next = F.one_hot(actions_next.long(), num_classes=len_space)
+            actions = F.one_hot(actions.long(), num_classes=len_space)
+
+            actions_next = torch.argmax(q_values_next, dim=1)
+            actions_next = F.one_hot(actions_next, num_classes=len_space)
 
             dones = dones.view(-1, 1)
 
