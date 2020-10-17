@@ -20,6 +20,7 @@
 - [x] Random Agent
 - [x] Constant Agent
 
+
 - [x] Deep Q Network (Mnih *et al.*, [2013](https://arxiv.org/abs/1312.5602))
 - [ ] Deep Recurrent Q Network (Hausknecht *et al.*, [2015](https://arxiv.org/abs/1507.06527))
 - [ ] Persistent Advantage Learning (Bellamare *et al.*, [2015](https://arxiv.org/abs/1512.04860))
@@ -30,21 +31,28 @@
 - [x] Categorical Deep Q Network (Bellamare *et al.*, [2017](https://arxiv.org/abs/1707.06887))
 - [ ] Quantile Regression DQN (Dabney et al, [2017](https://arxiv.org/abs/1710.10044))
 
+
 - [ ] Rainbow (Hessel *et al.*, [2017](https://arxiv.org/abs/1710.02298))
 - [ ] Quantile Regression Deep Q Network (Dabney *et al.*, [2017](https://arxiv.org/abs/1710.10044))
 
+
 - [ ] Soft Actor-Critic (Haarnoja et al, [2018](https://arxiv.org/abs/1801.01290))
 
+
 - [ ] Vanilla Policy Gradient ([2000](https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf))
+
 
 - [ ] Deep Deterministic Policy Gradient (Lillicrap et al, [2015](https://arxiv.org/abs/1509.02971))
 - [ ] Twin Delayed DDPG (Fujimoto et al, [2018](https://arxiv.org/abs/1802.09477))
 
+
 - [ ] Trust Region Policy Optimization (Schulman *et al.*, [2015](https://arxiv.org/abs/1502.05477))
 - [ ] Proximal Policy Optimizations (Schulman *et al.*, [2017](https://arxiv.org/abs/1707.06347))
 
+
 - [ ] A2C (Mnih et al, [2016](https://arxiv.org/abs/1602.01783))
 - [ ] A3C (Mnih et al, [2016](https://arxiv.org/abs/1602.01783))
+
 
 - [ ] Hindsight Experience Replay (Andrychowicz et al, [2017](https://arxiv.org/abs/1707.01495))
 
