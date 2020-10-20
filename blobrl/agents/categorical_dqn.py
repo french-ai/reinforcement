@@ -65,8 +65,8 @@ class CategoricalDQN(DQN):
             if isinstance(values, list):
                 return [return_values(v) for v in values]
             else:
-                q_values = values[0] * self.z
-                q_values = torch.sum(q_values, dim=1)
+                q_values = values * self.z
+                q_values = torch.sum(q_values, dim=2)
                 return torch.argmax(q_values).detach().item()
 
         return return_values(prediction)
@@ -88,10 +88,14 @@ class CategoricalDQN(DQN):
 
             dones = dones.view(-1, 1)
 
-            tz = torch.clamp(rewards.view(-1, 1) + self.gamma * self.z * (1 - dones), self.r_min, self.r_max)
+            tz = rewards.view(-1, 1) + self.gamma * self.z * (1 - dones)
+            tz = tz.clamp(self.r_min, self.r_max)
             b = (tz - self.r_min) / self.delta_z
 
             l, u = b.floor().to(torch.int64), b.ceil().to(torch.int64)
+
+            l[(u > 0) * (l == u)] -= 1
+            u[(l < (self.num_atoms - 1)) * (l == u)] += 1
 
             m_prob = torch.zeros((self.batch_size, len_space, self.num_atoms), device=self.device)
 

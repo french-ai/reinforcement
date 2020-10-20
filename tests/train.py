@@ -5,7 +5,7 @@ import gym
 
 if __name__ == "__main__":
 
-    for agent in [DQN, DoubleDQN, CategoricalDQN]:
+    for agent in [CategoricalDQN, DQN, DoubleDQN]:
 
         env = gym.make("CartPole-v1")
         a = agent(env.observation_space, env.action_space)
@@ -19,4 +19,4 @@ if __name__ == "__main__":
             if m > 200:
                 break
 
-        print(agent.__name__, i, m)
+        print("####### ", agent.__name__, i, m, " #######")
