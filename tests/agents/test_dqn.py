@@ -21,10 +21,14 @@ class TestDQN(TestAgentInterface):
     list_work = [
         [Discrete(3), Discrete(1)],
         [Discrete(3), Discrete(3)],
+        [Discrete(5), Discrete(3)],
         [Discrete(10), Discrete(50)],
+        [Discrete(15), Discrete(50)],
         [MultiDiscrete([3]), MultiDiscrete([1])],
+        [MultiDiscrete([3]), Discrete(50)],
         [MultiDiscrete([3, 3]), MultiDiscrete([3, 3])],
         [MultiDiscrete([4, 4, 4]), MultiDiscrete([50, 4, 4])],
+        [MultiDiscrete([4, 4, 4]), Discrete(3)],
         [MultiDiscrete([[100, 3], [3, 5]]), MultiDiscrete([[100, 3], [3, 5]])],
         [MultiDiscrete([[[100, 3], [3, 5]], [[100, 3], [3, 5]]]),
          MultiDiscrete([[[100, 3], [3, 5]], [[100, 3], [3, 5]]])]
@@ -91,7 +95,7 @@ class TestDQN(TestAgentInterface):
             agent = self.agent(observation_space=o, action_space=a, memory=memory, network=network)
 
             for i in range(20):
-                agent.learn(flatten(o, o.sample()), a.sample(), 0, flatten(o, o.sample()), False)
+                agent.learn(o.sample(), a.sample(), 0, o.sample(), False)
 
     def test_episode_finished(self):
         for o, a in self.list_work:

@@ -15,7 +15,7 @@ class TestDouble_DQN(TestDQN):
             agent = self.agent(observation_space=o, action_space=a, memory=memory, step_copy=10, network=network)
 
             for i in range(20):
-                agent.learn(flatten(o, o.sample()), a.sample(), 0, flatten(o, o.sample()), False)
+                agent.learn(o.sample(), a.sample(), 0, o.sample(), False)
 
     def test__str__(self):
         for o, a in self.list_work:

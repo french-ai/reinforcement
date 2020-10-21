@@ -134,7 +134,9 @@ class DQN(AgentInterface):
         :param done: if env is finished
         :type done: bool
         """
-        self.memory.append(observation, action, reward, next_observation, done)
+        self.memory.append(torch.tensor([flatten(self.observation_space, observation)], device=self.device).float(),
+                           action, reward, torch.tensor([flatten(self.observation_space, next_observation)],
+                                                        device=self.device).float(), done)
         self.step += 1
 
         if (self.step % self.step_train) == 0:
@@ -151,6 +153,7 @@ class DQN(AgentInterface):
                                                                                       device=self.device)
 
         next_prediction = self.network.forward(next_observations)
+
         prediction = self.network.forward(observations)
 
         if isinstance(self.action_space, Discrete):
