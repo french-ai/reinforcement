@@ -25,7 +25,7 @@ class Trainer:
             self.agent = agent(observation_space=observation_space, action_space=action_space)
         elif isinstance(agent, AgentInterface):
             import warnings
-            warnings.warn("be sure of agent have good input and output dimension")
+            warnings.warn("be sure of your agent need to have good input and output dimension")
             self.agent = agent
         else:
             raise TypeError("this type (" + str(type(agent)) + ") is an AgentInterface or instance of AgentInterface")
@@ -113,8 +113,13 @@ class Trainer:
         self.environment.reset()
         for i_episode in range(1, max_episode + 1):
             self.do_episode(logger=self.logger, render=render)
-            if nb_evaluation != 0:
-                if i_episode == 1 or i_episode == max_episode or i_episode % (max_episode // (nb_evaluation - 1)) == 0:
+            if nb_evaluation > 0:
+                if nb_evaluation <= 1:
+                    if i_episode == max_episode:
+                        self.evaluate(logger=self.logger, render=render)
+
+                elif i_episode == 1 or i_episode == max_episode or i_episode % int(
+                        max_episode // (nb_evaluation - 1)) == 0:
                     self.evaluate(logger=self.logger, render=render)
         self.close()
 

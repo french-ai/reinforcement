@@ -17,6 +17,8 @@ def test_experience_replay():
 
         mem.append(obs, action, reward, next_obs, done)
 
+    mem.sample(2, device=torch.device("cpu"))
+
     for i in range(10):
         obs_s = [obs, obs, obs]
         actions = [1, 2, 3]

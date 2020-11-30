@@ -20,9 +20,8 @@ class DQN(AgentInterface):
     def disable_exploration(self):
         self.with_exploration = False
 
-    def __init__(self, observation_space, action_space, memory=ExperienceReplay(), network=None,
-                 step_train=1, batch_size=32, gamma=1.00, loss=None, optimizer=None, greedy_exploration=None,
-                 device=None):
+    def __init__(self, observation_space, action_space, memory=None, network=None, step_train=1, batch_size=32,
+                 gamma=1.00, loss=None, optimizer=None, greedy_exploration=None, device=None):
         """
 
 
@@ -43,6 +42,9 @@ class DQN(AgentInterface):
         if not isinstance(action_space, (Discrete, MultiDiscrete)):
             raise TypeError(
                 "action_space need to be instance of Discrete or MultiDiscrete, not :" + str(type(action_space)))
+
+        if memory is None:
+            memory = ExperienceReplay()
 
         if not isinstance(memory, MemoryInterface):
             raise TypeError(
@@ -134,9 +136,8 @@ class DQN(AgentInterface):
         :param done: if env is finished
         :type done: bool
         """
-        self.memory.append(torch.tensor([flatten(self.observation_space, observation)], device=self.device).float(),
-                           action, reward, torch.tensor([flatten(self.observation_space, next_observation)],
-                                                        device=self.device).float(), done)
+        self.memory.append([flatten(self.observation_space, observation)], action, reward,
+                           [flatten(self.observation_space, next_observation)], done)
         self.step += 1
 
         if (self.step % self.step_train) == 0:

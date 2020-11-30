@@ -9,7 +9,6 @@ from ipykernel import iostream
 
 from gym.spaces import Discrete
 
-
 from blobrl import Trainer, Logger
 from blobrl.agents import AgentInterface
 from blobrl.trainer import arg_to_agent
@@ -254,6 +253,14 @@ def test_trainer_train():
         assert fake_agent.episode_finished_done == number_episode
         assert fake_env.step_done == number_episode + eval and fake_env.reset_done == number_episode + eval + 1
         assert fake_env.render_done == number_episode + eval
+
+    # test nb_evaluation
+    fake_env = FakeEnv()
+    fake_agent = FakeAgent(observation_space=None, action_space=None)
+    trainer = Trainer(environment=fake_env, agent=fake_agent)
+
+    for i in range(10):
+        trainer.train(max_episode=100, nb_evaluation=i)
 
 
 class FakeOutStream(iostream.OutStream):
