@@ -58,60 +58,81 @@ DQN, DoubleDQN, CategoricalDQN can reach 500 rewards in 300 (max) steps.
 
 * DQN
 
-500 step is reach with after 100 episode with this parameters.
+500 step is reach with after 30 episode with this parameters.
 
 with SimpleNetwork:
 
 | algo | step_train | batch_size | gamma | greedy_exploration | network | optimizer | lr | memories | max_size | step | max | min | avg | sum | 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
-|  DQN  |  1.0  |  32.0  |  0.95  |  EpsilonGreedy-0.6  |  SimpleNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  512  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0  |
-|  DQN  |  1.0  |  32.0  |  1.00  |  AdaptativeEpsilonGreedy-0.3-0.1-30000-0  |  SimpleNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  2048  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0  |
-|  DQN  |  1.0  |  32.0  |  1.00  |  EpsilonGreedy-0.6  |  SimpleNetwork  |  Adam  |  0.1000  |  ExperienceReplay  |  2048  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0  |
-|  DQN  |  1.0  |  64.0  |  0.99  |  AdaptativeEpsilonGreedy-0.3-0.1-30000-0  |  SimpleNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  2048  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0  |
-|  DQN  |  1.0  |  64.0  |  0.99  |  AdaptativeEpsilonGreedy-0.8-0.2-10000-0  |  SimpleNetwork  |  Adam  |  0.1000  |  ExperienceReplay  |  512  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0  |
-|  DQN  |  1.0  |  64.0  |  1.00  |  AdaptativeEpsilonGreedy-0.8-0.2-10000-0  |  SimpleNetwork  |  Adam  |  0.1000  |  ExperienceReplay  |  2048  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0  |
+|DQN|1.0|32.0|1.00|EpsilonGreedy-0.6|SimpleNetwork|Adam|0.001|ExperienceReplay|2048|30.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|0.99|EpsilonGreedy-0.6|SimpleNetwork|Adam|0.001|ExperienceReplay|2048|30.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|0.99|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleNetwork|Adam|0.100|ExperienceReplay|2048|40.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|0.95|EpsilonGreedy-0.6|SimpleNetwork|Adam|0.001|ExperienceReplay|512|50.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|1.00|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleNetwork|Adam|0.001|ExperienceReplay|512|50.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|32.0|0.99|AdaptativeEpsilonGreedy-0.8-0.2-10000-0|SimpleNetwork|Adam|0.001|ExperienceReplay|2048|60.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|0.99|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleNetwork|Adam|0.100|ExperienceReplay|2048|60.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|1.00|AdaptativeEpsilonGreedy-0.8-0.2-10000-0|SimpleNetwork|Adam|0.100|ExperienceReplay|512|60.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|1.00|EpsilonGreedy-0.6|SimpleNetwork|Adam|0.100|ExperienceReplay|512|60.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|0.95|AdaptativeEpsilonGreedy-0.8-0.2-10000-0|SimpleNetwork|Adam|0.001|ExperienceReplay|512|70.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|0.99|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleNetwork|Adam|0.001|ExperienceReplay|2048|70.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|1.00|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleNetwork|Adam|0.001|ExperienceReplay|2048|70.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|32.0|0.99|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleNetwork|Adam|0.001|ExperienceReplay|512|80.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|32.0|0.99|AdaptativeEpsilonGreedy-0.8-0.2-10000-0|SimpleNetwork|Adam|0.100|ExperienceReplay|512|80.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|32.0|1.00|EpsilonGreedy-0.6|SimpleNetwork|	Adam|0.001|ExperienceReplay|512|80.0|1.0|1.0|1.0|500.0
 
 with SimpleDuelingNetwork:
 
 | algo | step_train | batch_size | gamma | greedy_exploration | network | optimizer | lr | memories | max_size | step | max | min | avg | sum | 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
-|  DQN  |  1.0  |  32.0  |  0.95  |  AdaptativeEpsilonGreedy-0.3-0.1-30000-0  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  2048  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0 |
-|  DQN  |  1.0  |  32.0  |  0.95  |  AdaptativeEpsilonGreedy-0.8-0.2-10000-0  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  512  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0 |
-|  DQN  |  1.0  |  32.0  |  0.95  |  EpsilonGreedy-0.1  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  512  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0 |
-|  DQN  |  1.0  |  32.0  |  0.99  |  AdaptativeEpsilonGreedy-0.3-0.1-30000-0  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  2048  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0 |
-|  DQN  |  1.0  |  32.0  |  0.99  |  AdaptativeEpsilonGreedy-0.3-0.1-30000-0  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  512  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0 |
-|  DQN  |  1.0  |  32.0  |  0.99  |  AdaptativeEpsilonGreedy-0.8-0.2-10000-0  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  2048  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0 |
-|  DQN  |  1.0  |  32.0  |  0.99  |  EpsilonGreedy-0.6  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  512  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0 |
-|  DQN  |  1.0  |  64.0  |  0.95  |  AdaptativeEpsilonGreedy-0.3-0.1-30000-0  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  2048  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0 |
-|  DQN  |  1.0  |  64.0  |  0.95  |  EpsilonGreedy-0.6  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  2048  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0 |
-|  DQN  |  1.0  |  64.0  |  0.99  |  AdaptativeEpsilonGreedy-0.8-0.2-10000-0  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  2048  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0 |
-|  DQN  |  1.0  |  64.0  |  0.99  |  EpsilonGreedy-0.6  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  512  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0 |
-|  DQN  |  1.0  |  64.0  |  1.00  |  EpsilonGreedy-0.6  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  2048  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0 |
+|DQN|1.0|64.0|0.95|AdaptativeEpsilonGreedy-0.8-0.2-10000-0|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|512|30.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|32.0|0.95|EpsilonGreedy-0.6|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|512|40.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|32.0|0.99|EpsilonGreedy-0.1|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|2048|40.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|32.0|1.00|EpsilonGreedy-0.1|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|512|40.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|0.95|EpsilonGreedy-0.6|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|512|40.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|0.99|EpsilonGreedy-0.6|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|2048|40.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|32.0|0.95|EpsilonGreedy-0.1|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|512|50.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|32.0|1.00|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|2048|50.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|0.95|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|512|50.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|0.99|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|2048|50.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|32.0|0.99|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|2048|60.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|32.0|1.00|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|512|60.0|1.0|1.0|1.0|500.0|
+|DQN|1.0|64.0|0.99|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleDuelingNetwork|Adam|0.001|ExperienceReplay|2048|60.0|1.0|1.0|1.0|500.0|
 
 * DoubleDQN
 
-500 step is reach with after 100 episode with this parameters with SimpleDuelingNetwork. 
+500 step is reach with after 20 episode with this parameters with SimpleDuelingNetwork. 
 
 with SimpleNetwork:
 
 | algo | step_train | batch_size | gamma | greedy_exploration | network | optimizer | lr | memories | max_size | step | max | min | avg | sum | 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
-|  DoubleDQN  |  1.0  |  64.0  |  0.99  |  AdaptativeEpsilonGreedy-0.3-0.1-30000-0  |  SimpleNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  2048  |  200.0  |  1.0  |  1.0  |  1.0  |  500.0  |
-|  DoubleDQN  |  1.0  |  64.0  |  1.00  |  EpsilonGreedy-0.6  |  SimpleNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  2048  |  200.0  |  1.0  |  1.0  |  1.0  |  500.0  |
+|DoubleDQN|1.0|32.0|1.00|EpsilonGreedy-0.1|SimpleNetwork|Adam|0.0010|ExperienceReplay|512|30.0|1.0|1.0|1.0|500.0|
+|DoubleDQN|1.0|32.0|0.99|EpsilonGreedy-0.1|SimpleNetwork|Adam|0.0010|ExperienceReplay|2048|40.0|1.0|1.0|1.0|500.0|
+|DoubleDQN|32.0|64.0|0.99|AdaptativeEpsilonGreedy-0.3-0.1-30000-0|SimpleNetwork|Adam|0.1000|ExperienceReplay|2048|40.0|1.0|1.0|1.0|500.0|
+|DoubleDQN|1.0|64.0|0.95|EpsilonGreedy-0.6|SimpleNetwork|Adam|0.0010|ExperienceReplay|512|90.0|1.0|1.0|1.0|500.0|
+|DoubleDQN|1.0|64.0|1.00|EpsilonGreedy-0.6|SimpleNetwork|Adam|0.0010|ExperienceReplay|2048|100.0|1.0|1.0|1.0|500.0|
+|DoubleDQN|1.0|64.0|0.95|EpsilonGreedy-0.6|SimpleNetwork|Adam|0.0010|ExperienceReplay|512|150.0|1.0|1.0|1.0|500.0|
 
 with SimpleDuelingNetwork:
 
 | algo | step_train | batch_size | gamma | greedy_exploration | network | optimizer | lr | memories | max_size | step | max | min | avg | sum | 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
-|  DoubleDQN  |  1.0  |  32.0  |  0.95  |  AdaptativeEpsilonGreedy-0.3-0.1-30000-0  |  SimpleDuelingNetwork  |  Adam  |  0.0010  |  ExperienceReplay  |  512  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0  |
+|DoubleDQN|1.0|32.0|1.00|AdaptativeEpsilonGreedy-0.8-0.2-10000-0|SimpleDuelingNetwork|Adam|0.0010|ExperienceReplay|2048|20.0|1.0|1.0|1.0|500.0|
+|DoubleDQN|1.0|64.0|1.00|EpsilonGreedy-0.6|SimpleDuelingNetwork|Adam|0.1000|ExperienceReplay|512|60.0|1.0|1.0|1.0|500.0|
+|DoubleDQN|1.0|64.0|0.95|AdaptativeEpsilonGreedy-0.8-0.2-10000-0|SimpleDuelingNetwork|Adam|0.0001|ExperienceReplay|2048|110.0|1.0|1.0|1.0|500.0|
+|DoubleDQN|1.0|32.0|0.95|EpsilonGreedy-0.1|SimpleDuelingNetwork|Adam|0.0010|ExperienceReplay|2048|130.0|1.0|1.0|1.0|500.0|
+|DoubleDQN|1.0|32.0|1.00|AdaptativeEpsilonGreedy-0.8-0.2-10000-0|SimpleDuelingNetwork|Adam|0.0001|ExperienceReplay|512|130.0|1.0|1.0|1.0|500.0|
+|DoubleDQN|1.0|64.0|0.95|AdaptativeEpsilonGreedy-0.8-0.2-10000-0|SimpleDuelingNetwork|Adam|0.0001|ExperienceReplay|2048|130.0|1.0|1.0|1.0|500.0|
 
 * CategoricalDQN
 
-500 step is reach with after 100 episode with this parameters for only one training. It's less stable then other agent.
+500 step is reach with after 60 episode with this parameters for only one training. It's less stable then other agent.
 
 | algo | step_train | batch_size | gamma | greedy_exploration | network | optimizer | lr | memories | max_size | step | max | min | avg | sum | 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
-|  CategoricalDQN  |  32.0  |  32.0  |  0.99  |  AdaptativeEpsilonGreedy-0.8-0.2-10000-0  |  C51Network  |  Adam  |  0.0001  |  ExperienceReplay  |  2048  |  100.0  |  1.0  |  1.0  |  1.0  |  500.0  |
+|CategoricalDQN|1.0|64.0|0.95|EpsilonGreedy-0.1|C51Network|Adam|0.0010|ExperienceReplay|2048|60.0|1.0|1.0|1.0|500.0|
+|CategoricalDQN|32.0|64.0|1.00|AdaptativeEpsilonGreedy-0.8-0.2-10000-0|C51Network|Adam|0.0001|ExperienceReplay|512|180.0|1.0|1.0|1.0|500.0|
+
 
 #### Parameters importance
 

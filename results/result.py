@@ -144,7 +144,8 @@ if __name__ == '__main__':
 
                                                 trainer = Trainer(environment=env, agent=agent,
                                                                   log_dir=log_dir)
-                                                trainer.train(max_episode=args.max_episode, render=False)
+                                                trainer.train(max_episode=args.max_episode, render=False,
+                                                              nb_evaluation=int(args.max_episode / 10))
 
                                                 agent.save(file_name="save.p", dire_name=log_dir)
                                         except KeyboardInterrupt:
@@ -184,7 +185,8 @@ if __name__ == '__main__':
 
                                                     trainer = Trainer(environment=env, agent=agent,
                                                                       log_dir=log_dir)
-                                                    trainer.train(max_episode=args.max_episode, render=False)
+                                                    trainer.train(max_episode=args.max_episode, render=False,
+                                                                  nb_evaluation=int(args.max_episode / 10))
 
                                                     agent.save(file_name="save.p", dire_name=log_dir)
                                             except KeyboardInterrupt:
