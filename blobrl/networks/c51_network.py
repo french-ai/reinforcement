@@ -67,7 +67,7 @@ class C51Network(BaseNetwork):
             q = q.permute(1, 0, 2)
 
             return q
-        elif isinstance(self.action_space, MultiDiscrete):
+        if isinstance(self.action_space, MultiDiscrete):
 
             def do_forward(nvec, llayers, x):
                 if isinstance(llayers[-1], list):
