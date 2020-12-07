@@ -116,8 +116,8 @@ class DQN(AgentInterface):
         def return_values(values):
             if isinstance(values, list):
                 return [return_values(v) for v in values]
-            else:
-                return torch.argmax(values).detach().item()
+
+            return torch.argmax(values).detach().item()
 
         return return_values(q_values)
 

@@ -72,14 +72,13 @@ class C51Network(BaseNetwork):
             def do_forward(nvec, llayers, x):
                 if isinstance(llayers[-1], list):
                     return [do_forward(n, l, x) for n, l in zip(nvec, llayers)]
-                else:
 
-                    q = [distributionalLayer(x) for distributionalLayer in llayers]
-                    q = torch.cat(q)
-                    q = torch.reshape(q, (nvec, -1, self.NUM_ATOMS))
-                    q = q.permute(1, 0, 2)
+                q = [distributionalLayer(x) for distributionalLayer in llayers]
+                q = torch.cat(q)
+                q = torch.reshape(q, (nvec, -1, self.NUM_ATOMS))
+                q = q.permute(1, 0, 2)
 
-                    return q
+                return q
 
             return do_forward(self.action_space.nvec, self.distributional_list, x)
 
