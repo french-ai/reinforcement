@@ -1,8 +1,8 @@
-import pytest
+from blobrl.networks import BaseDuelingNetwork
+from tests.networks import TestBaseNetwork
 
-from blobrl.networks import BaseNetwork
 
+class TestBaseDuelingNetwork(TestBaseNetwork):
+    __test__ = True
 
-def test_init_base_network_fail():
-    with pytest.raises(TypeError):
-        BaseNetwork(None, None)
+    network = BaseDuelingNetwork

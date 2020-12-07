@@ -30,6 +30,7 @@ with open(os.path.abspath(path + '/README.md')) as f:
 setuptools.setup(
     author="french ai team",
     name='blobrl',
+    version='0.1.0',
     license="Apache-2.0",
     description='Reinforcement learning with pytorch ',
     long_description=README,

@@ -7,6 +7,8 @@ import numpy as np
 import pytest
 from ipykernel import iostream
 
+from gym.spaces import Discrete
+
 from blobrl import Trainer, Logger
 from blobrl.agents import AgentInterface
 from blobrl.trainer import arg_to_agent
@@ -14,7 +16,7 @@ from blobrl.trainer import arg_to_agent
 
 def test_arg_to_agent():
     fail_list = ["dzdzqd", None, 123, 123.123, [], {}, object]
-    work_list = ["agent_random", "dqn", "double_dqn", "categorical_dqn", "dueling_dqn"]
+    work_list = ["agent_random", "dqn", "double_dqn", "categorical_dqn"]
 
     for agent in fail_list:
         with pytest.raises(ValueError):
@@ -71,7 +73,7 @@ class FakeAgent(AgentInterface):
         pass
 
     def __init__(self, observation_space, action_space, device=None):
-        super().__init__(device)
+        super().__init__(Discrete(1), Discrete(1), device)
         self.get_action_done = 0
         self.learn_done = 0
         self.episode_finished_done = 0
@@ -251,6 +253,14 @@ def test_trainer_train():
         assert fake_agent.episode_finished_done == number_episode
         assert fake_env.step_done == number_episode + eval and fake_env.reset_done == number_episode + eval + 1
         assert fake_env.render_done == number_episode + eval
+
+    # test nb_evaluation
+    fake_env = FakeEnv()
+    fake_agent = FakeAgent(observation_space=None, action_space=None)
+    trainer = Trainer(environment=fake_env, agent=fake_agent)
+
+    for i in range(10):
+        trainer.train(max_episode=100, nb_evaluation=i)
 
 
 class FakeOutStream(iostream.OutStream):

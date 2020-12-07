@@ -1,45 +1,45 @@
 import pytest
 import torch
-from gym.spaces import Discrete
+from gym.spaces import flatdim, flatten
 
-from blobrl.networks import SimpleDuelingNetwork
-
-
-def test_simple_network_init():
-    list_fail = [[None, None],
-                 ["dedrfe", "qdzq"],
-                 [1215.4154, 157.48],
-                 ["zdzd", (Discrete(1))],
-                 [Discrete(1), "zdzd"],
-                 ["zdzd", (1, 4, 7)],
-                 [(1, 4, 7), "zdzd"],
-                 [Discrete(1), Discrete(1)]]
-
-    for ob, ac in list_fail:
-        with pytest.raises(TypeError):
-            SimpleDuelingNetwork(observation_shape=ob, action_shape=ac)
-
-    list_work = [[(454), (874)],
-                 [(454, 54), (48, 44)],
-                 [(454, 54, 45), (48, 44, 47)]]
-    for ob, ac in list_work:
-        SimpleDuelingNetwork(observation_shape=ob, action_shape=ac)
+from blobrl.networks import SimpleDuelingNetwork, SimpleNetwork
+from tests.networks import TestBaseDuelingNetwork
 
 
-def test_forward():
-    list_work = [[(454, 54), (48, 44)],
-                 [(454, 54, 45), (48, 44, 47)]]
-    for ob, ac in list_work:
-        simple_network = SimpleDuelingNetwork(observation_shape=ob, action_shape=ac)
-        simple_network.forward(torch.rand((1, *ob)))
+class TestSimpleDuelingNetwork(TestBaseDuelingNetwork):
+    __test__ = True
 
+    network = SimpleDuelingNetwork
+    net = SimpleNetwork
 
+    list_fail = [1,
+                 0.1,
+                 "string",
+                 object(),
+                 network(net(TestBaseDuelingNetwork.list_work[0][0], TestBaseDuelingNetwork.list_work[0][1]))
+                 ]
 
-def test__str__():
-    list_work = [[(454, 54), (48, 44)],
-                 [(454, 54, 45), (48, 44, 47)]]
+    def test_init(self):
+        for net in self.list_fail:
+            with pytest.raises(TypeError):
+                self.network(net)
 
-    for ob, ac in list_work:
-        network = SimpleDuelingNetwork(observation_shape=ob, action_shape=ac)
+        for ob, ac in self.list_work:
+            self.network(self.net(observation_space=ob, action_space=ac))
 
-        assert 'SimpleDuelingNetwork-' + str(ob) + "-" + str(ac) == network.__str__()
+    def test_forward(self):
+        for ob, ac in self.list_work:
+            network = self.network(self.net(observation_space=ob, action_space=ac))
+            network.forward(torch.rand((1, flatdim(ob))))
+
+    def test_str_(self):
+        for ob, ac in self.list_work:
+            net = self.net(observation_space=ob, action_space=ac)
+            network = self.network(net)
+
+            assert 'SimpleDuelingNetwork-' + str(net) == network.__str__()
+
+    def test_call_network(self):
+        for ob, ac in self.list_work:
+            self.network(SimpleNetwork(observation_space=ob, action_space=ac))(
+                torch.tensor([flatten(ob, ob.sample())]).float())

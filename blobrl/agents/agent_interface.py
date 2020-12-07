@@ -2,15 +2,30 @@ import abc
 
 import torch
 
+from gym.spaces import Space
+
 
 class AgentInterface(metaclass=abc.ABCMeta):
 
-    def __init__(self, device):
+    def __init__(self, observation_space, action_space, device):
         """
 
         :param device: torch device to run agent
         :type: torch.device
+        :param observation_space: Space for init observation size
+        :type observation_space: gym.Space
+        :param device: torch device to run agent
+        :type: torch.device
         """
+
+        if not isinstance(action_space, Space):
+            raise TypeError("action_space need to be instance of gym.spaces.Space, not :" + str(type(action_space)))
+        if not isinstance(observation_space, Space):
+            raise TypeError(
+                "observation_space need to be instance of gym.spaces.Space, not :" + str(type(observation_space)))
+        self.action_space = action_space
+        self.observation_space = observation_space
+
         if device is None:
             device = torch.device("cpu")
         if not isinstance(device, torch.device):

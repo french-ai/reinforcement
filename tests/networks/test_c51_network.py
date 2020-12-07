@@ -1,34 +1,66 @@
 import pytest
 import torch
-from gym.spaces import Discrete
 
+from gym.spaces import flatdim
+from gym.spaces import Discrete, MultiDiscrete, MultiBinary, Box, Tuple, Dict
 from blobrl.networks import C51Network
+from tests.networks import TestBaseNetwork
 
 
-def test_c51_init():
-    list_fail = [[None, None],
-                 ["dedrfe", "qdzq"],
-                 [1215.4154, 157.48],
-                 ["zdzd", (Discrete(1))],
-                 [Discrete(1), "zdzd"],
-                 ["zdzd", (1, 4, 7)],
-                 [(1, 4, 7), "zdzd"],
-                 [Discrete(1), Discrete(1)]]
+class TestC51Network(TestBaseNetwork):
+    __test__ = True
 
-    for ob, ac in list_fail:
-        with pytest.raises(TypeError):
-            C51Network(observation_shape=ob, action_shape=ac)
+    network = C51Network
 
-    list_work = [[(454), (4)],
-                 [(454, 54), (5, 2)],
-                 [(454, 54, 45), (4, 5, 3)]]
-    for ob, ac in list_work:
-        C51Network(observation_shape=ob, action_shape=ac)
+    list_work = [
+        [Discrete(3), Discrete(1)],
+        [Discrete(3), Discrete(3)],
+        [Discrete(10), Discrete(50)],
+        [MultiDiscrete([3]), MultiDiscrete([1])],
+        [MultiDiscrete([3, 3]), MultiDiscrete([3, 3])],
+        [MultiDiscrete([4, 4, 4]), MultiDiscrete([50, 4, 4])],
+        [MultiDiscrete([[100, 3], [3, 5]]), MultiDiscrete([[100, 3], [3, 5]])],
+        [MultiDiscrete([[[100, 3], [3, 5]], [[100, 3], [3, 5]]]),
+         MultiDiscrete([[[100, 3], [3, 5]], [[100, 3], [3, 5]]])]
 
+    ]
 
-def test_c51_forward():
-    list_work = [[(454, 54), (4, 2)],
-                 [(454, 54, 45), (5, 1, 2)]]
-    for ob, ac in list_work:
-        simple_network = C51Network(observation_shape=ob, action_shape=ac)
-        simple_network.forward(torch.rand((2, *ob)))
+    list_fail = [
+        [None, None],
+        ["dedrfe", "qdzq"],
+        [1215.4154, 157.48],
+        ["zdzd", (Discrete(1))],
+        [Discrete(1), "zdzd"],
+        ["zdzd", (1, 4, 7)],
+        [(1, 4, 7), "zdzd"],
+        [152, 485],
+        [MultiBinary(1), MultiBinary(1)],
+        [MultiBinary(3), MultiBinary(3)],
+        # [MultiBinary([3, 2]), MultiBinary([3, 2])], # Don't work yet because gym don't implemented this
+        [Box(low=0, high=10, shape=[1]), Box(low=0, high=10, shape=[1])],
+        [Box(low=0, high=10, shape=[2, 2]), Box(low=0, high=10, shape=[2, 2])],
+        [Box(low=0, high=10, shape=[2, 2, 2]), Box(low=0, high=10, shape=[2, 2, 2])],
+
+        [Tuple([Discrete(1), MultiDiscrete([1, 1])]), Tuple([Discrete(1), MultiDiscrete([1, 1])])],
+        [Dict({"first": Discrete(1), "second": MultiDiscrete([1, 1])}),
+         Dict({"first": Discrete(1), "second": MultiDiscrete([1, 1])})]
+    ]
+
+    def test_init(self):
+        for ob, ac in self.list_fail:
+            with pytest.raises(TypeError):
+                self.network(observation_space=ob, action_space=ac)
+
+        for ob, ac in self.list_work:
+            self.network(observation_space=ob, action_space=ac)
+
+    def test_forward(self):
+        for ob, ac in self.list_work:
+            network = self.network(observation_space=ob, action_space=ac)
+            network.forward(torch.rand((1, flatdim(ob))))
+
+    def test_str_(self):
+        for ob, ac in self.list_work:
+            network = self.network(observation_space=ob, action_space=ac)
+
+            assert 'C51Network-' + str(ob) + "-" + str(ac) == network.__str__()
