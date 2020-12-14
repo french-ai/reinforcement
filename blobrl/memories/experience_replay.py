@@ -11,14 +11,13 @@ class ExperienceReplay(MemoryInterface):
         """
         Create ExperienceReplay with buffersize equal to max_size
 
-        :param max_size:
+        :param max_size: size max of buffer
         :type max_size: int
         """
         self.buffer = deque(maxlen=max_size)
 
     def append(self, observation, action, reward, next_observation, done):
         """
-
         Store one couple of value
 
         :param observation:
@@ -44,19 +43,29 @@ class ExperienceReplay(MemoryInterface):
 
     def sample(self, batch_size, device):
         """
-        returns *batch_size* sample
+        returns *batch_size* of samples
 
         :param device: torch device to run agent
-        :type: torch.device
+        :type device: torch.device
         :param batch_size:
-        :type: int
+        :type batch_size: int
         :return: list<Tensor>
         """
         idxs = np.random.randint(len(self.buffer), size=batch_size)
 
-        batch = np.array([self.buffer[idx] for idx in idxs])
+        batch = np.array([self.get_sample(idx) for idx in idxs])
 
         return [torch.Tensor(list(V)).to(device=device) for V in batch.T]
+
+    def get_sample(self, idx):
+        """
+        returns sample at idx position
+
+        :param idx: torch device to run agent
+        :type idx: int
+        :return: [observation, action, reward, next_observation, done]
+        """
+        return self.buffer[idx]
 
     def __str__(self):
         return 'ExperienceReplay-' + str(self.buffer.maxlen)
