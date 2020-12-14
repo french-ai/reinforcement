@@ -82,7 +82,7 @@
 - [ ] Prioritized Experience Replay (Schaul *et al.*, [2015](https://arxiv.org/abs/1511.05952))
 - [ ] Hindsight Experience Replay (Andrychowicz *et al.*, [2017](https://arxiv.org/abs/1707.01495))
 
-- [ ] Add advantage in all memories or create Advantage buffer
+- [ ] Add temporal difference option in all memories
 
 # Environments list
 

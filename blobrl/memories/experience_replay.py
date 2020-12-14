@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+from collections import deque
 
 from blobrl.memories import MemoryInterface
 
@@ -12,9 +13,7 @@ class ExperienceReplay(MemoryInterface):
         :param max_size:
         """
         self.max_size = max_size
-        self.buffer = np.empty(shape=(self.max_size, 5), dtype=np.object)
-        self.index = 0
-        self.size = 0
+        self.buffer = deque(maxlen=max_size)
 
     def append(self, observation, action, reward, next_observation, done):
         """
@@ -25,9 +24,7 @@ class ExperienceReplay(MemoryInterface):
         :param next_observation:
         :param done:
         """
-        self.buffer[self.index] = np.array([np.array(observation), action, reward, np.array(next_observation), done])
-        self.index = (self.index + 1) % self.max_size
-        self.size = min(self.size + 1, self.max_size)
+        self.buffer.append([observation, action, reward, next_observation, done])
 
     def extend(self, observations, actions, rewards, next_observations, dones):
         """
@@ -48,9 +45,11 @@ class ExperienceReplay(MemoryInterface):
         :param batch_size:
         :return:
         """
-        idxs = np.random.randint(self.size, size=batch_size)
+        idxs = np.random.randint(len(self.buffer), size=batch_size)
 
-        return [torch.Tensor(list(V)).to(device=device) for V in self.buffer[idxs].T]
+        batch = np.array([self.buffer[idx] for idx in idxs])
+
+        return [torch.Tensor(list(V)).to(device=device) for V in batch.T]
 
     def __str__(self):
         return 'ExperienceReplay-' + str(self.max_size)
