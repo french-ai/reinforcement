@@ -29,3 +29,13 @@ def test_experience_replay():
         mem.extend(obs_s, actions, rewards, next_obs_s, dones)
 
     mem.sample(2, device=torch.device("cpu"))
+
+
+def test_get_sample():
+    max_size = 10
+
+    mem = ExperienceReplay(max_size)
+    for i in range(10):
+        mem.buffer.append([i, i, i, i, i])
+
+    assert mem.get_sample(5)[0] == 5
