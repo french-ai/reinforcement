@@ -38,4 +38,8 @@ def test_get_sample():
     for i in range(10):
         mem.buffer.append([i, i, i, i, i])
 
-    assert mem.get_sample(5)[0] == 5
+    for i in range(10):
+        assert mem.get_sample(i)[0] == i
+
+    mem.buffer.append([10, 10, 10, 10, 10])
+    assert mem.get_sample(0)[0] == 1
