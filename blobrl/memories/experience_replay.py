@@ -7,14 +7,19 @@ from blobrl.memories import MemoryInterface
 
 class ExperienceReplay(MemoryInterface):
 
-    def __init__(self, max_size=5000):
+    def __init__(self, max_size=5000, gamma=0.0):
         """
         Create ExperienceReplay with buffersize equal to max_size
 
         :param max_size: size max of buffer
         :type max_size: int
+        :param gamma: gamma from Temporal Distance objective
+        :type gamma: float [0,1]
         """
         self.buffer = deque(maxlen=max_size)
+        if not 0 <= gamma <= 1:
+            raise ValueError("gamma need to be in range [0,1] not " + str(gamma))
+        self.gamma = gamma
 
     def append(self, observation, action, reward, next_observation, done):
         """
@@ -68,4 +73,4 @@ class ExperienceReplay(MemoryInterface):
         return self.buffer[idx]
 
     def __str__(self):
-        return 'ExperienceReplay-' + str(self.buffer.maxlen)
+        return 'ExperienceReplay-' + str(self.buffer.maxlen) + '-' + str(self.gamma)
