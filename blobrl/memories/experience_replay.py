@@ -64,13 +64,20 @@ class ExperienceReplay(MemoryInterface):
 
     def get_sample(self, idx):
         """
-        returns sample at idx position
+        returns sample at idx position. if self.gamma not equal to 0 apply Temporal Distance objective.
 
         :param idx: torch device to run agent
         :type idx: int
         :return: [observation, action, reward, next_observation, done]
         """
-        return self.buffer[idx]
+        sample = self.buffer[idx]
+        if self.gamma == 0 or sample[4] is True:
+            return sample
+
+        if idx + 1 < len(self.buffer):
+            sample[2] = sample[2] + self.gamma * self.get_sample(idx + 1)[2]
+
+        return sample
 
     def __str__(self):
         return 'ExperienceReplay-' + str(self.buffer.maxlen) + '-' + str(self.gamma)
