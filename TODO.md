@@ -83,6 +83,7 @@
 - [ ] Hindsight Experience Replay (Andrychowicz *et al.*, [2017](https://arxiv.org/abs/1707.01495))
 
 - [ ] Add temporal difference option in all memories
+- [x] Add Discount reward in experience replay
 
 # Environments list
 

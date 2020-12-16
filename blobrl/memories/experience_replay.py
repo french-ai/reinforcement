@@ -13,7 +13,7 @@ class ExperienceReplay(MemoryInterface):
 
         :param max_size: size max of buffer
         :type max_size: int
-        :param gamma: gamma from Temporal Distance objective
+        :param gamma: gamma for discount reward. 0 disable discount reward
         :type gamma: float [0,1]
         """
         self.buffer = deque(maxlen=max_size)
@@ -64,7 +64,7 @@ class ExperienceReplay(MemoryInterface):
 
     def get_sample(self, idx):
         """
-        returns sample at idx position. if self.gamma not equal to 0 apply Temporal Distance objective.
+        returns sample at idx position. if self.gamma not equal to 0 apply discount reward.
 
         :param idx: torch device to run agent
         :type idx: int
