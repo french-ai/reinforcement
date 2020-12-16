@@ -1,23 +1,29 @@
 import numpy as np
 import torch
+from collections import deque
 
 from blobrl.memories import MemoryInterface
 
 
 class ExperienceReplay(MemoryInterface):
 
-    def __init__(self, max_size=5000):
+    def __init__(self, max_size=5000, gamma=0.0):
         """
+        Create ExperienceReplay with buffersize equal to max_size
 
-        :param max_size:
+        :param max_size: size max of buffer
+        :type max_size: int
+        :param gamma: gamma for discount reward. 0 disable discount reward
+        :type gamma: float [0,1]
         """
-        self.max_size = max_size
-        self.buffer = np.empty(shape=(self.max_size, 5), dtype=np.object)
-        self.index = 0
-        self.size = 0
+        self.buffer = deque(maxlen=max_size)
+        if not 0 <= gamma <= 1:
+            raise ValueError("gamma need to be in range [0,1] not " + str(gamma))
+        self.gamma = gamma
 
     def append(self, observation, action, reward, next_observation, done):
         """
+        Store one couple of value
 
         :param observation:
         :param action:
@@ -25,12 +31,11 @@ class ExperienceReplay(MemoryInterface):
         :param next_observation:
         :param done:
         """
-        self.buffer[self.index] = np.array([np.array(observation), action, reward, np.array(next_observation), done])
-        self.index = (self.index + 1) % self.max_size
-        self.size = min(self.size + 1, self.max_size)
+        self.buffer.append([observation, action, reward, next_observation, done])
 
     def extend(self, observations, actions, rewards, next_observations, dones):
         """
+        Store many couple of value
 
         :param observations:
         :param actions:
@@ -43,14 +48,36 @@ class ExperienceReplay(MemoryInterface):
 
     def sample(self, batch_size, device):
         """
+        returns *batch_size* of samples
 
-        :param device:
+        :param device: torch device to run agent
+        :type device: torch.device
         :param batch_size:
-        :return:
+        :type batch_size: int
+        :return: list<Tensor>
         """
-        idxs = np.random.randint(self.size, size=batch_size)
+        idxs = np.random.randint(len(self.buffer), size=batch_size)
 
-        return [torch.Tensor(list(V)).to(device=device) for V in self.buffer[idxs].T]
+        batch = np.array([self.get_sample(idx) for idx in idxs])
+
+        return [torch.Tensor(list(V)).to(device=device) for V in batch.T]
+
+    def get_sample(self, idx):
+        """
+        returns sample at idx position. if self.gamma not equal to 0 apply discount reward.
+
+        :param idx: torch device to run agent
+        :type idx: int
+        :return: [observation, action, reward, next_observation, done]
+        """
+        sample = self.buffer[idx]
+        if self.gamma == 0 or sample[4] is True:
+            return sample
+
+        if idx + 1 < len(self.buffer):
+            sample[2] = sample[2] + self.gamma * self.get_sample(idx + 1)[2]
+
+        return sample
 
     def __str__(self):
-        return 'ExperienceReplay-' + str(self.max_size)
+        return 'ExperienceReplay-' + str(self.buffer.maxlen) + '-' + str(self.gamma)
