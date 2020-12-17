@@ -11,6 +11,7 @@ INSTALL_REQUIRES = [
     'torchvision',
     'gym',
     'tensorboard',
+    'tqdm'
 ]
 
 INSTALL_REQUIRES_NOTBOOK = [
