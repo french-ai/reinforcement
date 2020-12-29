@@ -14,7 +14,7 @@
 - [x] List Environments for start project
 - [x] Add gpu option
 - [x] Render on notebook/collab
-- [ ] Add progress bar for training
+- [x] Add progress bar for training
 
 # Agents list
 
