@@ -6,7 +6,7 @@ from blobrl.networks import BaseNetwork
 
 
 class SimpleNetwork(BaseNetwork):
-    def __init__(self, observation_space, action_space):
+    def __init__(self, observation_space, action_space, linear_dim=64):
         """
 
         :param observation_space:
@@ -15,12 +15,13 @@ class SimpleNetwork(BaseNetwork):
         super().__init__(observation_space=observation_space, action_space=action_space)
 
         self.network = nn.Sequential()
-        self.network.add_module("NetWorkSimple_Linear_Input", nn.Linear(np.prod(flatdim(self.observation_space)), 64))
+        self.network.add_module("NetWorkSimple_Linear_Input",
+                                nn.Linear(np.prod(flatdim(self.observation_space)), linear_dim))
         self.network.add_module("NetWorkSimple_LeakyReLU_Input", nn.LeakyReLU())
-        self.network.add_module("NetWorkSimple_Linear_1", nn.Linear(64, 64))
+        self.network.add_module("NetWorkSimple_Linear_1", nn.Linear(linear_dim, linear_dim))
         self.network.add_module("NetWorkSimple_LeakyReLU_1", nn.LeakyReLU())
 
-        self.outputs = get_last_layers(self.action_space, last_dim=64)
+        self.outputs = get_last_layers(self.action_space, last_dim=linear_dim)
 
     def forward(self, observation):
         """

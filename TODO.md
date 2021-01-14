@@ -14,6 +14,7 @@
 - [x] List Environments for start project
 - [x] Add gpu option
 - [x] Render on notebook/collab
+- [x] Add progress bar for training
 
 # Agents list
 
@@ -84,6 +85,8 @@
 
 - [ ] Add temporal difference option in all memories
 - [x] Add Discount reward in experience replay
+
+- [ ] Add average reward 
 
 # Environments list
 
