@@ -1,6 +1,8 @@
 ﻿BlobRL : Reinforcement Learning library with Pytorch
 ============
 
+
+[![Pypi](https://img.shields.io/pypi/v/blobrl?color=blue&logo=pypi&style=for-the-badge)](https://pypi.org/project/blobrl/)
 [![Read the Docs](https://img.shields.io/readthedocs/blobrl?style=for-the-badge)](https://blobrl.readthedocs.io/en/latest/?badge=latest)
 [![Build Status](https://img.shields.io/travis/french-ai/reinforcement/master.svg?=master&style=for-the-badge)](https://travis-ci.org/french-ai/reinforcement)
 [![CodeFactor](https://www.codefactor.io/repository/github/french-ai/reinforcement/badge?style=for-the-badge)](https://www.codefactor.io/repository/github/french-ai/reinforcement)
@@ -17,35 +19,24 @@ BlobRl is a modular library for reinforcement learning which works on pytorch.
 For installing *pytorch* follow [Quick Start Locally](https://pytorch.org/) for your config.
 
 ### BlobRL
-Download files:
-
-```bash
-git clone https://github.com/french-ai/reinforcement.git
-```
-
-Move to reinforcement directory:
-
-```bash
-cd reinforcement
-```
 Install blobrl
 
 - to use it:
 
 ```bash
-pip install .
+pip install blobrl
 ```
 
 - to use it on notebook:
 
 ```bash
-pip install ".[notebook]"
+pip install blobrl[notebook]
 ```
 
 - to help development:
 
 ```bash
-pip install ".[dev]"
+pip install blobrl[dev]
 ```
 
 ## Get Started

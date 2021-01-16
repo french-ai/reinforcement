@@ -31,7 +31,7 @@ with open(os.path.abspath(path + '/README.md')) as f:
 setuptools.setup(
     author="french ai team",
     name='blobrl',
-    version='0.1.2',
+    version='0.1.3',
     license="Apache-2.0",
     description='Reinforcement learning with pytorch ',
     long_description=README,
@@ -39,6 +39,7 @@ setuptools.setup(
     url='https://github.com/french-ai/reinforcement',
     packages=setuptools.find_packages(),
     include_package_data=True,
+    download_url='https://github.com/french-ai/reinforcement/archive/V0.1.3.tar.gz',
     python_requires=">=3.6.1",
     install_requires=INSTALL_REQUIRES,
     extras_require={
@@ -46,8 +47,8 @@ setuptools.setup(
         "notebook": INSTALL_REQUIRES + INSTALL_REQUIRES_NOTBOOK
     },
     classifiers=[
-        'Development Status :: Alpha',
-        'License :: Apache 2.0 License',
+        'Development Status :: 3 - Alpha',
+        'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
