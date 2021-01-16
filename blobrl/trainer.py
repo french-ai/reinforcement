@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 
 import gym
 import matplotlib.pyplot as plt
+from tqdm.auto import tqdm
 from IPython import display
 
 from blobrl import Logger, Record
@@ -101,17 +102,22 @@ class Trainer:
         if logger:
             logger.evaluate()
 
-    def train(self, max_episode=1000, nb_evaluation=4, render=True):
+    def train(self, max_episode=1000, nb_evaluation=4, render=True, progress_bar=True):
         """
+        Star train on *max_episode* episode.
 
-        :param nb_evaluation:
-        :param max_episode:
+        :param max_episode: maximum episode to train agent
+        :type max_episode: int
+        :param nb_evaluation: number of time where we test agent without training
+        :type nb_evaluation: int
         :param render: if show env render
         :type render: bool
+        :param progress_bar: show or not progress bar of training
+        :type progress_bar: bool
         """
 
         self.environment.reset()
-        for i_episode in range(1, max_episode + 1):
+        for i_episode in tqdm(range(1, max_episode + 1), disable=not progress_bar):
             self.do_episode(logger=self.logger, render=render)
             if nb_evaluation > 0:
                 if nb_evaluation <= 1:

@@ -58,7 +58,7 @@ class ExperienceReplay(MemoryInterface):
         """
         idxs = np.random.randint(len(self.buffer), size=batch_size)
 
-        batch = np.array([self.get_sample(idx) for idx in idxs])
+        batch = np.array([self.get_sample(idx) for idx in idxs], dtype=object)
 
         return [torch.Tensor(list(V)).to(device=device) for V in batch.T]
 
