@@ -92,7 +92,7 @@ Agent implemented:
 ## Examples
 
 You can find all examples [here](./examples)
-- [Jupyter exemple](./examples/example_jupyter.ipynb)
+- [Jupyter exemple](./examples/example_train_jupyter.ipynb)
 - [Colab exemple](./examples/example_colab.ipynb)
 
 
